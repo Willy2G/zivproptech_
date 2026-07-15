@@ -108,7 +108,7 @@ export default function Hero() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-ziv-cyan to-blue-400">
                 Immobilière
               </span>{' '}
-              avec ZIV.
+              avec ZIVPROPTECH.
             </h1>
             <p className="mt-4 text-lg text-gray-300 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
               La première suite PropTech conçue et adaptée aux réalités immobilières en Côte
