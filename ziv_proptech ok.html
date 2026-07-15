@@ -1,0 +1,2156 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZIV PROPTECH | Logiciels Immobiliers en Côte d'Ivoire et Afrique de l'Ouest</title>
+    <meta name="description" content="Découvrez ZIV PROPTECH, la suite de logiciels immobiliers de référence en Côte d'Ivoire et Afrique de l'Ouest. Idéal pour générer des leads qualifiés et optimiser votre acquisition logicielle pour la promotion et la gestion foncière.">
+    <meta name="keywords" content="logiciels immobiliers, Côte d'Ivoire, Afrique de l'Ouest, générer des leads qualifiés, acquisition logiciels immobiliers, proptech, gestion locative, promotion immobilière">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ziv-navy': '#0A1E4A',
+                        'ziv-cyan': '#00A8B5',
+                        'ziv-blue': '#1D4ED8',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons (Load Deferred to prevent blocking) -->
+    <script src="https://unpkg.com/lucide@latest" defer></script>
+
+    <style>
+        .hero-pattern {
+            background-color: #0A1E4A;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='#00A8B5' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        
+        .modal-enter { opacity: 0; transform: scale(0.95); }
+        .modal-enter-active { opacity: 1; transform: scale(1); transition: opacity 300ms ease-out, transform 300ms ease-out; }
+        
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(0, 168, 181, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(0, 168, 181, 0); }
+            100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(0, 168, 181, 0); }
+        }
+        .play-button-pulse { animation: pulse-ring 2s infinite; }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        .animate-scroll { animation: scroll 40s linear infinite; }
+        .carousel-container:hover .animate-scroll { animation-play-state: paused; }
+        .mask-edges {
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #00A8B5; }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-gray-50 antialiased selection:bg-ziv-cyan selection:text-white relative">
+
+    <nav class="fixed w-full z-40 glass-nav border-b border-gray-200 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.scrollTo(0,0)">
+                    <svg class="h-10 w-10 text-ziv-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M2 22L22 2v8l-8 4 8 8H2V14l8-4-8-8z" fill="currentColor" fill-opacity="0.1"/>
+                        <circle cx="2" cy="22" r="1.5" fill="#0A1E4A" stroke="none"/>
+                        <circle cx="22" cy="2" r="1.5" fill="#0A1E4A" stroke="none"/>
+                    </svg>
+                    <span class="ml-2 font-heading font-bold text-2xl tracking-tight text-ziv-navy">ZIV<span class="text-ziv-cyan">PROPTECH</span></span>
+                </div>
+                
+                <div class="hidden lg:flex space-x-6 items-center">
+                    <a href="#solutions" class="text-gray-600 hover:text-ziv-blue font-medium transition text-sm">Notre Écosystème</a>
+                    <a href="#about" class="text-gray-600 hover:text-ziv-blue font-medium transition text-sm">Expertise</a>
+                    <a href="#tarifs" class="text-gray-600 hover:text-ziv-blue font-medium transition text-sm">Tarifs</a>
+                    <a href="#temoignages" class="text-gray-600 hover:text-ziv-blue font-medium transition text-sm">Témoignages</a>
+                    <a href="#ressources" class="text-gray-600 hover:text-ziv-blue font-medium transition text-sm flex items-center"><i data-lucide="book-open" class="h-4 w-4 mr-1"></i> Ressources</a>
+                    <a href="#" onclick="openExpertModal(); return false;" class="bg-ziv-navy hover:bg-ziv-blue text-white px-5 py-2.5 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 text-sm flex items-center">
+                        <i data-lucide="calendar" class="h-4 w-4 mr-2"></i> Prendre RDV
+                    </a>
+                </div>
+
+                <div class="lg:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-ziv-navy focus:outline-none">
+                        <i data-lucide="menu" class="h-6 w-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t mt-20 absolute w-full shadow-lg">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#solutions" class="block px-3 py-2 text-gray-700 font-medium hover:bg-gray-50">Notre Écosystème</a>
+                <a href="#about" class="block px-3 py-2 text-gray-700 font-medium hover:bg-gray-50">Expertise Afrique</a>
+                <a href="#tarifs" class="block px-3 py-2 text-gray-700 font-medium hover:bg-gray-50">Tarifs</a>
+                <a href="#temoignages" class="block px-3 py-2 text-gray-700 font-medium hover:bg-gray-50">Témoignages</a>
+                <a href="#ressources" class="block px-3 py-2 text-gray-700 font-medium hover:bg-gray-50">Ressources & Blog</a>
+                <a href="#" onclick="openExpertModal(); return false;" class="block px-3 py-2 mt-4 text-center bg-ziv-cyan text-white rounded-md font-medium">Prendre RDV</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-pattern pt-32 pb-20 lg:pt-40 lg:pb-24 overflow-hidden relative">
+        <div class="absolute inset-0 bg-gradient-to-br from-ziv-navy/95 to-ziv-blue/90"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-12 items-center">
+                <div class="text-center lg:text-left mb-12 lg:mb-0">
+                    <span class="inline-flex items-center py-1.5 px-4 rounded-full bg-yellow-400/20 text-yellow-300 text-xs sm:text-sm font-bold tracking-wider mb-6 border border-yellow-400/30 cursor-pointer hover:bg-yellow-400/30 transition-colors" onclick="window.location.href='#about'">
+                        <i data-lucide="award" class="h-4 w-4 mr-2 text-yellow-400"></i>
+                        Prix d'Excellence d'Or - Innovation Technologique
+                    </span>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-heading font-extrabold text-white leading-tight mb-6">
+                        Pilotez toute votre activité <br class="hidden lg:block"/> <span class="text-transparent bg-clip-text bg-gradient-to-r from-ziv-cyan to-blue-400">Immobilière</span> avec ZIV.
+                    </h1>
+                    <p class="mt-4 text-lg text-gray-300 mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                        La première suite PropTech conçue et adaptée aux réalités immobilières en Côte d'Ivoire et en Afrique de l'Ouest. Générez des leads, gérez vos projets, vos ventes et vos loyers avec des solutions logicielles de pointe.
+                    </p>
+                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start gap-4">
+                        <a href="#contact" class="bg-ziv-cyan hover:bg-cyan-500 text-white font-bold py-4 px-8 rounded-xl shadow-[0_0_20px_rgba(0,168,181,0.4)] hover:shadow-[0_0_30px_rgba(0,168,181,0.6)] transition-all duration-300 text-lg flex items-center justify-center transform hover:-translate-y-1">
+                            Démarrer ma Démo
+                            <i data-lucide="arrow-right" class="ml-2 h-5 w-5"></i>
+                        </a>
+                        <a href="#solutions" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-bold py-4 px-8 rounded-xl transition duration-300 text-lg flex items-center justify-center backdrop-blur-md">
+                            Voir les Logiciels
+                        </a>
+                    </div>
+                </div>
+
+                <div class="relative hidden md:block">
+                    <div class="glass-card rounded-2xl p-6 shadow-2xl relative z-20 transform hover:-translate-y-2 transition-transform duration-500">
+                        <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-400"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-400"></div>
+                            </div>
+                            <div class="text-white/80 text-sm font-medium flex items-center">
+                                <i data-lucide="hard-hat" class="h-4 w-4 mr-2 text-ziv-cyan"></i> LOTIGES ERP - Chantier BTP
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-white/5 rounded-xl p-4 border border-white/10">
+                                <div class="text-white/60 text-xs mb-1">Budget Réalisé</div>
+                                <div class="text-white font-bold text-xl flex items-end">
+                                    75% <span class="text-xs text-green-400 ml-2 font-normal">Normal</span>
+                                </div>
+                                <div class="w-full bg-white/10 h-1.5 rounded-full mt-2">
+                                    <div class="bg-green-400 h-1.5 rounded-full" style="width: 75%"></div>
+                                </div>
+                            </div>
+                            <div class="bg-white/5 rounded-xl p-4 border border-white/10">
+                                <div class="text-white/60 text-xs mb-1">Stock Matériaux</div>
+                                <div class="text-white font-bold text-xl flex items-end">
+                                    Alerte <span class="text-xs text-red-400 ml-2 font-normal">Ciment</span>
+                                </div>
+                                <div class="w-full bg-white/10 h-1.5 rounded-full mt-2">
+                                    <div class="bg-red-400 h-1.5 rounded-full" style="width: 20%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-white/5 rounded-xl p-4 border border-white/10">
+                            <div class="text-white/60 text-xs mb-3">Planning d'exécution (Gros Œuvre)</div>
+                            <div class="space-y-3">
+                                <div class="flex items-center">
+                                    <div class="w-20 text-[10px] text-white/50">Fondations</div>
+                                    <div class="flex-grow bg-white/10 h-4 rounded relative">
+                                        <div class="absolute left-0 top-0 h-full bg-ziv-cyan rounded w-1/3"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-20 text-[10px] text-white/50">Élévation</div>
+                                    <div class="flex-grow bg-white/10 h-4 rounded relative">
+                                        <div class="absolute left-1/3 top-0 h-full bg-blue-400 rounded w-1/2"></div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-20 text-[10px] text-white/50">Toiture</div>
+                                    <div class="flex-grow bg-white/10 h-4 rounded relative">
+                                        <div class="absolute left-3/4 top-0 h-full bg-white/30 rounded w-1/4"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute -bottom-6 -left-8 glass-card rounded-xl p-4 shadow-xl z-30 flex items-center animate-bounce" style="animation-duration: 3s;">
+                        <div class="w-10 h-10 rounded-full bg-yellow-500/20 flex items-center justify-center mr-3 border border-yellow-500/30">
+                            <i data-lucide="award" class="h-5 w-5 text-yellow-400"></i>
+                        </div>
+                        <div>
+                            <div class="text-white text-sm font-bold">Évaluation d'Or</div>
+                            <div class="text-white/60 text-[10px]">Innovation Technologique</div>
+                        </div>
+                    </div>
+                    
+                    <div class="absolute -top-6 -right-6 glass-card rounded-xl p-4 shadow-xl z-10 flex items-center">
+                        <div class="w-10 h-10 rounded-full bg-green-500/20 flex items-center justify-center mr-3">
+                            <i data-lucide="check-circle" class="h-5 w-5 text-green-400"></i>
+                        </div>
+                        <div>
+                            <div class="text-white text-sm font-bold">Facture validée</div>
+                            <div class="text-white/60 text-xs">Fournisseur BTP</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bg-ziv-blue py-6 border-b border-blue-900 relative z-20 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center divide-y md:divide-y-0 md:divide-x divide-blue-400/30">
+                <div class="py-2">
+                    <div class="text-3xl font-heading font-extrabold text-white mb-1">+50</div>
+                    <div class="text-blue-200 text-sm font-medium uppercase tracking-wider">Promoteurs & Agences Équipés</div>
+                </div>
+                <div class="py-2">
+                    <div class="text-3xl font-heading font-extrabold text-white mb-1">+ 100</div>
+                    <div class="text-blue-200 text-sm font-medium uppercase tracking-wider">Projets gérés via nos ERP</div>
+                </div>
+                <div class="py-2">
+                    <div class="text-3xl font-heading font-extrabold text-white mb-1">7j/7</div>
+                    <div class="text-blue-200 text-sm font-medium uppercase tracking-wider">Support Technique</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-10 bg-white border-b border-gray-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8">
+                <p class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-1">Les Solutions Logicielles destinées aux</p>
+                <p class="text-xl font-heading font-extrabold text-ziv-navy">Professionnels de l'immobilier</p>
+            </div>
+            <div class="flex flex-wrap justify-center gap-6 md:gap-12 opacity-80">
+                <div class="flex items-center bg-gray-50 px-6 py-3 rounded-xl border border-gray-100 shadow-sm hover:border-ziv-cyan transition-colors"><i data-lucide="building" class="h-5 w-5 mr-3 text-ziv-blue"></i><span class="font-heading font-semibold text-gray-800">Promoteurs Immobiliers</span></div>
+                <div class="flex items-center bg-gray-50 px-6 py-3 rounded-xl border border-gray-100 shadow-sm hover:border-ziv-cyan transition-colors"><i data-lucide="landmark" class="h-5 w-5 mr-3 text-ziv-cyan"></i><span class="font-heading font-semibold text-gray-800">Agences Immobilières</span></div>
+                <div class="flex items-center bg-gray-50 px-6 py-3 rounded-xl border border-gray-100 shadow-sm hover:border-ziv-cyan transition-colors"><i data-lucide="map" class="h-5 w-5 mr-3 text-teal-600"></i><span class="font-heading font-semibold text-gray-800">Aménageurs Fonciers</span></div>
+                <div class="flex items-center bg-gray-50 px-6 py-3 rounded-xl border border-gray-100 shadow-sm hover:border-ziv-cyan transition-colors"><i data-lucide="users" class="h-5 w-5 mr-3 text-emerald-600"></i><span class="font-heading font-semibold text-gray-800">Syndic Copropriété</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="solutions" class="py-24 bg-gray-50 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-ziv-cyan font-semibold tracking-wide uppercase text-sm mb-2">L'Écosystème ZIV PROPTECH</h2>
+                <h3 class="text-3xl md:text-4xl font-heading font-bold text-ziv-navy">Une Suite, Tous Vos Besoins</h3>
+                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">Découvrez notre ERP global pour piloter toute votre entreprise, ou choisissez nos modules logiciels spécialisés selon votre cœur de métier.</p>
+            </div>
+
+            <div class="mb-16">
+                <div onclick="openModal('erp')" class="bg-gradient-to-r from-ziv-navy via-blue-900 to-ziv-blue rounded-3xl p-8 md:p-12 shadow-2xl text-white cursor-pointer group transform hover:-translate-y-2 transition-all duration-500 relative overflow-hidden flex flex-col md:flex-row items-center justify-between border border-blue-800">
+                    <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2000&q=80')] opacity-10 bg-cover bg-center mix-blend-overlay group-hover:opacity-20 transition-opacity duration-700"></div>
+                    <div class="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-ziv-cyan/20 to-transparent"></div>
+                    
+                    <div class="relative z-10 md:w-2/3 md:pr-8 mb-8 md:mb-0">
+                        <div class="inline-flex items-center px-3 py-1 rounded-full bg-ziv-cyan/20 border border-ziv-cyan/30 text-cyan-300 text-xs font-bold uppercase tracking-wider mb-4">
+                            <i data-lucide="star" class="h-3 w-3 mr-2 fill-current"></i> La Solution Intégrale (ERP)
+                        </div>
+                        <h4 class="text-3xl md:text-5xl font-heading font-bold mb-4 text-white group-hover:text-cyan-100 transition-colors">LOTIGES ERP</h4>
+                        <p class="text-blue-100 text-lg mb-6 leading-relaxed">
+                            Le Progiciel de Gestion Intégré ultime pour les <strong>Promoteurs et Holdings Immobiliers</strong>. Centralisez vos ventes VEFA, vos chantiers et stocks, votre comptabilité, vos ressources humaines avec de multiples interfaces de travail.
+                        </p>
+                        <div class="flex flex-wrap gap-3 text-sm text-cyan-50">
+                            <span class="flex items-center bg-white/10 px-3 py-1.5 rounded-lg border border-white/10"><i data-lucide="briefcase" class="h-4 w-4 mr-2"></i> Pilotage Projet</span>
+                            <span class="flex items-center bg-white/10 px-3 py-1.5 rounded-lg border border-white/10"><i data-lucide="trending-up" class="h-4 w-4 mr-2"></i> Vente & CRM</span>
+                            <span class="flex items-center bg-white/10 px-3 py-1.5 rounded-lg border border-white/10"><i data-lucide="hard-hat" class="h-4 w-4 mr-2"></i> Chantier et Stock</span>
+                        </div>
+                    </div>
+
+                    <div class="relative z-10 md:w-1/3 flex justify-end w-full">
+                        <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl text-center w-full max-w-sm group-hover:bg-white/20 transition-colors">
+                            <div class="w-16 h-16 bg-ziv-cyan rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(0,168,181,0.5)] play-button-pulse">
+                                <i data-lucide="play" class="h-6 w-6 text-white ml-1"></i>
+                            </div>
+                            <span class="text-white font-bold text-lg block mb-1">Explorer l'ERP</span>
+                            <span class="text-cyan-200 text-sm">Voir la démonstration vidéo</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between mb-8">
+                <h4 class="text-2xl font-heading font-bold text-ziv-navy">Modules Logiciels Spécialisés</h4>
+                <div class="h-px bg-gray-200 flex-grow ml-6"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <div onclick="openModal('lotiges')" class="bg-white rounded-2xl p-8 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_10px_40px_rgba(29,78,216,0.15)] transition-all duration-300 cursor-pointer group flex flex-col h-full transform hover:-translate-y-2 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-ziv-blue transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+                    <div class="absolute top-4 right-4 bg-blue-50 text-ziv-blue text-xs font-bold px-2 py-1 rounded">Promotion</div>
+                    
+                    <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-ziv-blue group-hover:text-white transition-colors duration-300 text-ziv-blue">
+                        <i data-lucide="building-2" class="h-7 w-7"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-ziv-blue transition-colors">LOTIGES CRM</h4>
+                    <p class="text-gray-600 text-sm mb-6 flex-grow">Générez des leads qualifiés, gérez vos contrats de réservation et suivez vos Ventes en l'État Futur d'Achèvement (VEFA).</p>
+                    
+                    <ul class="text-sm text-gray-500 space-y-2 mb-6 border-t border-gray-50 pt-4">
+                        <li class="flex items-center"><i data-lucide="check" class="h-4 w-4 text-ziv-blue mr-2"></i> Échéanciers clients auto</li>
+                        <li class="flex items-center"><i data-lucide="check" class="h-4 w-4 text-ziv-blue mr-2"></i> Suivi Rentabilité Programme</li>
+                    </ul>
+                    
+                    <div class="flex items-center text-ziv-blue font-semibold text-sm mt-auto">
+                        Détails & Vidéo <i data-lucide="arrow-right" class="ml-2 h-4 w-4 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+
+                <div onclick="openModal('foncier')" class="bg-white rounded-2xl p-8 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_10px_40px_rgba(13,148,136,0.15)] transition-all duration-300 cursor-pointer group flex flex-col h-full transform hover:-translate-y-2 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-teal-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+                    <div class="absolute top-4 right-4 bg-teal-50 text-teal-600 text-xs font-bold px-2 py-1 rounded">Lotissement</div>
+
+                    <div class="w-14 h-14 bg-teal-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-teal-500 group-hover:text-white transition-colors duration-300 text-teal-600">
+                        <i data-lucide="map" class="h-7 w-7"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-teal-600 transition-colors">SUIT FONCIER</h4>
+                    <p class="text-gray-600 text-sm mb-6 flex-grow">L'outil métier des aménageurs agréés. Cartographiez vos lots et pilotez sereinement le processus d'obtention des ACD.</p>
+                    
+                    <ul class="text-sm text-gray-500 space-y-2 mb-6 border-t border-gray-50 pt-4">
+                        <li class="flex items-center"><i data-lucide="check" class="h-4 w-4 text-teal-500 mr-2"></i> Inventaire dynamique des lots</li>
+                        <li class="flex items-center"><i data-lucide="check" class="h-4 w-4 text-teal-500 mr-2"></i> Gestion des paiements terrains</li>
+                    </ul>
+
+                    <div class="flex items-center text-teal-600 font-semibold text-sm mt-auto">
+                        Détails & Vidéo <i data-lucide="arrow-right" class="ml-2 h-4 w-4 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+
+                <div onclick="openModal('gespat')" class="bg-white rounded-2xl p-8 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_10px_40px_rgba(249,115,22,0.15)] transition-all duration-300 cursor-pointer group flex flex-col h-full transform hover:-translate-y-2 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-orange-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+                    <div class="absolute top-4 right-4 bg-orange-50 text-orange-600 text-xs font-bold px-2 py-1 rounded">Syndic & Agence</div>
+
+                    <div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-orange-500 group-hover:text-white transition-colors duration-300 text-orange-500">
+                        <i data-lucide="wallet" class="h-7 w-7"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-500 transition-colors">GESPAT</h4>
+                    <p class="text-gray-600 text-sm mb-6 flex-grow">Automatisez votre gestion locative. Génération de quittances, suivi des impayés et reddition de comptes propriétaires.</p>
+                    
+                    <ul class="text-sm text-gray-500 space-y-2 mb-6 border-t border-gray-50 pt-4">
+                        <li class="flex items-center"><i data-lucide="check" class="h-4 w-4 text-orange-500 mr-2"></i> Quittances automatiques</li>
+                        <li class="flex items-center"><i data-lucide="check" class="h-4 w-4 text-orange-500 mr-2"></i> Bilan mandants (Propriétaires)</li>
+                    </ul>
+
+                    <div class="flex items-center text-orange-500 font-semibold text-sm mt-auto">
+                        Détails & Vidéo <i data-lucide="arrow-right" class="ml-2 h-4 w-4 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+
+                <div onclick="openModal('vente')" class="bg-white rounded-2xl p-8 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_10px_40px_rgba(79,70,229,0.15)] transition-all duration-300 cursor-pointer group flex flex-col h-full transform hover:-translate-y-2 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-indigo-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+                    
+                    <div class="w-14 h-14 bg-indigo-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-indigo-500 group-hover:text-white transition-colors duration-300 text-indigo-500">
+                        <i data-lucide="home" class="h-7 w-7"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-indigo-500 transition-colors">EASY VENTE</h4>
+                    <p class="text-gray-600 text-sm mb-6 flex-grow">La solution transactionnelle. Multipliez vos ventes grâce au matching intelligent entre vos biens et vos prospects.</p>
+                    
+                    <ul class="text-sm text-gray-500 space-y-2 mb-6 border-t border-gray-50 pt-4">
+                        <li class="flex items-center"><i data-lucide="check" class="h-4 w-4 text-indigo-500 mr-2"></i> Matching Offre / Demande</li>
+                        <li class="flex items-center"><i data-lucide="check" class="h-4 w-4 text-indigo-500 mr-2"></i> Registre des mandats</li>
+                    </ul>
+
+                    <div class="flex items-center text-indigo-500 font-semibold text-sm mt-auto">
+                        Détails & Vidéo <i data-lucide="arrow-right" class="ml-2 h-4 w-4 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+
+                <div onclick="openModal('gedaj')" class="bg-white rounded-2xl p-8 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_10px_40px_rgba(220,38,38,0.15)] transition-all duration-300 cursor-pointer group flex flex-col h-full transform hover:-translate-y-2 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-red-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+                    <div class="absolute top-4 right-4 bg-red-50 text-red-600 text-xs font-bold px-2 py-1 rounded border border-red-100">Obligatoire</div>
+
+                    <div class="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-red-500 group-hover:text-white transition-colors duration-300 text-red-500">
+                        <i data-lucide="shield-check" class="h-7 w-7"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-red-500 transition-colors">GEDAJ</h4>
+                    <p class="text-gray-600 text-sm mb-6 flex-grow">Dématérialisez vos process juridiques. Le module indispensable pour votre conformité LBC en Côte d'Ivoire.</p>
+                    
+                    <ul class="text-sm text-gray-500 space-y-2 mb-6 border-t border-gray-50 pt-4">
+                        <li class="flex items-center"><i data-lucide="check" class="h-4 w-4 text-red-500 mr-2"></i> Conformité KYC & LBC</li>
+                        <li class="flex items-center"><i data-lucide="check" class="h-4 w-4 text-red-500 mr-2"></i> Coffre-fort numérique</li>
+                    </ul>
+
+                    <div class="flex items-center text-red-500 font-semibold text-sm mt-auto">
+                        Détails & Vidéo <i data-lucide="arrow-right" class="ml-2 h-4 w-4 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+
+                <div onclick="openModal('syndycarre')" class="bg-white rounded-2xl p-8 border border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,0.05)] hover:shadow-[0_10px_40px_rgba(16,185,129,0.15)] transition-all duration-300 cursor-pointer group flex flex-col h-full transform hover:-translate-y-2 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-emerald-500 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+                    <div class="absolute top-4 right-4 bg-emerald-50 text-emerald-600 text-xs font-bold px-2 py-1 rounded">Copropriété</div>
+
+                    <div class="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-emerald-500 group-hover:text-white transition-colors duration-300 text-emerald-500">
+                        <i data-lucide="users" class="h-7 w-7"></i>
+                    </div>
+                    <h4 class="text-xl font-bold text-gray-900 mb-3 group-hover:text-emerald-500 transition-colors">SYNDYCARRE</h4>
+                    <p class="text-gray-600 text-sm mb-6 flex-grow">La Plateforme Intégrale pour la Gestion de Copropriété Augmentée. Idéal pour Syndics pro et bénévoles.</p>
+                    
+                    <ul class="text-sm text-gray-500 space-y-2 mb-6 border-t border-gray-50 pt-4">
+                        <li class="flex items-center"><i data-lucide="check" class="h-4 w-4 text-emerald-500 mr-2"></i> Appels de fonds par tantièmes</li>
+                        <li class="flex items-center"><i data-lucide="check" class="h-4 w-4 text-emerald-500 mr-2"></i> Cartographie SIG & GMAO</li>
+                    </ul>
+
+                    <div class="flex items-center text-emerald-500 font-semibold text-sm mt-auto justify-between">
+                        <span class="flex items-center">Détails <i data-lucide="arrow-right" class="ml-2 h-4 w-4 group-hover:translate-x-2 transition-transform"></i></span>
+                        <span class="text-[10px] text-gray-400 font-medium border border-gray-200 px-2 py-1 rounded-full bg-gray-50">Vidéo à venir</span>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 lg:col-span-3 mt-4">
+                    <div class="bg-gradient-to-r from-gray-100 to-white rounded-2xl p-8 border border-gray-200 flex flex-col md:flex-row items-center justify-between shadow-sm hover:shadow-md transition-shadow">
+                        <div class="flex items-center mb-6 md:mb-0 md:mr-6 text-center md:text-left">
+                            <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center mr-0 md:mr-6 mb-4 md:mb-0 mx-auto shadow-sm text-ziv-cyan flex-shrink-0">
+                                <i data-lucide="help-circle" class="h-8 w-8"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xl font-bold text-gray-900 mb-1">Besoin de conseils pour votre structure ?</h4>
+                                <p class="text-gray-600 text-sm">Nos experts vous aident à définir l'architecture logicielle (SaaS ou On-Premise) idéale.</p>
+                            </div>
+                        </div>
+                        <button onclick="openExpertModal()" class="w-full md:w-auto bg-ziv-navy text-white hover:bg-ziv-blue font-semibold py-3 px-8 rounded-xl transition-colors shadow-lg flex-shrink-0 flex items-center justify-center whitespace-nowrap">
+                            <i data-lucide="calendar" class="h-4 w-4 mr-2"></i> Prendre RDV B2B
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-20 bg-gray-50 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+                <div class="mb-10 lg:mb-0 relative">
+                    <div class="absolute -inset-4 bg-gradient-to-r from-ziv-cyan to-ziv-blue opacity-30 blur-2xl rounded-3xl"></div>
+                    <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Logiciels immobiliers en Côte d'Ivoire" class="relative rounded-2xl shadow-xl border border-white/50">
+                    
+                    <div class="absolute -bottom-6 -right-6 bg-white p-6 rounded-2xl shadow-2xl border border-yellow-200 hidden md:block w-64 transform rotate-2 hover:rotate-0 transition-transform duration-300">
+                        <div class="absolute -top-4 -left-4 w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
+                            <i data-lucide="star" class="h-5 w-5 text-white fill-current"></i>
+                        </div>
+                        <div class="text-center">
+                            <i data-lucide="award" class="h-10 w-10 text-yellow-500 mx-auto mb-2"></i>
+                            <h4 class="font-bold text-gray-900 leading-tight">Prix d'Excellence</h4>
+                            <p class="text-xs text-yellow-600 font-semibold mt-1">ÉVALUATION D'OR</p>
+                            <div class="w-8 h-1 bg-gray-200 mx-auto my-2"></div>
+                            <p class="text-[10px] text-gray-500 uppercase tracking-wide">Innovation Technologique PropTech</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="text-3xl font-heading font-bold text-ziv-navy mb-6">L'Expertise PropTech 100% Ouest-Africaine</h2>
+                    <p class="text-gray-600 mb-6 text-lg">Développée par <strong>Alerte Foncier</strong>, ZIV n'est pas un logiciel importé et adapté à la hâte. C'est une suite primée conçue dès le premier jour pour résoudre les défis réels (ACD, VEFA, LBC, OHADA) des professionnels en Côte d'Ivoire et dans la sous-région.</p>
+                    <div class="space-y-6 mt-8">
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center border border-blue-100">
+                                    <i data-lucide="zap" class="h-5 w-5 text-ziv-blue"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold text-gray-900">Productivité & Leads</h4>
+                                <p class="text-gray-600 text-sm mt-1">Automatisez l'administratif (quittances, échéanciers) pour que vos équipes se concentrent sur la vente et l'acquisition de nouveaux clients.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="flex-shrink-0 mt-1">
+                                <div class="w-10 h-10 rounded-xl bg-teal-50 flex items-center justify-center border border-teal-100">
+                                    <i data-lucide="lock" class="h-5 w-5 text-teal-600"></i>
+                                </div>
+                            </div>
+                            <div class="ml-4">
+                                <h4 class="text-lg font-bold text-gray-900">Sécurité et Continuité</h4>
+                                <p class="text-gray-600 text-sm mt-1">Hébergement Cloud sécurisé, sauvegardes quotidiennes, et archivage inviolable de vos contrats et actes juridiques.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="temoignages" class="py-24 bg-white border-t border-gray-200 overflow-x-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+            <div class="text-center">
+                <h2 class="text-ziv-cyan font-semibold tracking-wide uppercase text-sm mb-2">Ils ont choisi l'excellence</h2>
+                <h3 class="text-3xl md:text-4xl font-heading font-bold text-ziv-navy">La parole à nos partenaires B2B</h3>
+            </div>
+        </div>
+
+        <div class="w-full relative carousel-container mask-edges py-4 overflow-hidden">
+            <div class="flex w-full">
+                <div class="flex animate-scroll gap-6 pr-6 w-max flex-shrink-0">
+                    
+                    <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200 hover:border-ziv-cyan transition-colors w-[350px] md:w-[400px] flex-shrink-0 flex flex-col h-full relative">
+                        <i data-lucide="quote" class="absolute top-6 right-6 h-8 w-8 text-ziv-cyan opacity-20"></i>
+                        <div class="bg-white border border-gray-100 text-ziv-navy text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block w-max shadow-sm">ORIBAT (Cocody Angré)</div>
+                        <p class="text-gray-700 italic mb-6 flex-grow text-sm md:text-base">"Le déploiement de LOTI'GES s'est parfaitement déroulé. Après une excellente formation, la prise en main a été immédiate. Un véritable levier de performance."</p>
+                        <div class="flex items-center mt-auto border-t border-gray-200 pt-4">
+                            <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-ziv-blue font-bold mr-3 flex-shrink-0">SS</div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm">M. Sidibé Souleymane</h4>
+                                <p class="text-xs text-gray-500">Gérant</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-ziv-navy rounded-2xl p-8 shadow-xl w-[350px] md:w-[400px] flex-shrink-0 flex flex-col h-full relative transform md:-translate-y-2">
+                        <i data-lucide="quote" class="absolute top-6 right-6 h-8 w-8 text-white opacity-10"></i>
+                        <div class="bg-white/10 border border-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block w-max backdrop-blur-sm">KOUMBA PRESTIGE (Anyama)</div>
+                        <p class="text-gray-200 italic mb-6 flex-grow text-sm md:text-base">"Alerte Foncier a parfaitement répondu à nos attentes avec LOTI'GES. Le déploiement et la formation complète ont été menés de main de maître."</p>
+                        <div class="flex items-center mt-auto border-t border-white/10 pt-4">
+                            <div class="h-10 w-10 rounded-full bg-ziv-cyan flex items-center justify-center text-white font-bold mr-3 flex-shrink-0">KW</div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">Mme Koumba Wagué</h4>
+                                <p class="text-xs text-gray-400">Directrice Générale</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200 hover:border-ziv-cyan transition-colors w-[350px] md:w-[400px] flex-shrink-0 flex flex-col h-full relative">
+                        <i data-lucide="quote" class="absolute top-6 right-6 h-8 w-8 text-ziv-cyan opacity-20"></i>
+                        <div class="bg-white border border-gray-100 text-ziv-navy text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block w-max shadow-sm">INTERBAT</div>
+                        <p class="text-gray-700 italic mb-6 flex-grow text-sm md:text-base">"Intégration d'une grande efficacité. Grâce à un accompagnement de qualité et une formation sur-mesure, le logiciel est parfaitement opérationnel."</p>
+                        <div class="flex items-center mt-auto border-t border-gray-200 pt-4">
+                            <div class="h-10 w-10 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 font-bold mr-3 flex-shrink-0">PS</div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm">M. Patrick Sebatigita</h4>
+                                <p class="text-xs text-gray-500">Directeur Général</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200 hover:border-ziv-cyan transition-colors w-[350px] md:w-[400px] flex-shrink-0 flex flex-col h-full relative">
+                        <i data-lucide="quote" class="absolute top-6 right-6 h-8 w-8 text-ziv-cyan opacity-20"></i>
+                        <div class="bg-white border border-gray-100 text-ziv-navy text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block w-max shadow-sm">SOGETD (San-Pedro)</div>
+                        <p class="text-gray-700 italic mb-6 flex-grow text-sm md:text-base">"Le choix s'est avéré excellent. Le cabinet Alerte Foncier a assuré un déploiement impeccable, suivi d'une formation de qualité pour nos équipes."</p>
+                        <div class="flex items-center mt-auto border-t border-gray-200 pt-4">
+                            <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold mr-3 flex-shrink-0">IT</div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm">M. Issouf Touré</h4>
+                                <p class="text-xs text-gray-500">Directeur Général</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-ziv-navy rounded-2xl p-8 shadow-xl w-[350px] md:w-[400px] flex-shrink-0 flex flex-col h-full relative transform md:-translate-y-2">
+                        <i data-lucide="quote" class="absolute top-6 right-6 h-8 w-8 text-white opacity-10"></i>
+                        <div class="bg-white/10 border border-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block w-max backdrop-blur-sm">SCBAU (Cocody-Faya)</div>
+                        <p class="text-gray-200 italic mb-6 flex-grow text-sm md:text-base">"Une réelle valeur ajoutée. Le déploiement de LOTI'GES nous permet d'optimiser et sécuriser la gestion de nos projets de construction."</p>
+                        <div class="flex items-center mt-auto border-t border-white/10 pt-4">
+                            <div class="h-10 w-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold mr-3 flex-shrink-0">OP</div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">Mme Ouattara P.</h4>
+                                <p class="text-xs text-gray-400">Directrice Générale</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200 hover:border-ziv-cyan transition-colors w-[350px] md:w-[400px] flex-shrink-0 flex flex-col h-full relative">
+                        <i data-lucide="quote" class="absolute top-6 right-6 h-8 w-8 text-ziv-cyan opacity-20"></i>
+                        <div class="bg-white border border-gray-100 text-ziv-navy text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block w-max shadow-sm">ELITE FONCIER</div>
+                        <p class="text-gray-700 italic mb-6 flex-grow text-sm md:text-base">"Grâce à une formation rigoureuse, nos équipes maîtrisent parfaitement cet outil innovant qui sécurise nos pratiques foncières au quotidien."</p>
+                        <div class="flex items-center mt-auto border-t border-gray-200 pt-4">
+                            <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold mr-3 flex-shrink-0">KR</div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm">M. Kouadio Raphael Ebouo</h4>
+                                <p class="text-xs text-gray-500">Gérant</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex animate-scroll gap-6 pr-6 w-max flex-shrink-0" aria-hidden="true">
+                    
+                    <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200 hover:border-ziv-cyan transition-colors w-[350px] md:w-[400px] flex-shrink-0 flex flex-col h-full relative">
+                        <i data-lucide="quote" class="absolute top-6 right-6 h-8 w-8 text-ziv-cyan opacity-20"></i>
+                        <div class="bg-white border border-gray-100 text-ziv-navy text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block w-max shadow-sm">ORIBAT (Cocody Angré)</div>
+                        <p class="text-gray-700 italic mb-6 flex-grow text-sm md:text-base">"Le déploiement de LOTI'GES s'est parfaitement déroulé. Après une excellente formation, la prise en main a été immédiate. Un véritable levier de performance."</p>
+                        <div class="flex items-center mt-auto border-t border-gray-200 pt-4">
+                            <div class="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-ziv-blue font-bold mr-3 flex-shrink-0">SS</div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm">M. Sidibé Souleymane</h4>
+                                <p class="text-xs text-gray-500">Gérant</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-ziv-navy rounded-2xl p-8 shadow-xl w-[350px] md:w-[400px] flex-shrink-0 flex flex-col h-full relative transform md:-translate-y-2">
+                        <i data-lucide="quote" class="absolute top-6 right-6 h-8 w-8 text-white opacity-10"></i>
+                        <div class="bg-white/10 border border-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block w-max backdrop-blur-sm">KOUMBA PRESTIGE (Anyama)</div>
+                        <p class="text-gray-200 italic mb-6 flex-grow text-sm md:text-base">"Alerte Foncier a parfaitement répondu à nos attentes avec LOTI'GES. Le déploiement et la formation complète ont été menés de main de maître."</p>
+                        <div class="flex items-center mt-auto border-t border-white/10 pt-4">
+                            <div class="h-10 w-10 rounded-full bg-ziv-cyan flex items-center justify-center text-white font-bold mr-3 flex-shrink-0">KW</div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">Mme Koumba Wagué</h4>
+                                <p class="text-xs text-gray-400">Directrice Générale</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200 hover:border-ziv-cyan transition-colors w-[350px] md:w-[400px] flex-shrink-0 flex flex-col h-full relative">
+                        <i data-lucide="quote" class="absolute top-6 right-6 h-8 w-8 text-ziv-cyan opacity-20"></i>
+                        <div class="bg-white border border-gray-100 text-ziv-navy text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block w-max shadow-sm">INTERBAT</div>
+                        <p class="text-gray-700 italic mb-6 flex-grow text-sm md:text-base">"Intégration d'une grande efficacité. Grâce à un accompagnement de qualité et une formation sur-mesure, le logiciel est parfaitement opérationnel."</p>
+                        <div class="flex items-center mt-auto border-t border-gray-200 pt-4">
+                            <div class="h-10 w-10 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 font-bold mr-3 flex-shrink-0">PS</div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm">M. Patrick Sebatigita</h4>
+                                <p class="text-xs text-gray-500">Directeur Général</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200 hover:border-ziv-cyan transition-colors w-[350px] md:w-[400px] flex-shrink-0 flex flex-col h-full relative">
+                        <i data-lucide="quote" class="absolute top-6 right-6 h-8 w-8 text-ziv-cyan opacity-20"></i>
+                        <div class="bg-white border border-gray-100 text-ziv-navy text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block w-max shadow-sm">SOGETD (San-Pedro)</div>
+                        <p class="text-gray-700 italic mb-6 flex-grow text-sm md:text-base">"Le choix s'est avéré excellent. Le cabinet Alerte Foncier a assuré un déploiement impeccable, suivi d'une formation de qualité pour nos équipes."</p>
+                        <div class="flex items-center mt-auto border-t border-gray-200 pt-4">
+                            <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold mr-3 flex-shrink-0">IT</div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm">M. Issouf Touré</h4>
+                                <p class="text-xs text-gray-500">Directeur Général</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-ziv-navy rounded-2xl p-8 shadow-xl w-[350px] md:w-[400px] flex-shrink-0 flex flex-col h-full relative transform md:-translate-y-2">
+                        <i data-lucide="quote" class="absolute top-6 right-6 h-8 w-8 text-white opacity-10"></i>
+                        <div class="bg-white/10 border border-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block w-max backdrop-blur-sm">SCBAU (Cocody-Faya)</div>
+                        <p class="text-gray-200 italic mb-6 flex-grow text-sm md:text-base">"Une réelle valeur ajoutée. Le déploiement de LOTI'GES nous permet d'optimiser et sécuriser la gestion de nos projets de construction."</p>
+                        <div class="flex items-center mt-auto border-t border-white/10 pt-4">
+                            <div class="h-10 w-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 font-bold mr-3 flex-shrink-0">OP</div>
+                            <div>
+                                <h4 class="font-bold text-white text-sm">Mme Ouattara P.</h4>
+                                <p class="text-xs text-gray-400">Directrice Générale</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 rounded-2xl p-8 border border-gray-200 hover:border-ziv-cyan transition-colors w-[350px] md:w-[400px] flex-shrink-0 flex flex-col h-full relative">
+                        <i data-lucide="quote" class="absolute top-6 right-6 h-8 w-8 text-ziv-cyan opacity-20"></i>
+                        <div class="bg-white border border-gray-100 text-ziv-navy text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block w-max shadow-sm">ELITE FONCIER</div>
+                        <p class="text-gray-700 italic mb-6 flex-grow text-sm md:text-base">"Grâce à une formation rigoureuse, nos équipes maîtrisent parfaitement cet outil innovant qui sécurise nos pratiques foncières au quotidien."</p>
+                        <div class="flex items-center mt-auto border-t border-gray-200 pt-4">
+                            <div class="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold mr-3 flex-shrink-0">KR</div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 text-sm">M. Kouadio Raphael Ebouo</h4>
+                                <p class="text-xs text-gray-500">Gérant</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-center text-sm text-gray-400 mt-8 mb-4">
+                <i data-lucide="mouse-pointer-click" class="h-4 w-4 inline mr-1"></i> Survolez pour mettre en pause
+            </p>
+        </div>
+    </section>
+
+    <section id="ressources" class="py-24 bg-gray-50 border-t border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12">
+                <div class="max-w-2xl">
+                    <h2 class="text-ziv-cyan font-semibold tracking-wide uppercase text-sm mb-2">Centre de Connaissances</h2>
+                    <h3 class="text-3xl md:text-4xl font-heading font-bold text-ziv-navy mb-4">Ressources & Expertises PropTech</h3>
+                    <p class="text-gray-600">Restez à jour sur la réglementation foncière, les innovations technologiques et les meilleures pratiques de l'immobilier en UEMOA.</p>
+                </div>
+                <div class="mt-6 md:mt-0">
+                    <a href="#" onclick="alert('La section complète du blog avec tous les articles sera bientôt disponible. Restez connectés !'); return false;" class="text-ziv-blue font-semibold hover:text-blue-800 flex items-center transition-colors">
+                        Voir tout le blog <i data-lucide="arrow-right" class="ml-2 h-4 w-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-1 bg-gradient-to-br from-ziv-navy to-ziv-blue rounded-2xl p-8 text-white relative overflow-hidden shadow-xl h-full flex flex-col">
+                    <div class="absolute -right-10 -top-10 w-40 h-40 bg-white opacity-5 rounded-full blur-2xl"></div>
+                    <div class="inline-flex items-center px-3 py-1 rounded-full bg-yellow-400/20 text-yellow-300 text-xs font-bold uppercase tracking-wider mb-6 border border-yellow-400/30 w-max">
+                        <i data-lucide="download" class="h-3 w-3 mr-2"></i> Ressource Gratuite
+                    </div>
+                    <h4 class="text-2xl font-bold font-heading mb-4 leading-tight">Le Guide de la Digitalisation Immobilière en Côte d'Ivoire</h4>
+                    <p class="text-blue-100 text-sm mb-8 leading-relaxed flex-grow">Découvrez les 5 étapes clés pour automatiser votre agence ou votre société de promotion, et éviter les pièges juridiques (ACD, LBC).</p>
+                    
+                    <form class="space-y-3 mt-auto" onsubmit="event.preventDefault(); alert('Lien de téléchargement envoyé à votre adresse email !');">
+                        <input type="email" placeholder="Votre adresse email professionnelle" required class="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:bg-white/20 focus:ring-2 focus:ring-ziv-cyan outline-none transition-all text-white placeholder-blue-200 text-sm">
+                        <button type="submit" class="w-full bg-ziv-cyan hover:bg-cyan-500 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition duration-300 text-sm flex justify-center items-center">
+                            Recevoir le Guide <i data-lucide="arrow-down-to-line" class="ml-2 h-4 w-4"></i>
+                        </button>
+                    </form>
+                    <p class="text-[10px] text-blue-200/60 mt-4 text-center">Déjà téléchargé par +1200 professionnels.</p>
+                </div>
+
+                <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <a href="#" onclick="openBlogModal('lbc_2026'); return false;" class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:border-ziv-cyan/50 transition-all duration-300 group flex flex-col">
+                        <div class="h-40 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=600&q=80" alt="Conformité LBC immobilier" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-ziv-navy text-xs font-bold px-2.5 py-1 rounded-lg">Réglementation</div>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-ziv-blue transition-colors line-clamp-2">Lutte contre le Blanchiment de Capitaux (LBC) : Comment s'adapter en 2026 ?</h4>
+                            <p class="text-sm text-gray-500 mb-4 line-clamp-2 flex-grow">Découvrez les nouvelles exigences documentaires pour les transactions immobilières et comment GEDAJ vous protège.</p>
+                            <div class="flex items-center text-xs text-gray-400 mt-auto">
+                                <i data-lucide="calendar" class="h-3 w-3 mr-1"></i> 12 Mars 2026
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="#" onclick="openBlogModal('vefa_erreurs'); return false;" class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:border-ziv-cyan/50 transition-all duration-300 group flex flex-col">
+                        <div class="h-40 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=600&q=80" alt="Gestion VEFA Abidjan" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-ziv-navy text-xs font-bold px-2.5 py-1 rounded-lg">Promotion</div>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-ziv-blue transition-colors line-clamp-2">VEFA en Côte d'Ivoire : Les 3 erreurs fatales dans la gestion des échéanciers</h4>
+                            <p class="text-sm text-gray-500 mb-4 line-clamp-2 flex-grow">Gérer des appels de fonds sur Excel est risqué. Voici comment sécuriser votre trésorerie et la confiance acquéreur.</p>
+                            <div class="flex items-center text-xs text-gray-400 mt-auto">
+                                <i data-lucide="calendar" class="h-3 w-3 mr-1"></i> 05 Mars 2026
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="#" onclick="openBlogModal('acd_guide'); return false;" class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:border-ziv-cyan/50 transition-all duration-300 group flex flex-col">
+                        <div class="h-40 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1524813686514-a57563d77965?auto=format&fit=crop&w=600&q=80" alt="Obtenir ACD Cote Ivoire" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-ziv-navy text-xs font-bold px-2.5 py-1 rounded-lg">Lotissement</div>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-ziv-blue transition-colors line-clamp-2">Comment obtenir un ACD en Côte d'Ivoire : Étapes et coûts (Guide 2026)</h4>
+                            <p class="text-sm text-gray-500 mb-4 line-clamp-2 flex-grow">L'Arrêté de Concession Définitive est le sésame foncier. Voici la procédure détaillée et comment SUIT FONCIER l'automatise.</p>
+                            <div class="flex items-center text-xs text-gray-400 mt-auto">
+                                <i data-lucide="calendar" class="h-3 w-3 mr-1"></i> 28 Fév 2026
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="#" onclick="openBlogModal('tantiemes_copro'); return false;" class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-xl hover:border-ziv-cyan/50 transition-all duration-300 group flex flex-col">
+                        <div class="h-40 overflow-hidden relative">
+                            <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80" alt="Tantiemes copropriete" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500">
+                            <div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-ziv-navy text-xs font-bold px-2.5 py-1 rounded-lg">Syndic</div>
+                        </div>
+                        <div class="p-6 flex flex-col flex-grow">
+                            <h4 class="font-bold text-gray-900 mb-2 group-hover:text-ziv-blue transition-colors line-clamp-2">Calculer les tantièmes de copropriété : La méthode infaillible</h4>
+                            <p class="text-sm text-gray-500 mb-4 line-clamp-2 flex-grow">Évitez les conflits entre résidents. Apprenez à répartir les charges de copropriété de manière équitable et automatisée.</p>
+                            <div class="flex items-center text-xs text-gray-400 mt-auto">
+                                <i data-lucide="calendar" class="h-3 w-3 mr-1"></i> 15 Fév 2026
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="py-24 bg-white border-t border-gray-200">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-ziv-cyan font-semibold tracking-wide uppercase text-sm mb-2">Foire Aux Questions</h2>
+                <h3 class="text-3xl font-heading font-bold text-ziv-navy">Tout savoir sur l'écosystème ZIV</h3>
+            </div>
+
+            <div class="space-y-4">
+                <div class="border border-gray-200 rounded-2xl overflow-hidden bg-gray-50 transition-all duration-300">
+                    <button class="faq-btn w-full text-left px-6 py-5 focus:outline-none flex justify-between items-center bg-white" onclick="toggleFaq(this)">
+                        <span class="font-bold text-gray-900 pr-4">Vos logiciels sont-ils conformes à la réglementation OHADA et ivoirienne ?</span>
+                        <i data-lucide="chevron-down" class="h-5 w-5 text-ziv-cyan flex-shrink-0 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 py-5 text-gray-600 text-sm leading-relaxed border-t border-gray-100">
+                        Absolument. Contrairement aux logiciels européens, ZIV PROPTECH a été conçu nativement pour l'espace UEMOA. Notre module comptable respecte le plan comptable <strong>SYSCOHADA révisé</strong>. De plus, nos modules prennent en charge les spécificités locales comme le traitement des <strong>ACD (Arrêtés de Concession Définitive)</strong> et la réglementation <strong>LBC/FT</strong> imposée par la CENTIF.
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 rounded-2xl overflow-hidden bg-gray-50 transition-all duration-300">
+                    <button class="faq-btn w-full text-left px-6 py-5 focus:outline-none flex justify-between items-center bg-white" onclick="toggleFaq(this)">
+                        <span class="font-bold text-gray-900 pr-4">Faut-il installer l'ERP sur nos serveurs ou est-ce dans le Cloud ?</span>
+                        <i data-lucide="chevron-down" class="h-5 w-5 text-ziv-cyan flex-shrink-0 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 py-5 text-gray-600 text-sm leading-relaxed border-t border-gray-100">
+                        Nous offrons les deux ! Pour une flexibilité maximale, nos modules spécialisés sont disponibles en mode <strong>SaaS (Cloud sécurisé)</strong> avec des sauvegardes quotidiennes. Pour les grandes holdings nécessitant LOTIGES ERP, nous proposons également une <strong>Licence On-Premise</strong> pour une installation sur vos propres serveurs.
+                    </div>
+                </div>
+
+                <div class="border border-gray-200 rounded-2xl overflow-hidden bg-gray-50 transition-all duration-300">
+                    <button class="faq-btn w-full text-left px-6 py-5 focus:outline-none flex justify-between items-center bg-white" onclick="toggleFaq(this)">
+                        <span class="font-bold text-gray-900 pr-4">Proposez-vous un accompagnement et une formation de notre personnel ?</span>
+                        <i data-lucide="chevron-down" class="h-5 w-5 text-ziv-cyan flex-shrink-0 transition-transform duration-300"></i>
+                    </button>
+                    <div class="faq-content hidden px-6 py-5 text-gray-600 text-sm leading-relaxed border-t border-gray-100">
+                        La digitalisation est avant tout humaine. Tout déploiement de ZIV s'accompagne d'un audit de vos processus actuels (frais de setup). Nos experts assurent ensuite la configuration du logiciel et organisent des <strong>sessions de formation pratiques</strong> pour vos équipes, directement dans vos locaux ou en ligne, pour garantir une adoption à 100%.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tarifs" class="py-24 bg-white border-t border-gray-100 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-ziv-cyan font-semibold tracking-wide uppercase text-sm mb-2">Acquisition Transparente</h2>
+                <h3 class="text-3xl md:text-4xl font-heading font-bold text-ziv-navy">Les Tarifs par Module SaaS</h3>
+                <p class="mt-4 text-gray-600 max-w-2xl mx-auto">Choisissez le module adapté à vos besoins. Nos offres incluent l'hébergement sécurisé, la maintenance et le support technique.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                <div class="bg-gray-50 rounded-2xl p-8 shadow-sm border border-gray-200 hover:shadow-xl hover:border-indigo-300 transition-all duration-300 flex flex-col h-full relative">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 mr-3"><i data-lucide="home" class="h-5 w-5"></i></div>
+                        <h4 class="text-xl font-bold text-gray-900">EASY VENTE</h4>
+                    </div>
+                    <p class="text-gray-500 text-sm mb-6">Transactions & Agences</p>
+                    <div class="mb-6 pb-6 border-b border-gray-200">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">À partir de</span>
+                        <div class="flex items-baseline mt-1">
+                            <span class="text-3xl font-extrabold text-ziv-navy">40 000 <span class="text-lg">FCFA</span></span>
+                            <span class="ml-1 text-gray-500 text-sm">/ mois</span>
+                        </div>
+                    </div>
+                    <a href="#contact" onclick="document.getElementById('software').value='easy_vente'" class="mt-auto w-full text-center bg-white hover:bg-ziv-navy hover:text-white text-ziv-navy font-semibold py-2.5 px-4 rounded-lg transition duration-300 border border-gray-300">
+                        S'équiper de EASY VENTE
+                    </a>
+                </div>
+
+                <div class="bg-gray-50 rounded-2xl p-8 shadow-sm border border-gray-200 hover:shadow-xl hover:border-orange-300 transition-all duration-300 flex flex-col h-full relative">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center text-orange-600 mr-3"><i data-lucide="wallet" class="h-5 w-5"></i></div>
+                        <h4 class="text-xl font-bold text-gray-900">GESPAT</h4>
+                    </div>
+                    <p class="text-gray-500 text-sm mb-6">Gestion Locative</p>
+                    <div class="mb-6 pb-6 border-b border-gray-200">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">À partir de</span>
+                        <div class="flex items-baseline mt-1">
+                            <span class="text-3xl font-extrabold text-ziv-navy">15 800 <span class="text-lg">FCFA</span></span>
+                            <span class="ml-1 text-gray-500 text-sm">/ mois</span>
+                        </div>
+                    </div>
+                    <a href="#contact" onclick="document.getElementById('software').value='gespat'" class="mt-auto w-full text-center bg-white hover:bg-ziv-navy hover:text-white text-ziv-navy font-semibold py-2.5 px-4 rounded-lg transition duration-300 border border-gray-300">
+                        S'équiper de GESPAT
+                    </a>
+                </div>
+
+                <div class="bg-gray-50 rounded-2xl p-8 shadow-sm border border-gray-200 hover:shadow-xl hover:border-red-300 transition-all duration-300 flex flex-col h-full relative">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center text-red-600 mr-3"><i data-lucide="shield-check" class="h-5 w-5"></i></div>
+                        <h4 class="text-xl font-bold text-gray-900">GEDAJ</h4>
+                    </div>
+                    <p class="text-gray-500 text-sm mb-6">Juridique & Conformité LBC</p>
+                    <div class="mb-6 pb-6 border-b border-gray-200">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">À partir de</span>
+                        <div class="flex items-baseline mt-1">
+                            <span class="text-3xl font-extrabold text-ziv-navy">12 000 <span class="text-lg">FCFA</span></span>
+                            <span class="ml-1 text-gray-500 text-sm">/ mois</span>
+                        </div>
+                    </div>
+                    <a href="#contact" onclick="document.getElementById('software').value='gedaj'" class="mt-auto w-full text-center bg-white hover:bg-ziv-navy hover:text-white text-ziv-navy font-semibold py-2.5 px-4 rounded-lg transition duration-300 border border-gray-300">
+                        S'équiper de GEDAJ
+                    </a>
+                </div>
+
+                <div class="bg-gray-50 rounded-2xl p-8 shadow-sm border border-gray-200 hover:shadow-xl hover:border-teal-300 transition-all duration-300 flex flex-col h-full relative">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center text-teal-600 mr-3"><i data-lucide="map" class="h-5 w-5"></i></div>
+                        <h4 class="text-xl font-bold text-gray-900">SUIT FONCIER</h4>
+                    </div>
+                    <p class="text-gray-500 text-sm mb-6">Aménagement & Lotissement</p>
+                    <div class="mb-6 pb-6 border-b border-gray-200">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">À partir de</span>
+                        <div class="flex items-baseline mt-1">
+                            <span class="text-3xl font-extrabold text-ziv-navy">30 000 <span class="text-lg">FCFA</span></span>
+                            <span class="ml-1 text-gray-500 text-sm">/ mois</span>
+                        </div>
+                    </div>
+                    <a href="#contact" onclick="document.getElementById('software').value='suit_foncier'" class="mt-auto w-full text-center bg-white hover:bg-ziv-navy hover:text-white text-ziv-navy font-semibold py-2.5 px-4 rounded-lg transition duration-300 border border-gray-300">
+                        S'équiper de SUIT FONCIER
+                    </a>
+                </div>
+
+                <div class="bg-gray-50 rounded-2xl p-8 shadow-sm border border-gray-200 hover:shadow-xl hover:border-emerald-300 transition-all duration-300 flex flex-col h-full relative">
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center text-emerald-600 mr-3"><i data-lucide="users" class="h-5 w-5"></i></div>
+                        <h4 class="text-xl font-bold text-gray-900">SYNDYCARRE</h4>
+                    </div>
+                    <p class="text-gray-500 text-sm mb-6">Syndic & Copropriété Augmentée</p>
+                    <div class="mb-6 pb-6 border-b border-gray-200">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">À partir de</span>
+                        <div class="flex items-baseline mt-1">
+                            <span class="text-3xl font-extrabold text-ziv-navy">22 800 <span class="text-lg">FCFA</span></span>
+                            <span class="ml-1 text-gray-500 text-sm">/ mois</span>
+                        </div>
+                    </div>
+                    <a href="#contact" onclick="document.getElementById('software').value='syndycarre'" class="mt-auto w-full text-center bg-white hover:bg-ziv-navy hover:text-white text-ziv-navy font-semibold py-2.5 px-4 rounded-lg transition duration-300 border border-gray-300">
+                        S'équiper de SYNDYCARRE
+                    </a>
+                </div>
+
+                <div class="bg-white rounded-2xl p-8 shadow-[0_8px_30px_rgb(0,168,181,0.15)] border-2 border-ziv-cyan hover:shadow-2xl transition-all duration-300 flex flex-col h-full relative">
+                    <div class="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-ziv-cyan text-white text-xs font-bold px-4 py-1 rounded-full shadow-md">Module Le Plus Populaire</div>
+                    <div class="flex items-center mb-4 mt-2">
+                        <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center text-ziv-blue mr-3"><i data-lucide="building-2" class="h-6 w-6"></i></div>
+                        <h4 class="text-2xl font-bold text-gray-900">LOTIGES</h4>
+                    </div>
+                    <p class="text-gray-500 text-sm mb-6">Promotion Immobilière & VEFA</p>
+                    <div class="mb-6 pb-6 border-b border-gray-100">
+                        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">À partir de</span>
+                        <div class="flex items-baseline mt-1">
+                            <span class="text-4xl font-extrabold text-ziv-navy">75 000 <span class="text-lg">FCFA</span></span>
+                            <span class="ml-1 text-gray-500 text-sm">/ mois</span>
+                        </div>
+                    </div>
+                    <a href="#contact" onclick="document.getElementById('software').value='lotiges'" class="mt-auto w-full text-center bg-ziv-cyan hover:bg-cyan-600 text-white font-bold py-3 px-4 rounded-xl shadow-md transition duration-300">
+                        Démarrer avec LOTIGES
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-ziv-navy rounded-3xl p-8 md:p-12 shadow-2xl border border-blue-900 flex flex-col md:flex-row items-center justify-between text-white relative overflow-hidden mt-8 max-w-5xl mx-auto">
+                <div class="absolute -right-24 -top-24 w-64 h-64 bg-ziv-cyan rounded-full opacity-20 blur-3xl"></div>
+                
+                <div class="relative z-10 md:w-2/3 md:pr-10 mb-8 md:mb-0">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center mr-4 backdrop-blur-sm border border-white/20">
+                            <i data-lucide="layers" class="h-6 w-6 text-cyan-300"></i>
+                        </div>
+                        <div>
+                            <span class="text-cyan-300 text-xs font-bold uppercase tracking-wider">Acquisition Globale (Licence ou SaaS)</span>
+                            <h4 class="text-3xl font-heading font-bold text-white">LOTIGES ERP</h4>
+                        </div>
+                    </div>
+                    <p class="text-blue-100 mb-6 leading-relaxed">
+                        L'intégration totale de votre groupe de promotion immobilière. Centralisez vos ventes VEFA, vos chantiers et stocks, votre comptabilité, vos ressources humaines.
+                    </p>
+                    <ul class="flex flex-wrap gap-4 text-sm text-blue-50">
+                        <li class="flex items-center"><i data-lucide="check-circle" class="h-4 w-4 text-ziv-cyan mr-2"></i> Licence Serveur Local disponible</li>
+                        <li class="flex items-center"><i data-lucide="check-circle" class="h-4 w-4 text-ziv-cyan mr-2"></i> Sur-mesure complet</li>
+                    </ul>
+                </div>
+
+                <div class="relative z-10 md:w-1/3 flex flex-col items-center justify-center bg-black/20 backdrop-blur-md rounded-2xl p-6 border border-white/10 w-full">
+                    <div class="text-center mb-6">
+                        <span class="text-4xl font-extrabold text-white block">Sur Devis</span>
+                        <span class="text-sm text-blue-200 mt-1">Audit métier inclus</span>
+                    </div>
+                    <a href="#contact" onclick="document.getElementById('software').value='lotiges_erp'" class="w-full text-center bg-white text-ziv-navy hover:bg-gray-100 font-bold py-3 px-4 rounded-xl shadow-lg transition duration-300">
+                        Demander un Audit
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-24 bg-ziv-navy relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+            <div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-ziv-cyan opacity-20 blur-3xl"></div>
+            <div class="absolute bottom-0 right-0 w-1/2 h-1/2 rounded-full bg-blue-600 opacity-20 blur-3xl"></div>
+        </div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-heading font-bold text-white mb-4">Démarrons Votre Projet d'Acquisition</h2>
+                <p class="text-gray-300 text-lg">Demandez un devis personnalisé ou une démonstration gratuite pour entamer la digitalisation de vos processus immobiliers.</p>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border border-gray-100" id="formContainer">
+                <form id="leadForm" onsubmit="submitForm(event)" class="space-y-6">
+                    <div id="formSuccess" class="hidden bg-green-50 border border-green-200 text-green-700 px-6 py-4 rounded-xl relative flex items-start" role="alert">
+                        <i data-lucide="check-circle" class="h-6 w-6 mr-3 text-green-600 flex-shrink-0"></i>
+                        <div>
+                            <strong class="font-bold block mb-1">Demande envoyée avec succès !</strong>
+                            <span class="block text-sm">Notre équipe commerciale en Côte d'Ivoire vous contactera très prochainement pour votre devis.</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="name" class="block text-sm font-bold text-gray-700 mb-2">Nom Complet / Société *</label>
+                            <input type="text" id="name" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-ziv-cyan focus:border-ziv-cyan outline-none transition-all">
+                        </div>
+                        <div>
+                            <label for="phone" class="block text-sm font-bold text-gray-700 mb-2">Téléphone (WhatsApp préféré) *</label>
+                            <input type="tel" id="phone" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-ziv-cyan focus:border-ziv-cyan outline-none transition-all">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-bold text-gray-700 mb-2">Email Professionnel *</label>
+                        <input type="email" id="email" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-ziv-cyan focus:border-ziv-cyan outline-none transition-all">
+                    </div>
+
+                    <div>
+                        <label for="software" class="block text-sm font-bold text-gray-700 mb-2">Projet d'acquisition logiciel *</label>
+                        <div class="relative">
+                            <select id="software" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-ziv-cyan focus:border-ziv-cyan outline-none transition-all appearance-none text-gray-800 font-medium">
+                                <option value="">Sélectionnez le logiciel ou l'ERP souhaité...</option>
+                                <option value="lotiges_erp">LOTIGES ERP (Licence/SaaS - Promoteurs & Holding)</option>
+                                <option value="lotiges">LOTIGES CRM (Promotion Immobilière & VEFA)</option>
+                                <option value="suit_foncier">SUIT FONCIER (Aménagement Foncier & Lotissement)</option>
+                                <option value="easy_vente">EASY VENTE (Transactions Agence, Achat & Vente)</option>
+                                <option value="gespat">GESPAT (Gestion Locative, Syndic & Quittances)</option>
+                                <option value="gedaj">GEDAJ (Juridique, Dispositif LBC & Conformité)</option>
+                                <option value="syndycarre">SYNDYCARRE (Gestion Copropriété Augmentée)</option>
+                                <option value="multiple">Acquisition globale (Écosystème / Plusieurs solutions)</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                                <i data-lucide="chevron-down" class="h-5 w-5"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-ziv-cyan hover:bg-cyan-600 text-white font-bold py-4 px-4 rounded-xl transition duration-300 shadow-lg hover:shadow-cyan-500/30 text-lg flex justify-center items-center">
+                        <i data-lucide="send" class="h-5 w-5 mr-2"></i>
+                        Demander un Devis & Démo B2B
+                    </button>
+                    <p class="text-center text-xs text-gray-400 mt-4"><i data-lucide="lock" class="h-3 w-3 inline mr-1"></i> Vos informations sont chiffrées et sécurisées.</p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-gray-900 text-gray-400 py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="col-span-1 md:col-span-1">
+                <div class="flex items-center mb-4 text-white">
+                    <svg class="h-8 w-8 text-ziv-cyan" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 22L22 2v8l-8 4 8 8H2V14l8-4-8-8z" fill="currentColor" fill-opacity="0.2"/>
+                    </svg>
+                    <span class="ml-2 font-heading font-bold text-xl">ZIV<span class="text-ziv-cyan">PROPTECH</span></span>
+                </div>
+                <p class="text-sm leading-relaxed mb-4">Édité par la Société Alerte Foncier. Expert en digitalisation immobilière en Côte d'Ivoire et Afrique de l'Ouest.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-500 hover:text-white transition-colors"><i data-lucide="linkedin" class="h-5 w-5"></i></a>
+                    <a href="#" class="text-gray-500 hover:text-white transition-colors"><i data-lucide="facebook" class="h-5 w-5"></i></a>
+                </div>
+            </div>
+            
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Solutions</h4>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="#solutions" class="hover:text-ziv-cyan transition-colors">Promotion Immobilière (VEFA)</a></li>
+                    <li><a href="#solutions" class="hover:text-ziv-cyan transition-colors">Gestion Locative & Syndic</a></li>
+                    <li><a href="#solutions" class="hover:text-ziv-cyan transition-colors">Aménagement & Lotissement</a></li>
+                    <li><a href="#solutions" class="hover:text-ziv-cyan transition-colors">Conformité LBC / KYC</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Ressources & Juridique</h4>
+                <ul class="space-y-3 text-sm">
+                    <li><a href="#ressources" class="hover:text-ziv-cyan transition-colors">Blog Immobilier UEMOA</a></li>
+                    <li><a href="#" class="hover:text-ziv-cyan transition-colors" onclick="openExpertModal(); return false;">Consulting B2B</a></li>
+                    <li class="pt-2 border-t border-gray-800"><a href="#" onclick="openLegalModal('privacy'); return false;" class="hover:text-ziv-cyan transition-colors text-gray-300">Politique de Confidentialité</a></li>
+                    <li><a href="#" onclick="openLegalModal('terms'); return false;" class="hover:text-ziv-cyan transition-colors text-gray-300">Conditions Générales (CGV/CGU)</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-sm tracking-wider">Contact Régional</h4>
+                <ul class="space-y-3 text-sm">
+                    <li class="flex items-start"><i data-lucide="map-pin" class="h-4 w-4 mr-3 text-ziv-cyan flex-shrink-0 mt-1"></i> Abidjan, Cité SYNATRESOR en face de la Pharmacie Jules Verne</li>
+                    <li class="flex items-center"><i data-lucide="phone" class="h-4 w-4 mr-3 text-ziv-cyan flex-shrink-0"></i> (+225) 27 22 43 51 88<br>07 08 53 11 11</li>
+                    <li class="flex items-center"><i data-lucide="mail" class="h-4 w-4 mr-3 text-ziv-cyan flex-shrink-0"></i> info@alertefoncier.ci</li>
+                </ul>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 pt-8 border-t border-gray-800 text-sm flex flex-col md:flex-row items-center justify-between text-gray-500">
+            <p>&copy; 2026 ZIV PROPTECH - Société Alerte Foncier. Tous droits réservés.</p>
+            <p class="mt-2 md:mt-0"><a href="#" class="hover:text-white transition-colors">Laissez-nous un avis sur Google My Business</a></p>
+        </div>
+    </footer>
+
+    <!-- Software Details Modal -->
+    <div id="softwareModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div id="modalBackdrop" class="fixed inset-0 bg-ziv-navy/80 backdrop-blur-sm transition-opacity opacity-0" onclick="closeModal()"></div>
+
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                <div id="modalContent" class="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-5xl opacity-0 scale-95 border border-gray-100 flex flex-col">
+                    
+                    <button type="button" onclick="closeModal()" class="absolute right-4 top-4 z-20 rounded-full bg-black/40 backdrop-blur-md p-2 text-white hover:bg-black/60 focus:outline-none transition-colors">
+                        <i data-lucide="x" class="h-6 w-6"></i>
+                    </button>
+
+                    <div class="bg-white">
+                        <div id="modalMediaContainer" class="relative w-full aspect-video md:aspect-[21/9] bg-gray-900 group overflow-hidden flex items-center justify-center">
+                            
+                            <div id="modalImageWrapper" class="absolute inset-0 w-full h-full cursor-pointer" onclick="playVideo()">
+                                <img id="modalVideoCover" src="" alt="Vidéo de présentation" class="absolute inset-0 w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500">
+                                
+                                <div id="modalPlayButton" class="absolute inset-0 z-10 flex flex-col items-center justify-center">
+                                    <div class="w-20 h-20 bg-ziv-cyan rounded-full flex items-center justify-center text-white shadow-[0_0_30px_rgba(0,168,181,0.5)] play-button-pulse group-hover:scale-110 transition-transform duration-300">
+                                        <i data-lucide="play" class="h-8 w-8 ml-1"></i>
+                                    </div>
+                                    <span class="mt-4 text-white font-medium tracking-wide text-sm bg-black/50 px-4 py-1 rounded-full backdrop-blur-md">Lancer la vidéo de présentation</span>
+                                </div>
+                                <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent pointer-events-none"></div>
+                            </div>
+
+                            <div id="modalVideoWrapper" class="hidden absolute inset-0 w-full h-full bg-black z-10">
+                                <iframe id="modalYoutubeIframe" class="w-full h-full" src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                            
+                            <div id="modalTitleWrapper" class="absolute bottom-6 left-6 md:bottom-8 md:left-8 z-20 pointer-events-none">
+                                <div id="modalIconWrapper" class="w-12 h-12 bg-white rounded-xl flex items-center justify-center mb-4 shadow-lg">
+                                    <i id="modalIcon" data-lucide="box" class="h-6 w-6 text-ziv-navy"></i>
+                                </div>
+                                <h2 id="modalTitle" class="text-3xl md:text-5xl font-heading font-extrabold text-white leading-tight">NOM LOGICIEL</h2>
+                            </div>
+                        </div>
+
+                        <div class="px-6 py-10 md:p-12 grid grid-cols-1 md:grid-cols-3 gap-12 flex-grow overflow-y-auto">
+                            <div class="md:col-span-2 space-y-8">
+                                <div>
+                                    <h3 id="modalSubtitle" class="text-2xl font-bold text-ziv-navy mb-4">Le sous-titre accrocheur vient ici.</h3>
+                                    <p id="modalDescription" class="text-gray-600 leading-relaxed text-lg">
+                                        Description complète et détaillée.
+                                    </p>
+                                </div>
+
+                                <div class="border-t border-gray-100 pt-8">
+                                    <h4 class="text-lg font-bold text-gray-900 mb-6 flex items-center">
+                                        <i data-lucide="list-checks" class="h-5 w-5 mr-2 text-ziv-cyan"></i> 
+                                        Toutes les Fonctionnalités
+                                    </h4>
+                                    <div id="modalFeaturesGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <!-- Injected via JS -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-50 rounded-2xl p-6 md:p-8 border border-gray-100 h-fit sticky top-6">
+                                <h4 class="text-lg font-bold text-gray-900 mb-6">Bénéfices Majeurs</h4>
+                                <ul id="modalBenefits" class="space-y-4 mb-8">
+                                    <!-- Injected via JS -->
+                                </ul>
+
+                                <div class="border-t border-gray-200 pt-6">
+                                    <p class="text-sm text-gray-500 mb-4 text-center">Passez à la vitesse supérieure</p>
+                                    <button onclick="selectSoftwareAndScroll()" class="w-full bg-ziv-navy hover:bg-ziv-blue text-white font-bold py-3 px-4 rounded-xl shadow-lg transition-all transform hover:-translate-y-1 flex justify-center items-center">
+                                        Voir les prix & Demander démo 
+                                        <i data-lucide="arrow-down-circle" class="ml-2 h-5 w-5"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Legal Pages Modal (Privacy & T&C) -->
+    <div id="legalModal" class="fixed inset-0 z-[110] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div id="legalModalBackdrop" class="fixed inset-0 bg-gray-900/80 backdrop-blur-sm transition-opacity opacity-0" onclick="closeLegalModal()"></div>
+
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                <div id="legalModalContent" class="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-4xl opacity-0 scale-95 border border-gray-100 flex flex-col">
+                    
+                    <button type="button" onclick="closeLegalModal()" class="absolute right-6 top-6 z-20 rounded-full bg-gray-100 p-2 text-gray-600 hover:bg-gray-200 focus:outline-none transition-colors">
+                        <i data-lucide="x" class="h-6 w-6"></i>
+                    </button>
+
+                    <div class="bg-ziv-navy p-8 md:p-10 text-white relative overflow-hidden">
+                        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-ziv-cyan rounded-full opacity-20 blur-3xl"></div>
+                        <h2 id="legalModalTitle" class="text-2xl md:text-3xl font-heading font-extrabold relative z-10">Titre Légal</h2>
+                        <p class="text-blue-200 mt-2 text-sm relative z-10">Édité par ALERTE FONCIER - Côte d'Ivoire</p>
+                    </div>
+
+                    <div class="p-6 md:p-10 bg-white max-h-[70vh] overflow-y-auto">
+                        <div id="legalModalBody" class="prose prose-sm sm:prose max-w-none text-gray-600">
+                            <!-- Injected via JS -->
+                        </div>
+                    </div>
+                    
+                    <div class="p-6 bg-gray-50 border-t border-gray-200 text-right">
+                        <button onclick="closeLegalModal()" class="bg-ziv-cyan hover:bg-cyan-600 text-white font-bold py-2.5 px-6 rounded-lg transition duration-300 text-sm">
+                            J'ai compris et j'accepte
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- The Blog Post Modal -->
+    <div id="blogModal" class="fixed inset-0 z-[110] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div id="blogModalBackdrop" class="fixed inset-0 bg-ziv-navy/90 backdrop-blur-sm transition-opacity opacity-0" onclick="closeBlogModal()"></div>
+
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                <div id="blogModalContent" class="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-4xl opacity-0 scale-95 border border-gray-100 flex flex-col">
+                    
+                    <button type="button" onclick="closeBlogModal()" class="absolute right-4 top-4 z-20 rounded-full bg-black/40 backdrop-blur-md p-2 text-white hover:bg-black/60 focus:outline-none transition-colors">
+                        <i data-lucide="x" class="h-6 w-6"></i>
+                    </button>
+
+                    <div class="relative w-full h-64 md:h-80 bg-gray-900">
+                        <img id="blogModalImage" src="" alt="Image de l'article" class="absolute inset-0 w-full h-full object-cover opacity-80">
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/40 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 md:bottom-10 md:left-10 pr-6">
+                            <span id="blogModalCategory" class="bg-ziv-cyan text-white text-xs font-bold px-3 py-1 rounded-full mb-4 inline-block">Catégorie</span>
+                            <h2 id="blogModalTitle" class="text-2xl md:text-4xl font-heading font-extrabold text-white leading-tight">Titre de l'article</h2>
+                        </div>
+                    </div>
+
+                    <div class="p-6 md:p-10 bg-white">
+                        <div class="flex items-center text-sm text-gray-500 mb-8 border-b border-gray-100 pb-4">
+                            <i data-lucide="calendar" class="h-4 w-4 mr-2"></i> <span id="blogModalDate">Date</span>
+                            <span class="mx-4">•</span>
+                            <i data-lucide="clock" class="h-4 w-4 mr-2"></i> <span id="blogModalTime">Temps de lecture</span>
+                        </div>
+                        
+                        <div id="blogModalBody" class="prose prose-lg max-w-none text-gray-600 leading-relaxed space-y-6">
+                            <!-- Injected via JS -->
+                        </div>
+                        
+                        <div class="mt-10 pt-8 border-t border-gray-100 text-center">
+                            <p class="text-sm font-bold text-gray-900 mb-4">Cet article vous a intéressé ?</p>
+                            <button onclick="closeBlogModal(); openExpertModal();" class="bg-ziv-navy hover:bg-ziv-blue text-white font-bold py-3 px-8 rounded-xl transition duration-300 shadow-md">
+                                Échanger avec un expert PropTech
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- The Expert Consulting Modal (Calendly Integration) -->
+    <div id="expertModal" class="fixed inset-0 z-[100] hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div id="expertModalBackdrop" class="fixed inset-0 bg-ziv-navy/90 backdrop-blur-sm transition-opacity opacity-0" onclick="closeExpertModal()"></div>
+
+        <div class="fixed inset-0 z-10 overflow-y-auto">
+            <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+                <div id="expertModalContent" class="relative transform overflow-hidden rounded-3xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-4xl opacity-0 scale-95 border border-gray-100 flex flex-col md:flex-row">
+                    
+                    <button type="button" onclick="closeExpertModal()" class="absolute right-4 top-4 z-20 rounded-full bg-gray-200/50 backdrop-blur-md p-2 text-gray-800 hover:bg-gray-300 focus:outline-none transition-colors">
+                        <i data-lucide="x" class="h-6 w-6"></i>
+                    </button>
+
+                    <div class="bg-ziv-navy p-8 md:p-12 md:w-2/5 text-white flex flex-col justify-center relative overflow-hidden hidden md:flex">
+                        <div class="absolute -left-12 -bottom-12 w-48 h-48 bg-ziv-cyan rounded-full opacity-20 blur-3xl"></div>
+                        <div class="relative z-10">
+                            <i data-lucide="calendar" class="h-12 w-12 text-ziv-cyan mb-6"></i>
+                            <h3 class="text-2xl md:text-3xl font-bold font-heading mb-4 leading-tight">Planifiez votre audit gratuit</h3>
+                            <p class="text-blue-100 text-sm mb-8 leading-relaxed">
+                                Choisissez directement un créneau dans notre agenda. Un consultant expert ZIV Proptech vous rappellera à l'heure convenue pour auditer vos besoins.
+                            </p>
+                            <ul class="space-y-4 text-sm text-blue-50">
+                                <li class="flex items-start"><i data-lucide="check-circle" class="h-5 w-5 text-ziv-cyan mr-3 flex-shrink-0"></i> Démonstration logicielle en direct</li>
+                                <li class="flex items-start"><i data-lucide="check-circle" class="h-5 w-5 text-ziv-cyan mr-3 flex-shrink-0"></i> Analyse de votre flux de travail</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="w-full md:w-3/5 bg-white relative min-h-[550px] md:min-h-[600px] rounded-b-3xl md:rounded-bl-none md:rounded-r-3xl overflow-hidden">
+                        <!-- Fallback Loading State -->
+                        <div class="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 z-0">
+                            <i data-lucide="loader-2" class="h-10 w-10 text-ziv-cyan mb-4 animate-spin"></i>
+                            <p class="text-gray-500 text-sm font-medium">Chargement de l'agenda...</p>
+                            <!-- Note pour vous : modifiez "alertefoncier" dans l'URL Calendly ci-dessous par votre vrai compte -->
+                            <p class="text-[10px] text-gray-400 mt-2">Intégration Calendly sécurisée</p>
+                        </div>
+                        
+                        <!-- Calendly inline widget begin -->
+                        <div class="calendly-inline-widget relative z-10 w-full h-full absolute inset-0" data-url="https://calendly.com/alertefoncier?hide_gdpr_banner=1&background_color=ffffff&text_color=0a1e4a&primary_color=00a8b5" style="min-width:320px;height:100%;"></div>
+                        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+                        <!-- Calendly inline widget end -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WhatsApp & Chatbot Widgets -->
+    <a href="https://wa.me/2250708531111" target="_blank" class="fixed bottom-6 left-6 bg-green-500 text-white p-4 rounded-full shadow-2xl hover:bg-green-600 transition-transform transform hover:scale-110 z-50 flex items-center justify-center" aria-label="Contactez-nous sur WhatsApp">
+        <i data-lucide="phone-call" class="h-6 w-6"></i>
+    </a>
+
+    <div id="chatbot-container" class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <div id="chatbot-tooltip" class="hidden absolute bottom-20 right-0 bg-white text-ziv-navy text-sm p-4 rounded-2xl shadow-2xl border border-gray-100 mb-2 w-64 transform transition-all duration-500 origin-bottom-right translate-y-4 opacity-0 cursor-pointer" onclick="toggleChat()">
+            <div class="flex items-start">
+                <div class="w-10 h-10 rounded-full bg-ziv-cyan flex items-center justify-center mr-3 flex-shrink-0 animate-pulse shadow-md">
+                    <i data-lucide="bot" class="h-5 w-5 text-white"></i>
+                </div>
+                <div>
+                    <p class="font-bold text-gray-900 text-sm mb-0.5">Besoin d'aide ?</p>
+                    <p class="text-xs text-gray-500 leading-tight">Laissez-moi vous guider vers le bon logiciel immobilier.</p>
+                </div>
+            </div>
+            <div class="absolute -bottom-2 right-6 w-4 h-4 bg-white transform rotate-45 border-b border-r border-gray-100"></div>
+        </div>
+
+        <div id="chatbot-window" class="hidden w-80 sm:w-[24rem] bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden mb-4 transition-all duration-300 origin-bottom-right flex flex-col h-[32rem]">
+            <div class="bg-gradient-to-r from-ziv-navy to-ziv-blue text-white p-4 flex justify-between items-center flex-shrink-0 z-10 shadow-sm">
+                <div class="flex items-center">
+                    <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-3 backdrop-blur-sm border border-white/30 relative">
+                        <i data-lucide="bot" class="h-6 w-6 text-white"></i>
+                        <div class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 border-2 border-ziv-navy rounded-full"></div>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm">ZIV Guide Interactif</h4>
+                        <p class="text-xs text-cyan-200">Expertise B2B</p>
+                    </div>
+                </div>
+                <button id="close-chatbot" class="text-white/70 hover:text-white transition-colors bg-white/10 rounded-full p-1.5">
+                    <i data-lucide="x" class="h-5 w-5"></i>
+                </button>
+            </div>
+            
+            <div id="chat-messages" class="p-4 flex-grow overflow-y-auto bg-gray-50 flex flex-col pb-6"></div>
+
+            <div class="p-3 bg-white border-t border-gray-100 flex items-center justify-center flex-shrink-0 text-center">
+                <p class="text-[11px] text-gray-400 flex items-center font-medium"><i data-lucide="shield-check" class="h-3 w-3 mr-1"></i> Réponses générées par votre assistant B2B</p>
+            </div>
+        </div>
+
+        <button id="chatbot-toggle" class="bg-ziv-navy text-white p-4 rounded-full shadow-2xl hover:bg-ziv-blue transition-transform transform hover:scale-110 flex items-center justify-center relative border border-white/10">
+            <i data-lucide="message-square" class="h-6 w-6"></i>
+            <span class="absolute top-0 right-0 flex h-3 w-3">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-ziv-cyan opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-3 w-3 bg-ziv-cyan border-2 border-ziv-navy"></span>
+            </span>
+        </button>
+    </div>
+
+    <script>
+        function initIcons() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            } else {
+                setTimeout(initIcons, 100);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', initIcons);
+
+        const softwareData = {
+            'lotiges': {
+                title: 'LOTIGES CRM',
+                icon: 'building-2',
+                iconColor: 'text-ziv-blue',
+                formValue: 'lotiges',
+                youtubeId: 'M7lc1UVf-VE',
+                videoCover: 'https://images.unsplash.com/photo-1556761175-5973dc0f32b7?auto=format&fit=crop&w=1200&q=80',
+                subtitle: 'Le Moteur Commercial de la Promotion Immobilière',
+                description: 'La référence CRM conçue spécifiquement pour les promoteurs ouest-africains. Simplifiez radicalement la gestion de vos Ventes en l\'État Futur d\'Achèvement (VEFA).',
+                features: [
+                    'Suivi détaillé de l\'échéancier client (VEFA)',
+                    'Génération automatisée des contrats de réservation',
+                    'Pipeline commercial et qualification des leads',
+                    'Tableau de bord de rentabilité par programme',
+                    'Gestion des modifications acquéreurs (TMA)',
+                    'Calcul automatisé des commissions courtiers',
+                    'Espace client acquéreur (Suivi avancement)',
+                    'Alertes automatiques d\'appels de fonds'
+                ],
+                benefits: [
+                    'Zéro papier : centralisation des dossiers clients',
+                    'Accélération du cycle de vente (Signature rapide)',
+                    'Visibilité de trésorerie en temps réel',
+                    'Fidélisation client via transparence totale'
+                ]
+            },
+            'erp': {
+                title: 'LOTIGES ERP',
+                icon: 'layers',
+                iconColor: 'text-cyan-500',
+                formValue: 'lotiges_erp',
+                youtubeId: 'M7lc1UVf-VE',
+                videoCover: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
+                subtitle: 'La Gouvernance Totale de votre Holding Immobilière',
+                description: 'Oubliez les silos Excel. Ce progiciel de gestion intégré à 360 degrés interconnecte vos finances, vos chantiers, vos ressources humaines et vos ventes.',
+                features: [
+                    'Comptabilité Générale et Analytique (Norme OHADA)',
+                    'Pilotage de l\'exécution des chantiers (Suivi budget BTP)',
+                    'Gestion des Ressources Humaines & Paie',
+                    'Contrôle des décaissements et factures fournisseurs',
+                    'Intégration native avec tous les modules ZIV (CRM, Foncier...)',
+                    'Gestion des stocks et matériaux sur chantiers',
+                    'Reporting décisionnel consolidé multi-sociétés',
+                    'Gestion avancée des droits utilisateurs par filiale'
+                ],
+                benefits: [
+                    'Pilotage ultra-précis des marges de construction',
+                    'Gain de temps colossal sur la clôture comptable OHADA',
+                    'Traçabilité infaillible des flux financiers',
+                    'Hébergement souverain & Sécurité des données critiques'
+                ]
+            },
+            'foncier': {
+                title: 'SUIT FONCIER',
+                icon: 'map',
+                iconColor: 'text-teal-600',
+                formValue: 'suit_foncier',
+                youtubeId: 'M7lc1UVf-VE',
+                videoCover: 'https://images.unsplash.com/photo-1524813686514-a57563d77965?auto=format&fit=crop&w=1200&q=80',
+                subtitle: 'Sécurisez l\'Aménagement Foncier & le Lotissement',
+                description: 'L\'outil métier numéro 1 des aménageurs agréés en Côte d\'Ivoire. Cartographiez vos opérations et pilotez l\'obtention des ACD sans perdre le fil.',
+                features: [
+                    'Suivi pas-à-pas de la procédure d\'ACD (Ministère/Cadastre)',
+                    'Inventaire dynamique des lots (Vendu/Réservé/Disponible)',
+                    'Gestion pointue des paiements terrains échelonnés',
+                    'Génération de lettres d\'attribution et conventions',
+                    'Cartographie digitale et plan de lotissement interactif',
+                    'Gestion des morcellements et fusions de parcelles',
+                    'Suivi des apporteurs d\'affaires fonciers',
+                    'Archivage des pièces d\'identité acquéreurs'
+                ],
+                benefits: [
+                    'Éradication définitive des doubles ventes de terrains',
+                    'Anticipation des blocages administratifs (Circuit ACD)',
+                    'Gestion de trésorerie fiabilisée sur les recouvrements',
+                    'Gage de sérieux absolu face à vos clients finaux'
+                ]
+            },
+            'vente': {
+                title: 'EASY VENTE',
+                icon: 'home',
+                iconColor: 'text-indigo-600',
+                formValue: 'easy_vente',
+                youtubeId: 'M7lc1UVf-VE',
+                videoCover: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80',
+                subtitle: 'Le Moteur Turbo de vos Transactions Immobilières',
+                description: 'Développé pour les agences réseau et les courtiers. EASY VENTE croise intelligemment votre portefeuille de biens avec les requêtes de vos prospects.',
+                features: [
+                    'Algorithme de rapprochement intelligent Offre / Demande',
+                    'Gestion multimédia du portefeuille de biens (Photos/Vidéos)',
+                    'Suivi chronologique des visites (comptes-rendus, avis)',
+                    'Registre dématérialisé central des mandats de vente',
+                    'Édition automatisée des bons de visite sécurisés',
+                    'Calculs automatiques des rétrocessions/commissions',
+                    'Module d\'envoi de fiches biens par WhatsApp/Email',
+                    'Base de données prospects acquéreurs centralisée'
+                ],
+                benefits: [
+                    'Hausse immédiate du taux de conversion Visite/Vente',
+                    'Réactivité redoutable face aux requêtes entrantes',
+                    'Édition rapide de reportings pros pour vos mandants',
+                    'Motivation des commerciaux via le suivi des commissions'
+                ]
+            },
+            'gespat': {
+                title: 'GESPAT',
+                icon: 'wallet',
+                iconColor: 'text-orange-500',
+                formValue: 'gespat',
+                youtubeId: 'M7lc1UVf-VE',
+                videoCover: 'https://images.unsplash.com/photo-1554469384-e58fac16e23a?auto=format&fit=crop&w=1200&q=80',
+                subtitle: 'L\'Automatisation Intelligente de la Gestion Locative',
+                description: 'Syndics et Agences de gestion : GESPAT automatise le cauchemar des appels de loyers, des quittances et des redditions de comptes propriétaires.',
+                features: [
+                    'Génération/Envoi auto des quittances et appels de loyer',
+                    'Tableau de bord flash de suivi des impayés/recouvrements',
+                    'Calcul automatisé des honoraires de gestion',
+                    'Reddition de comptes (Bilan propriétaire clair et exportable)',
+                    'Gestion du cycle de vie des bails (Avenants, Renouvellements)',
+                    'Suivi des tickets d\'interventions techniques (travaux)',
+                    'Indexation automatique des loyers (selon législation)',
+                    'Accès Portail Locataire / Portail Propriétaire'
+                ],
+                benefits: [
+                    'Division par 4 du temps administratif mensuel',
+                    'Chute drastique des loyers impayés grâce aux relances auto',
+                    'Transparence financière rassurante pour les bailleurs',
+                    'Valorisation de l\'image de marque de votre agence'
+                ]
+            },
+            'gedaj': {
+                title: 'GEDAJ',
+                icon: 'shield-check',
+                iconColor: 'text-red-600',
+                formValue: 'gedaj',
+                youtubeId: 'M7lc1UVf-VE',
+                videoCover: 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=80',
+                subtitle: 'La Muraille de Sécurité Juridique & Conformité LBC',
+                description: 'Le module de Gestion Électronique des Documents intégrant nativement la réglementation sur la Lutte contre le Blanchiment de Capitaux (LBC).',
+                features: [
+                    'Formulaires KYC et audit d\'identité LBC/FT intégrés',
+                    'Coffre-fort numérique crypté des actes notariés',
+                    'Système de signature électronique à valeur légale',
+                    'Alertes automatiques (documents expirés, CNI manquantes)',
+                    'Traçabilité complète (Audit trail) des manipulations',
+                    'Aide à la génération des déclarations de soupçon (CENTIF)',
+                    'Moteur de recherche plein texte ultra-rapide',
+                    'Classification automatisée des archives juridiques'
+                ],
+                benefits: [
+                    'Zéro risque d\'amende pour non-conformité LBC',
+                    'Protection juridique absolue pour le dirigeant',
+                    'Économie massive d\'espace physique (zéro classeur)',
+                    'Retrieval instantané des pièces en cas de litige/audit'
+                ]
+            },
+            'syndycarre': {
+                title: 'SYNDYCARRE',
+                icon: 'users',
+                iconColor: 'text-emerald-600',
+                formValue: 'syndycarre',
+                youtubeId: '',
+                videoCover: 'Syndycarre.jpeg',
+                subtitle: 'La Plateforme Intégrale pour la Gestion de Copropriété Augmentée',
+                description: 'Syndics professionnels et bénévoles : SyndicPro centralise la comptabilité, automatise les recouvrements, cartographie vos cités (SIG) et digitalise vos AG.',
+                features: [
+                    'Génération/Envoi auto des appels de fonds par tantièmes',
+                    'Cartographie SIG & module GMAO pour infrastructures',
+                    'Paiement Mobile Money intégré (App Résident)',
+                    'Scénarios de relances impayés automatisés (Mise en demeure)',
+                    'Module GMAO spatialisé (Gestion forages, tickets incidents)',
+                    'Assemblées Générales (Vote en direct & PV automatisé)',
+                    'Portail de communication (Alertes SMS, Push, Annonces)',
+                    'Architecture SaaS Multi-cités 100% cloisonnée'
+                ],
+                benefits: [
+                    'Chute drastique des impayés grâce au paiement Mobile et relances auto',
+                    'Division par 5 du temps administratif (compta, courriers, PV d\'AG)',
+                    'Maîtrise totale des infrastructures grâce à la carte SIG et GMAO',
+                    'Image de marque premium et rassurante auprès de vos Conseils Syndicaux'
+                ]
+            }
+        };
+
+        const blogData = {
+            'lbc_2026': {
+                title: "Lutte contre le Blanchiment de Capitaux (LBC) : Comment s'adapter en 2026 ?",
+                category: "Réglementation",
+                date: "12 Mars 2026",
+                readTime: "4 min de lecture",
+                image: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?auto=format&fit=crop&w=1200&q=80",
+                content: `
+                    <p class="mb-4"><strong>Le secteur de l'immobilier en Côte d'Ivoire et dans l'espace UEMOA est de plus en plus encadré par les réglementations LBC/FT (Lutte contre le Blanchiment de Capitaux et le Financement du Terrorisme). En 2026, les exigences se durcissent pour tous les professionnels de la transaction.</strong></p>
+                    <h4 class="text-xl font-bold text-gray-900 mt-6 mb-3">Les nouvelles obligations pour les agences</h4>
+                    <p class="mb-4">Les professionnels de l'immobilier sont tenus d'identifier scrupuleusement leurs clients (KYC - Know Your Customer) avant toute transaction. Cela inclut la vérification des pièces d'identité, la détermination de l'origine des fonds (surtout pour les paiements comptants de forte valeur), et la conservation sécurisée de ces données pendant plusieurs années.</p>
+                    <h4 class="text-xl font-bold text-gray-900 mt-6 mb-3">Le risque de la non-conformité</h4>
+                    <p class="mb-4">Les sanctions prononcées par la CENTIF (Cellule Nationale de Traitement des Informations Financières) peuvent être extrêmement lourdes, allant de l'amende administrative à la suspension d'activité pour le dirigeant.</p>
+                    <h4 class="text-xl font-bold text-gray-900 mt-6 mb-3">Comment GEDAJ facilite cette conformité ?</h4>
+                    <p class="mb-4">Pour éviter ces lourdes sanctions, le module <strong>GEDAJ</strong> de ZIV PROPTECH automatise cette collecte. Il alerte sur les pièces manquantes ou expirées et génère des rapports d'audit en un clic, tout en assurant un archivage numérique inviolable dans un coffre-fort électronique certifié.</p>
+                `
+            },
+            'vefa_erreurs': {
+                title: "VEFA en Côte d'Ivoire : Les 3 erreurs fatales dans la gestion des échéanciers",
+                category: "Promotion",
+                date: "05 Mars 2026",
+                readTime: "6 min de lecture",
+                image: "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1200&q=80",
+                content: `
+                    <p class="mb-4"><strong>La Vente en l'État Futur d'Achèvement (VEFA) est le modèle de développement roi de la promotion immobilière moderne. Pourtant, de nombreux promoteurs perdent en rentabilité et dégradent leur relation client à cause d'une gestion hasardeuse des échéanciers.</strong></p>
+                    <h4 class="text-xl font-bold text-gray-900 mt-6 mb-3">Erreur #1 : Le pilotage sur Excel</h4>
+                    <p class="mb-4">Suivre les appels de fonds de dizaines, voire centaines de clients sur un tableur est la porte ouverte aux erreurs humaines. Un retard dans l'envoi d'un appel de fonds se traduit directement par un manque de trésorerie sur le chantier, retardant d'autant plus l'avancement global du programme.</p>
+                    <h4 class="text-xl font-bold text-gray-900 mt-6 mb-3">Erreur #2 : La déconnexion avec l'avancement BTP</h4>
+                    <p class="mb-4">En VEFA, l'appel de fonds est déclenché par l'avancement technique (ex: "Achèvement des fondations = 20% à payer"). Si votre équipe chantier (BTP) ne communique pas en temps réel et de manière formelle avec le service commercial, les décaissements prennent du retard.</p>
+                    <h4 class="text-xl font-bold text-gray-900 mt-6 mb-3">Erreur #3 : Le manque de transparence client</h4>
+                    <p class="mb-4">Un acquéreur VEFA a besoin d'être rassuré. Envoyer un simple email avec une facture sans preuves d'avancement génère souvent des litiges et des retards de paiement.</p>
+                    <h4 class="text-xl font-bold text-gray-900 mt-6 mb-3">La Solution : LOTIGES ERP</h4>
+                    <p class="mb-4">Avec <strong>LOTIGES</strong>, le processus est scellé. Dès que le directeur technique valide une étape du chantier dans le module BTP (avec photos à l'appui), le logiciel CRM génère et envoie automatiquement les appels de fonds aux clients concernés via leur espace client, sécurisant ainsi votre trésorerie de manière absolue.</p>
+                `
+            },
+            'acd_guide': {
+                title: "Comment obtenir un ACD en Côte d'Ivoire : Étapes et coûts (Guide 2026)",
+                category: "Lotissement",
+                date: "28 Fév 2026",
+                readTime: "8 min de lecture",
+                image: "https://images.unsplash.com/photo-1524813686514-a57563d77965?auto=format&fit=crop&w=1200&q=80",
+                content: `
+                    <p class="mb-4"><strong>L'Arrêté de Concession Définitive (ACD) est le seul document qui confère la pleine propriété sur un terrain urbain en Côte d'Ivoire. Le processus d'obtention est souvent jugé complexe et long par les acquéreurs et les aménageurs.</strong></p>
+                    <h4 class="text-xl font-bold text-gray-900 mt-6 mb-3">Les étapes fondamentales</h4>
+                    <p class="mb-4">L'instruction du dossier ACD passe par plusieurs services administratifs : le Domaine Urbain, le Cadastre, et la Conservation Foncière. Cela requiert la constitution d'un dossier solide (Attestation d'attribution, plan topo, extrait topo, pièces d'identité).</p>
+                    <h4 class="text-xl font-bold text-gray-900 mt-6 mb-3">Les blocages fréquents</h4>
+                    <p class="mb-4">La majorité des retards sont causés par des dossiers incomplets, des erreurs de morcellement sur les plans ou, pire, des litiges sur la parcelle (doubles ventes, superpositions). Pour un aménageur qui gère 500 lots, suivre manuellement chaque dossier d'ACD au Ministère est un cauchemar logistique.</p>
+                    <h4 class="text-xl font-bold text-gray-900 mt-6 mb-3">Digitaliser la procédure avec SUIT FONCIER</h4>
+                    <p class="mb-4">C'est ici qu'intervient <strong>SUIT FONCIER</strong>. Ce logiciel métier permet aux aménageurs de cartographier leur lotissement de manière interactive. Ils peuvent voir en un clic le statut exact du dossier ACD de chaque lot ("En attente de signature", "Au cadastre", "Délivré") et générer automatiquement les lettres d'attribution sans erreur.</p>
+                `
+            },
+            'tantiemes_copro': {
+                title: "Calculer les tantièmes de copropriété : La méthode infaillible",
+                category: "Syndic",
+                date: "15 Fév 2026",
+                readTime: "5 min de lecture",
+                image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=80",
+                content: `
+                    <p class="mb-4"><strong>La répartition des charges au sein d'une copropriété (immeuble ou cité horizontale) est la principale source de litiges entre résidents. Tout repose sur une notion clé : le calcul des tantièmes.</strong></p>
+                    <h4 class="text-xl font-bold text-gray-900 mt-6 mb-3">Qu'est-ce qu'un tantième ?</h4>
+                    <p class="mb-4">C'est la quote-part (la fraction) des parties communes qui est rattachée à chaque lot privatif (appartement, villa). Plus un lot est grand et bien situé, plus ses tantièmes sont élevés, et par conséquent, plus sa participation aux charges communes sera importante.</p>
+                    <h4 class="text-xl font-bold text-gray-900 mt-6 mb-3">L'erreur commune des syndics bénévoles</h4>
+                    <p class="mb-4">Diviser les frais de gardiennage ou d'entretien de la piscine en parts égales "pour faire simple" est illégal selon la réglementation sur la copropriété. Cela finit inévitablement par être contesté en Assemblée Générale, bloquant le budget.</p>
+                    <h4 class="text-xl font-bold text-gray-900 mt-6 mb-3">Le calcul automatisé</h4>
+                    <p class="mb-4">La plateforme <strong>SYNDYCARRE</strong> intègre nativement la répartition par tantièmes (générale et spéciale). Lors de la création du budget annuel, le syndic saisit le montant global et le logiciel génère instantanément les appels de fonds individuels de chaque résident, au franc près, avec une transparence totale justifiant le calcul sur la quittance.</p>
+                `
+            }
+        };
+
+        const legalData = {
+            'privacy': {
+                title: "Politique de Confidentialité",
+                content: `
+                    <p class="mb-4 text-sm font-bold text-gray-800">Dernière mise à jour : Juillet 2026</p>
+                    
+                    <h3 class="text-lg font-bold text-ziv-navy mt-6 mb-2">1. Préambule et Cadre Légal</h3>
+                    <p class="mb-4">La société <strong>ALERTE FONCIER</strong>, éditrice de la suite logicielle ZIV PROPTECH, accorde une importance majeure à la confidentialité et à la sécurité de vos données. La présente Politique de Confidentialité est établie conformément à la <strong>Loi Ivoirienne n° 2013-450 du 19 juin 2013</strong> relative à la protection des données à caractère personnel. Elle définit les principes encadrant le traitement de vos données lors de l'utilisation de notre site vitrine et de nos logiciels.</p>
+
+                    <h3 class="text-lg font-bold text-ziv-navy mt-6 mb-2">2. Données à caractère personnel collectées</h3>
+                    <p class="mb-4">Lors de vos interactions avec notre site internet (formulaire de contact, téléchargement de ressources, demande de démonstration), nous sommes amenés à collecter, de manière explicite et avec votre consentement préalable, les données suivantes :</p>
+                    <ul class="list-disc pl-5 mb-4 space-y-1">
+                        <li><strong>Données d'identification :</strong> Nom complet, prénom, adresse e-mail professionnelle, numéro de téléphone (WhatsApp).</li>
+                        <li><strong>Données d'ordre professionnel :</strong> Nom de la société, secteur d'activité (Promotion, Syndic, Agence).</li>
+                        <li><strong>Données de navigation :</strong> Adresse IP, type de navigateur, cookies d'analyse de performance (si acceptés).</li>
+                    </ul>
+
+                    <h3 class="text-lg font-bold text-ziv-navy mt-6 mb-2">3. Finalités du traitement (Pourquoi collectons-nous ces données ?)</h3>
+                    <p class="mb-4">Conformément à l'Article 16 de la Loi n° 2013-450, vos données sont collectées pour des finalités déterminées, explicites et légitimes :</p>
+                    <ul class="list-disc pl-5 mb-4 space-y-1">
+                        <li>Assurer la gestion de la relation client (CRM) et le suivi de vos demandes commerciales (Devis, Audit).</li>
+                        <li>Vous fournir les accès et l'assistance technique nécessaires au déploiement de nos solutions logicielles (LOTIGES, GESPAT, etc.).</li>
+                        <li>Vous envoyer des informations pertinentes liées aux mises à jour de nos logiciels ou à la réglementation immobilière (ex: Conformité LBC).</li>
+                        <li>Améliorer l'ergonomie de nos services digitaux.</li>
+                    </ul>
+
+                    <h3 class="text-lg font-bold text-ziv-navy mt-6 mb-2">4. Sécurité, Confidentialité et Hébergement</h3>
+                    <p class="mb-4">ALERTE FONCIER met en œuvre des mesures techniques et organisationnelles rigoureuses pour garantir la sécurité et la confidentialité de vos données contre toute perte, altération ou accès non autorisé. Nos infrastructures de serveurs et nos bases de données sont sécurisées et cryptées. <strong>Aucun transfert de vos données à caractère personnel n'est effectué en dehors de l'espace CEDEAO</strong> sans les garanties juridiques adéquates exigées par l'ARTCI.</p>
+
+                    <h3 class="text-lg font-bold text-ziv-navy mt-6 mb-2">5. Durée de conservation</h3>
+                    <p class="mb-4">Vos données personnelles sont conservées uniquement pour la durée strictement nécessaire à l'accomplissement des finalités évoquées. Les données des prospects sont conservées pour une durée maximale de trois (3) ans à compter du dernier contact. Les données des clients sont conservées pendant toute la durée de la relation commerciale, augmentée des délais de prescription légale (conservation d'archives comptables et juridiques).</p>
+
+                    <h3 class="text-lg font-bold text-ziv-navy mt-6 mb-2">6. Vos droits selon la Loi n° 2013-450</h3>
+                    <p class="mb-4">Conformément à la législation ivoirienne, vous disposez sur vos données personnelles des droits suivants :</p>
+                    <ul class="list-disc pl-5 mb-4 space-y-1">
+                        <li><strong>Droit d'accès et d'information :</strong> Vous pouvez demander à connaître les données que nous détenons sur vous.</li>
+                        <li><strong>Droit de rectification :</strong> Vous pouvez exiger la mise à jour de vos données inexactes.</li>
+                        <li><strong>Droit à l'effacement (droit à l'oubli) :</strong> Vous pouvez demander la suppression de vos données.</li>
+                        <li><strong>Droit d'opposition et de retrait :</strong> Vous pouvez retirer à tout moment votre consentement au traitement de vos données pour la prospection commerciale.</li>
+                    </ul>
+                    <p class="mt-4">Pour exercer ces droits, veuillez contacter notre Délégué à la Protection des Données (DPO) par e-mail à l'adresse suivante : <strong>info@alertefoncier.ci</strong>, ou par courrier physique à notre siège situé à Abidjan, Cité SYNATRESOR.</p>
+                `
+            },
+            'terms': {
+                title: "Conditions Générales (CGV / CGU)",
+                content: `
+                    <p class="mb-4 text-sm font-bold text-gray-800">Dernière mise à jour : Juillet 2026</p>
+                    
+                    <h3 class="text-lg font-bold text-ziv-navy mt-6 mb-2">1. Objet</h3>
+                    <p class="mb-4">Les présentes Conditions Générales d'Utilisation et de Vente (ci-après « CGV/CGU ») ont pour objet de définir les conditions dans lesquelles la société <strong>ALERTE FONCIER</strong> (l'Éditeur) met à la disposition des utilisateurs (Professionnels de l'immobilier, Agences, Promoteurs, Syndics) le site internet ZIV PROPTECH ainsi que sa suite de logiciels métiers (SaaS et licences sur serveur local).</p>
+
+                    <h3 class="text-lg font-bold text-ziv-navy mt-6 mb-2">2. Éditeur et Mentions Légales</h3>
+                    <p class="mb-2">Le site ZIV PROPTECH et l'ensemble de ses modules (LOTIGES ERP, SUIT FONCIER, EASY VENTE, GESPAT, GEDAJ, SYNDYCARRE) sont développés et exploités par :</p>
+                    <ul class="list-none mb-4 space-y-1 bg-gray-50 p-4 rounded-lg">
+                        <li><strong>Raison Sociale :</strong> ALERTE FONCIER</li>
+                        <li><strong>Siège Social :</strong> Abidjan, Cité SYNATRESOR en face de la Pharmacie Jules Verne, Côte d'Ivoire.</li>
+                        <li><strong>Contact Téléphonique :</strong> (+225) 27 22 43 51 88 / 07 08 53 11 11</li>
+                        <li><strong>Courriel :</strong> info@alertefoncier.ci</li>
+                    </ul>
+
+                    <h3 class="text-lg font-bold text-ziv-navy mt-6 mb-2">3. Accès aux Services et Prestations</h3>
+                    <p class="mb-4">L'accès à la vitrine en ligne de ZIV PROPTECH est gratuit. L'accès aux modules logiciels nécessite la signature préalable d'un bon de commande, d'un contrat de prestation de services (SaaS ou On-Premise) et, le cas échéant, le paiement de frais d'audit et de configuration initiaux (Setup). ALERTE FONCIER s'engage à une obligation de moyens quant à la disponibilité de ses serveurs Cloud, visant un taux de disponibilité de 99,9% hors plages de maintenance programmées.</p>
+
+                    <h3 class="text-lg font-bold text-ziv-navy mt-6 mb-2">4. Propriété Intellectuelle</h3>
+                    <p class="mb-4">L'ensemble des éléments constituant le site et les logiciels ZIV PROPTECH (codes sources, algorithmes, interfaces, arborescences, textes, chartes graphiques, logos, marques) sont la propriété exclusive d'ALERTE FONCIER. Ils sont protégés par la législation ivoirienne et les traités internationaux relatifs à la propriété intellectuelle. Toute reproduction, modification, ingénierie inverse (reverse engineering) ou commercialisation non expressément autorisée par écrit est strictement interdite et constitutive du délit de contrefaçon.</p>
+
+                    <h3 class="text-lg font-bold text-ziv-navy mt-6 mb-2">5. Tarification et Modalités de Paiement</h3>
+                    <p class="mb-4">Les tarifs indicatifs mentionnés sur le site sont exprimés en Francs CFA (XOF) et s'entendent hors taxes (HT) pour des abonnements SaaS standards. Les tarifs définitifs, incluant les éventuelles options sur-mesure (ERP, API spécifiques), sont établis sur devis. Les factures sont payables aux échéances convenues dans le contrat de prestation. En cas de retard de paiement, ALERTE FONCIER se réserve le droit de suspendre l'accès aux services logiciels après mise en demeure restée infructueuse.</p>
+
+                    <h3 class="text-lg font-bold text-ziv-navy mt-6 mb-2">6. Limitation de Responsabilité</h3>
+                    <p class="mb-4">ALERTE FONCIER met tout en œuvre pour fournir des outils numériques fiables et conformes aux réglementations métier (OHADA, LBC/FT, directives foncières). Toutefois, les logiciels sont des outils d'assistance à la gestion. L'Utilisateur professionnel reste seul responsable des données qu'il saisit, des actes juridiques qu'il génère, de sa comptabilité et des décisions de gestion qu'il prend. ALERTE FONCIER ne saurait être tenu responsable des préjudices indirects, pertes d'exploitation ou pertes de profits découlant de l'utilisation de ses solutions.</p>
+
+                    <h3 class="text-lg font-bold text-ziv-navy mt-6 mb-2">7. Droit Applicable et Juridiction Compétente</h3>
+                    <p class="mb-4">Les présentes conditions sont soumises au Droit Ivoirien. En cas de litige relatif à l'interprétation ou à l'exécution des présentes, et à défaut de résolution à l'amiable, compétence exclusive est attribuée au Tribunal de Commerce d'Abidjan.</p>
+                `
+            }
+        };
+
+        let currentSelectedSoftware = '';
+
+        function openModal(softwareId) {
+            const data = softwareData[softwareId];
+            if (!data) return;
+
+            currentSelectedSoftware = data.formValue;
+
+            document.getElementById('modalTitle').textContent = data.title;
+            document.getElementById('modalSubtitle').textContent = data.subtitle;
+            document.getElementById('modalDescription').textContent = data.description;
+            document.getElementById('modalVideoCover').src = data.videoCover;
+            
+            const iconWrapper = document.getElementById('modalIconWrapper');
+            iconWrapper.innerHTML = `<i data-lucide="${data.icon}" class="h-8 w-8 ${data.iconColor}"></i>`;
+            
+            const featuresContainer = document.getElementById('modalFeaturesGrid');
+            featuresContainer.innerHTML = data.features.map(f => `
+                <div class="flex items-start bg-gray-50 p-4 rounded-xl border border-gray-100 h-full hover:border-ziv-cyan/30 transition-colors">
+                    <i data-lucide="check-circle" class="h-5 w-5 text-ziv-cyan mr-3 flex-shrink-0 mt-0.5"></i>
+                    <span class="text-sm text-gray-700 leading-relaxed font-medium">${f}</span>
+                </div>
+            `).join('');
+
+            const benefitsContainer = document.getElementById('modalBenefits');
+            benefitsContainer.innerHTML = data.benefits.map(b => `
+                <li class="flex items-start bg-white rounded-lg p-2">
+                    <div class="h-6 w-6 rounded-full bg-green-100 flex items-center justify-center mr-3 flex-shrink-0 mt-0.5 border border-green-200">
+                        <i data-lucide="trending-up" class="h-3 w-3 text-green-600"></i>
+                    </div>
+                    <span class="text-sm font-bold text-gray-800 leading-snug pt-0.5">${b}</span>
+                </li>
+            `).join('');
+
+            const videoWrapper = document.getElementById('modalVideoWrapper');
+            const iframe = document.getElementById('modalYoutubeIframe');
+            const playBtn = document.getElementById('modalPlayButton');
+            const titleWrapper = document.getElementById('modalTitleWrapper');
+
+            videoWrapper.classList.add('hidden');
+            iframe.src = '';
+            titleWrapper.style.display = 'block';
+            
+            if(data.youtubeId) {
+                iframe.dataset.src = `https://www.youtube.com/embed/${data.youtubeId}?autoplay=1`;
+                playBtn.innerHTML = `
+                    <div class="w-20 h-20 bg-ziv-cyan rounded-full flex items-center justify-center text-white shadow-[0_0_30px_rgba(0,168,181,0.5)] play-button-pulse group-hover:scale-110 transition-transform duration-300"><i data-lucide="play" class="h-8 w-8 ml-1"></i></div>
+                    <span class="mt-4 text-white font-medium text-sm bg-black/50 px-4 py-1 rounded-full backdrop-blur-md">Lancer la vidéo de démonstration</span>
+                `;
+            } else {
+                iframe.dataset.src = "";
+                playBtn.innerHTML = `
+                    <div class="w-20 h-20 bg-gray-500 rounded-full flex items-center justify-center text-white"><i data-lucide="video-off" class="h-8 w-8"></i></div>
+                    <span class="mt-4 text-white font-medium text-sm bg-black/50 px-4 py-1 rounded-full backdrop-blur-md">Vidéo bientôt disponible</span>
+                `;
+            }
+
+            initIcons();
+
+            const modal = document.getElementById('softwareModal');
+            const backdrop = document.getElementById('modalBackdrop');
+            const content = document.getElementById('modalContent');
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            void modal.offsetWidth;
+
+            backdrop.classList.add('opacity-100');
+            content.classList.remove('opacity-0', 'scale-95');
+            content.classList.add('opacity-100', 'scale-100');
+        }
+
+        function playVideo() {
+            const iframe = document.getElementById('modalYoutubeIframe');
+            if(iframe.dataset.src) {
+                iframe.src = iframe.dataset.src;
+                document.getElementById('modalVideoWrapper').classList.remove('hidden');
+                document.getElementById('modalTitleWrapper').style.display = 'none';
+            }
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('softwareModal');
+            const backdrop = document.getElementById('modalBackdrop');
+            const content = document.getElementById('modalContent');
+            const iframe = document.getElementById('modalYoutubeIframe');
+
+            backdrop.classList.remove('opacity-100');
+            content.classList.remove('opacity-100', 'scale-100');
+            content.classList.add('opacity-0', 'scale-95');
+            
+            iframe.src = ''; 
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        function openBlogModal(articleId) {
+            const data = blogData[articleId];
+            if(!data) return;
+
+            document.getElementById('blogModalTitle').textContent = data.title;
+            document.getElementById('blogModalCategory').textContent = data.category;
+            document.getElementById('blogModalDate').textContent = data.date;
+            document.getElementById('blogModalTime').textContent = data.readTime;
+            document.getElementById('blogModalImage').src = data.image;
+            document.getElementById('blogModalBody').innerHTML = data.content;
+
+            const modal = document.getElementById('blogModal');
+            const backdrop = document.getElementById('blogModalBackdrop');
+            const content = document.getElementById('blogModalContent');
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            void modal.offsetWidth;
+            backdrop.classList.add('opacity-100');
+            content.classList.remove('opacity-0', 'scale-95');
+            content.classList.add('opacity-100', 'scale-100');
+            
+            initIcons();
+        }
+
+        function closeBlogModal() {
+            const modal = document.getElementById('blogModal');
+            const backdrop = document.getElementById('blogModalBackdrop');
+            const content = document.getElementById('blogModalContent');
+
+            backdrop.classList.remove('opacity-100');
+            content.classList.remove('opacity-100', 'scale-100');
+            content.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+        
+        function openLegalModal(legalId) {
+            const data = legalData[legalId];
+            if(!data) return;
+
+            document.getElementById('legalModalTitle').textContent = data.title;
+            document.getElementById('legalModalBody').innerHTML = data.content;
+
+            const modal = document.getElementById('legalModal');
+            const backdrop = document.getElementById('legalModalBackdrop');
+            const content = document.getElementById('legalModalContent');
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            void modal.offsetWidth;
+            backdrop.classList.add('opacity-100');
+            content.classList.remove('opacity-0', 'scale-95');
+            content.classList.add('opacity-100', 'scale-100');
+        }
+
+        function closeLegalModal() {
+            const modal = document.getElementById('legalModal');
+            const backdrop = document.getElementById('legalModalBackdrop');
+            const content = document.getElementById('legalModalContent');
+
+            backdrop.classList.remove('opacity-100');
+            content.classList.remove('opacity-100', 'scale-100');
+            content.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        function selectSoftwareAndScroll() {
+            closeModal();
+            setTimeout(() => {
+                const formSection = document.getElementById('contact');
+                const selectElement = document.getElementById('software');
+                const formContainer = document.getElementById('formContainer');
+
+                formSection.scrollIntoView({ behavior: 'smooth' });
+
+                if (currentSelectedSoftware) {
+                    selectElement.value = currentSelectedSoftware;
+                    setTimeout(() => {
+                        formContainer.classList.add('ring-4', 'ring-ziv-cyan', 'ring-opacity-50', 'transition-all', 'duration-500', 'scale-[1.02]');
+                        setTimeout(() => {
+                            formContainer.classList.remove('ring-4', 'ring-ziv-cyan', 'ring-opacity-50', 'scale-[1.02]');
+                        }, 1200);
+                    }, 500);
+                }
+            }, 300);
+        }
+
+        function openExpertModal() {
+            const modal = document.getElementById('expertModal');
+            const backdrop = document.getElementById('expertModalBackdrop');
+            const content = document.getElementById('expertModalContent');
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            void modal.offsetWidth;
+            backdrop.classList.add('opacity-100');
+            content.classList.remove('opacity-0', 'scale-95');
+            content.classList.add('opacity-100', 'scale-100');
+        }
+
+        function closeExpertModal() {
+            const modal = document.getElementById('expertModal');
+            const backdrop = document.getElementById('expertModalBackdrop');
+            const content = document.getElementById('expertModalContent');
+
+            backdrop.classList.remove('opacity-100');
+            content.classList.remove('opacity-100', 'scale-100');
+            content.classList.add('opacity-0', 'scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        function toggleFaq(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('i');
+            
+            document.querySelectorAll('.faq-content').forEach(item => {
+                if(item !== content && !item.classList.contains('hidden')) {
+                    item.classList.add('hidden');
+                    item.previousElementSibling.querySelector('i').classList.remove('rotate-180');
+                }
+            });
+
+            content.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+
+        function submitForm(e) {
+            e.preventDefault();
+            const form = document.getElementById('leadForm');
+            const successMsg = document.getElementById('formSuccess');
+            
+            Array.from(form.elements).forEach(el => {
+                if(el.tagName !== 'BUTTON' && el.id !== 'formSuccess') {
+                    el.disabled = true;
+                    el.classList.add('opacity-50');
+                }
+            });
+            successMsg.classList.remove('hidden');
+            
+            setTimeout(() => {
+                form.reset();
+                Array.from(form.elements).forEach(el => {
+                    el.disabled = false;
+                    el.classList.remove('opacity-50');
+                });
+                successMsg.classList.add('hidden');
+            }, 4000);
+        }
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 10) {
+                nav.classList.add('shadow-md', 'bg-white/95');
+                nav.classList.remove('glass-nav');
+            } else {
+                nav.classList.remove('shadow-md', 'bg-white/95');
+                nav.classList.add('glass-nav');
+            }
+        });
+
+        /* --- Chatbot Guided Logic --- */
+        const chatbotToggle = document.getElementById('chatbot-toggle');
+        const chatbotWindow = document.getElementById('chatbot-window');
+        const closeChatbot = document.getElementById('close-chatbot');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatbotTooltip = document.getElementById('chatbot-tooltip');
+        let chatInitialized = false;
+
+        setTimeout(() => {
+            if(!chatInitialized && chatbotWindow.classList.contains('hidden')) {
+                chatbotTooltip.classList.remove('hidden');
+                setTimeout(() => {
+                    chatbotTooltip.classList.remove('translate-y-4', 'opacity-0');
+                }, 50);
+                
+                setTimeout(() => {
+                    if(!chatInitialized) {
+                        chatbotTooltip.classList.add('translate-y-4', 'opacity-0');
+                        setTimeout(() => chatbotTooltip.classList.add('hidden'), 500);
+                    }
+                }, 8000);
+            }
+        }, 3000);
+
+        function toggleChat() {
+            chatbotWindow.classList.toggle('hidden');
+            chatbotTooltip.classList.add('hidden'); 
+            if(!chatbotWindow.classList.contains('hidden') && !chatInitialized){
+                startChat();
+                chatInitialized = true;
+            }
+        }
+
+        chatbotToggle.addEventListener('click', toggleChat);
+        closeChatbot.addEventListener('click', () => chatbotWindow.classList.add('hidden'));
+
+        const chatFlows = {
+            start: {
+                msg: "Bonjour ! 👋 Bienvenue sur ZIV PROPTECH. Pour vous guider précisément, quelle est votre activité principale ?",
+                options: [
+                    { text: "🏢 Promotion Immobilière", next: "promo" },
+                    { text: "🤝 Agence / Gestion", next: "agence" },
+                    { text: "🗺️ Aménagement Foncier", next: "foncier" },
+                    { text: "🏙️ Syndic de Copropriété", next: "syndic" },
+                    { text: "⚖️ Notaire / Juridique", next: "juridique" }
+                ]
+            },
+            promo: {
+                msg: "Parfait. Pour la promotion, notre **ERP** gère tout (Compta, Chantiers), et notre module **LOTIGES CRM** booste vos ventes VEFA.",
+                options: [
+                    { text: "Découvrir LOTIGES ERP", action: "open_erp" },
+                    { text: "Voir le module VEFA (LOTIGES)", action: "open_lotiges" },
+                    { text: "📞 Prendre RDV avec un expert", action: "open_expert" },
+                    { text: "⬅️ Retour", next: "start" }
+                ]
+            },
+            agence: {
+                msg: "Excellent. Pour une agence, nous avons **EASY VENTE** (transactions) et **GESPAT** (automatisation de la gestion locative).",
+                options: [
+                    { text: "Voir EASY VENTE", action: "open_vente" },
+                    { text: "Voir GESPAT (Location)", action: "open_gespat" },
+                    { text: "⬅️ Retour", next: "start" }
+                ]
+            },
+            foncier: {
+                msg: "L'aménagement foncier exige de la rigueur. **SUIT FONCIER** est idéal pour suivre vos ACD et vos recouvrements terrains.",
+                options: [
+                    { text: "Découvrir SUIT FONCIER", action: "open_foncier" },
+                    { text: "⬅️ Retour", next: "start" }
+                ]
+            },
+            syndic: {
+                msg: "Pour les professionnels et bénévoles, **SYNDYCARRE** est la plateforme intégrale qui gère vos appels de fonds, la comptabilité et la cartographie SIG de vos résidences.",
+                options: [
+                    { text: "Découvrir SYNDYCARRE", action: "open_syndycarre" },
+                    { text: "⬅️ Retour", next: "start" }
+                ]
+            },
+            juridique: {
+                msg: "La conformité est clé. Notre module **GEDAJ** gère votre conformité LBC et l'archivage numérique de vos actes.",
+                options: [
+                    { text: "Découvrir GEDAJ", action: "open_gedaj" },
+                    { text: "⬅️ Retour", next: "start" }
+                ]
+            }
+        };
+
+        function startChat() {
+            chatMessages.innerHTML = '';
+            renderStep('start');
+        }
+
+        function renderStep(stepKey) {
+            const step = chatFlows[stepKey];
+            if(!step) return;
+
+            const typingId = 'typing-' + Date.now();
+            appendBotMessage(`<div class="flex space-x-1.5 items-center h-4 px-1"><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div><div class="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div></div>`, typingId);
+
+            setTimeout(() => {
+                document.getElementById(typingId).remove();
+                appendBotMessage(step.msg);
+                
+                if(step.options && step.options.length > 0) {
+                    const optionsContainer = document.createElement('div');
+                    optionsContainer.className = "flex flex-col space-y-2.5 mt-3 ml-12 max-w-[85%] pb-2";
+                    
+                    step.options.forEach(opt => {
+                        const btn = document.createElement('button');
+                        btn.className = "text-left px-4 py-2.5 bg-white border border-ziv-cyan text-ziv-cyan text-sm font-medium rounded-xl hover:bg-ziv-cyan hover:text-white transition-all shadow-sm transform hover:-translate-y-0.5";
+                        btn.innerHTML = opt.text;
+                        btn.onclick = () => handleOptionClick(opt);
+                        optionsContainer.appendChild(btn);
+                    });
+                    
+                    chatMessages.appendChild(optionsContainer);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            }, 800);
+        }
+
+        function handleOptionClick(opt) {
+            const allOptionContainers = chatMessages.querySelectorAll('.flex-col.space-y-2\\.5');
+            if(allOptionContainers.length > 0) {
+                const lastContainer = allOptionContainers[allOptionContainers.length - 1];
+                lastContainer.style.opacity = '0.4';
+                lastContainer.style.pointerEvents = 'none';
+            }
+
+            appendUserMessage(opt.text);
+
+            if(opt.next) {
+                renderStep(opt.next);
+            } else if (opt.action) {
+                setTimeout(() => {
+                    const finalMsg = "Ouverture en cours... N'hésitez pas à me solliciter de nouveau si vous avez d'autres questions !";
+                    appendBotMessage(finalMsg);
+                    
+                    setTimeout(() => {
+                        chatbotWindow.classList.add('hidden');
+                        if(opt.action === 'open_erp') openModal('erp');
+                        if(opt.action === 'open_lotiges') openModal('lotiges');
+                        if(opt.action === 'open_vente') openModal('vente');
+                        if(opt.action === 'open_gespat') openModal('gespat');
+                        if(opt.action === 'open_foncier') openModal('foncier');
+                        if(opt.action === 'open_gedaj') openModal('gedaj');
+                        if(opt.action === 'open_syndycarre') openModal('syndycarre');
+                        if(opt.action === 'open_expert') openExpertModal();
+                    }, 1800);
+                }, 600);
+            }
+        }
+
+        function appendBotMessage(text, id = null) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex items-start mt-4`;
+            if(id) messageDiv.id = id;
+            
+            messageDiv.innerHTML = `
+                <div class="w-9 h-9 rounded-full bg-gradient-to-br from-ziv-cyan to-blue-500 flex items-center justify-center mr-3 flex-shrink-0 shadow-md">
+                    <i data-lucide="bot" class="h-4 w-4 text-white"></i>
+                </div>
+                <div class="bg-white p-3.5 rounded-2xl rounded-tl-none border border-gray-100 shadow-sm text-[13px] sm:text-sm text-gray-700 leading-relaxed max-w-[80%]">
+                    ${text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')}
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            initIcons();
+            chatMessages.scrollTop = chatMessages.scrollHeight; 
+        }
+
+        function appendUserMessage(text) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `flex items-start justify-end mt-4 mb-2`;
+            
+            messageDiv.innerHTML = `
+                <div class="bg-ziv-navy text-white p-3 rounded-2xl rounded-tr-none shadow-md text-[13px] sm:text-sm leading-relaxed max-w-[80%]">
+                    ${text}
+                </div>
+            `;
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight; 
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+import { useEffect, useMemo, useState } from 'react';
+import { Loader2, Mail, Search, Trash2, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, MessageSquare, Settings } from 'lucide-react';
+import SoftwareBadge from '../components/ui/SoftwareBadge.jsx';
+import { leadStatuses } from '../data/mockLeads.js';
+import { fetchLeads, updateLeadStatus as apiUpdateStatus, deleteLead as apiDeleteLead } from '../../services/api.js';
+import { useToast } from '../context/ToastContext.jsx';
+
+const SELECT_STYLE = {
+  new: 'bg-yellow-50 border-yellow-200 text-yellow-800',
+  in_progress: 'bg-blue-50 border-blue-200 text-blue-800',
+  closed: 'bg-green-50 border-green-200 text-green-800',
+};
+
+function formatDate(value) {
+  if (!value) return '—';
+  const d = new Date(value);
+  return Number.isNaN(d.getTime()) ? '—' : d.toLocaleDateString('fr-FR', { day: '2-digit', month: 'short', year: 'numeric' });
+}
+
+export default function Crm() {
+  const { showToast } = useToast();
+  const [leads, setLeads] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState('');
+  const [sortKey, setSortKey] = useState('created_at');
+  const [sortDir, setSortDir] = useState('desc');
+  const [page, setPage] = useState(1);
+  const perPage = 10;
+
+  useEffect(() => {
+    fetchLeads()
+      .then(setLeads)
+      .catch(() => showToast('Impossible de charger les leads.'))
+      .finally(() => setLoading(false));
+  }, []);
+
+  const handleSort = (key) => {
+    if (sortKey === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    else { setSortKey(key); setSortDir('asc'); }
+  };
+
+  const SortIcon = ({ col }) => {
+    if (sortKey !== col) return <ChevronUp className="h-3 w-3 opacity-20" />;
+    return sortDir === 'asc' ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />;
+  };
+
+  const processed = useMemo(() => {
+    let data = [...leads];
+    const q = search.trim().toLowerCase();
+    if (q) data = data.filter(l => [l.full_name, l.email, l.phone].filter(Boolean).some(v => v.toLowerCase().includes(q)));
+    data.sort((a, b) => {
+      const va = a[sortKey] || '';
+      const vb = b[sortKey] || '';
+      return sortDir === 'asc' ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+    });
+    return data;
+  }, [leads, search, sortKey, sortDir]);
+
+  const totalPages = Math.max(1, Math.ceil(processed.length / perPage));
+  const paginated = processed.slice((page - 1) * perPage, page * perPage);
+
+  const handleStatus = async (lead, status) => {
+    setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, status } : l));
+    try { await apiUpdateStatus(lead.id, status); showToast('Statut mis à jour.'); }
+    catch { showToast('Erreur de mise à jour.'); }
+  };
+
+  const handleDelete = async (lead) => {
+    if (!window.confirm(`Supprimer « ${lead.full_name} » ?`)) return;
+    setLeads(prev => prev.filter(l => l.id !== lead.id));
+    try { await apiDeleteLead(lead.id); showToast('Lead supprimé.'); }
+    catch { showToast('Erreur de suppression.'); }
+  };
+
+  return (
+    <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+      <div className="p-6 border-b border-gray-100 flex flex-col xl:flex-row justify-between items-center gap-4">
+        <p className="text-sm text-gray-500 whitespace-nowrap">{processed.length} lead(s) trouvé(s)</p>
+        <div className="flex flex-col md:flex-row items-center gap-4 w-full xl:w-auto xl:justify-end">
+          <div className="flex flex-wrap items-center gap-2">
+            <button className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-black transition-colors shadow-sm">
+              <MessageSquare className="h-4 w-4" /> Envoi SMS
+            </button>
+            <button className="flex items-center gap-2 bg-ziv-cyan text-white px-4 py-2 rounded-lg text-sm font-medium hover:brightness-110 transition-colors shadow-sm">
+              <Mail className="h-4 w-4" /> Envoi Email
+            </button>
+            <a href="/admin/seo" className="flex items-center gap-2 border border-gray-200 bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors shadow-sm">
+              <Settings className="h-4 w-4 text-gray-500" /> Config. Paramètres
+            </a>
+          </div>
+          <div className="relative w-full md:w-auto">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <input type="text" value={search} onChange={e => { setSearch(e.target.value); setPage(1); }}
+              placeholder="Rechercher..." className="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ziv-cyan w-full md:w-64" />
+          </div>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="flex items-center justify-center py-20 text-gray-400">
+          <Loader2 className="h-6 w-6 animate-spin mr-2" /> Chargement...
+        </div>
+      ) : (
+        <>
+          <table className="w-full text-left text-sm text-gray-500">
+            <thead className="text-xs text-gray-400 uppercase bg-gray-50">
+              <tr>
+                <th className="px-6 py-4 cursor-pointer select-none" onClick={() => handleSort('full_name')}>
+                  <span className="flex items-center gap-1">Contact <SortIcon col="full_name" /></span>
+                </th>
+                <th className="px-6 py-4">Coordonnées</th>
+                <th className="px-6 py-4">Intérêt</th>
+                <th className="px-6 py-4 cursor-pointer select-none" onClick={() => handleSort('status')}>
+                  <span className="flex items-center gap-1">Statut <SortIcon col="status" /></span>
+                </th>
+                <th className="px-6 py-4 cursor-pointer select-none" onClick={() => handleSort('created_at')}>
+                  <span className="flex items-center gap-1">Date <SortIcon col="created_at" /></span>
+                </th>
+                <th className="px-6 py-4">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {paginated.length === 0 && (
+                <tr><td colSpan={6} className="px-6 py-12 text-center text-gray-400">Aucun lead.</td></tr>
+              )}
+              {paginated.map(lead => (
+                <tr key={lead.id} className="hover:bg-gray-50 transition-colors">
+                  <td className="px-6 py-4"><p className="font-bold text-gray-900">{lead.full_name}</p></td>
+                  <td className="px-6 py-4">
+                    <p className="text-gray-900">{lead.phone}</p>
+                    <p className="text-xs">{lead.email}</p>
+                  </td>
+                  <td className="px-6 py-4"><SoftwareBadge value={lead.software_interest} /></td>
+                  <td className="px-6 py-4">
+                    <select value={lead.status} onChange={e => handleStatus(lead, e.target.value)}
+                      className={`border text-xs rounded-lg block w-full p-2 focus:ring-2 ${SELECT_STYLE[lead.status] || ''}`}>
+                      {Object.entries(leadStatuses).map(([v, { label }]) => <option key={v} value={v}>{label}</option>)}
+                    </select>
+                  </td>
+                  <td className="px-6 py-4 text-xs text-gray-400">{formatDate(lead.created_at)}</td>
+                  <td className="px-6 py-4">
+                    <a href={`mailto:${lead.email}`} className="text-gray-400 hover:text-ziv-cyan mr-2"><Mail className="h-4 w-4" /></a>
+                    <button onClick={() => handleDelete(lead)} className="text-gray-400 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gray-50 text-sm">
+            <span className="text-gray-500">Page {page} / {totalPages}</span>
+            <div className="flex gap-2">
+              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
+                className="p-2 rounded-lg border border-gray-200 hover:bg-white disabled:opacity-30"><ChevronLeft className="h-4 w-4" /></button>
+              <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
+                className="p-2 rounded-lg border border-gray-200 hover:bg-white disabled:opacity-30"><ChevronRight className="h-4 w-4" /></button>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}

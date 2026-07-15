@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZIV PROPTECH - Back Office Administration</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'ziv-navy': '#0A1E4A',
+                        'ziv-cyan': '#00A8B5',
+                        'ziv-blue': '#1D4ED8',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom Scrollbar for sidebar and main content */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        .toast-enter { transform: translateY(100%); opacity: 0; }
+        .toast-enter-active { transform: translateY(0); opacity: 1; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .toast-leave { transform: translateY(0); opacity: 1; }
+        .toast-leave-active { transform: translateY(100%); opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    </style>
+</head>
+<body class="font-sans text-gray-800 bg-gray-50 h-screen flex overflow-hidden selection:bg-ziv-cyan selection:text-white">
+
+    <aside class="w-64 bg-ziv-navy text-white flex flex-col h-full shadow-2xl z-20 flex-shrink-0">
+        <div class="h-20 flex items-center px-6 border-b border-white/10 bg-black/10">
+            <svg class="h-8 w-8 text-ziv-cyan mr-2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 22L22 2v8l-8 4 8 8H2V14l8-4-8-8z" fill="currentColor" fill-opacity="0.2"/>
+            </svg>
+            <span class="font-heading font-bold text-xl tracking-tight">ZIV<span class="text-ziv-cyan">ADMIN</span></span>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-6 px-4 space-y-1">
+            <p class="px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 mt-4">Vue d'ensemble</p>
+            <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg bg-ziv-cyan text-white transition-colors">
+                <i data-lucide="layout-dashboard" class="h-5 w-5 mr-3"></i> Tableau de bord
+            </button>
+            <button onclick="switchTab('crm')" id="nav-crm" class="nav-btn w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-white/10 hover:text-white transition-colors">
+                <i data-lucide="users" class="h-5 w-5 mr-3"></i> CRM (Démos & RDV)
+                <span class="ml-auto bg-red-500 text-white py-0.5 px-2 rounded-full text-[10px] font-bold">3</span>
+            </button>
+
+            <p class="px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 mt-8">Contenu du Site</p>
+            <button onclick="switchTab('logiciels')" id="nav-logiciels" class="nav-btn w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-white/10 hover:text-white transition-colors">
+                <i data-lucide="box" class="h-5 w-5 mr-3"></i> Logiciels & Tarifs
+            </button>
+            <button onclick="switchTab('blog')" id="nav-blog" class="nav-btn w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-white/10 hover:text-white transition-colors">
+                <i data-lucide="file-text" class="h-5 w-5 mr-3"></i> Blog & Ressources
+            </button>
+            <button onclick="switchTab('temoignages')" id="nav-temoignages" class="nav-btn w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-white/10 hover:text-white transition-colors">
+                <i data-lucide="message-square" class="h-5 w-5 mr-3"></i> Témoignages
+            </button>
+            <button onclick="switchTab('faq')" id="nav-faq" class="nav-btn w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-white/10 hover:text-white transition-colors">
+                <i data-lucide="help-circle" class="h-5 w-5 mr-3"></i> FAQ & Chatbot
+            </button>
+
+            <p class="px-2 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 mt-8">Configuration</p>
+            <button onclick="switchTab('seo')" id="nav-seo" class="nav-btn w-full flex items-center px-3 py-2.5 text-sm font-medium rounded-lg text-gray-300 hover:bg-white/10 hover:text-white transition-colors">
+                <i data-lucide="search" class="h-5 w-5 mr-3"></i> SEO & Apparence
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-white/10">
+            <button class="flex items-center w-full px-3 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors">
+                <i data-lucide="log-out" class="h-5 w-5 mr-3"></i> Déconnexion
+            </button>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+        
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 h-20 flex items-center justify-between px-8 flex-shrink-0 z-10 shadow-sm">
+            <div class="flex items-center">
+                <h1 id="header-title" class="text-2xl font-bold font-heading text-ziv-navy">Tableau de bord</h1>
+            </div>
+            <div class="flex items-center space-x-6">
+                <a href="#" class="text-gray-400 hover:text-ziv-cyan transition-colors" title="Voir le site public">
+                    <i data-lucide="external-link" class="h-5 w-5"></i>
+                </a>
+                <button class="relative text-gray-400 hover:text-ziv-cyan transition-colors">
+                    <i data-lucide="bell" class="h-5 w-5"></i>
+                    <span class="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full border-2 border-white"></span>
+                </button>
+                <div class="flex items-center pl-6 border-l border-gray-200">
+                    <div class="h-9 w-9 rounded-full bg-ziv-cyan flex items-center justify-center text-white font-bold text-sm shadow-md">
+                        AD
+                    </div>
+                    <div class="ml-3 hidden md:block">
+                        <p class="text-sm font-bold text-gray-700 leading-none">Admin ZIV</p>
+                        <p class="text-xs text-gray-500 mt-1">Super Administrateur</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto bg-gray-50/50 p-8 relative">
+            
+            <!-- VIEW: DASHBOARD -->
+            <div id="view-dashboard" class="view-section">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Démos Demandées</p>
+                                <h3 class="text-3xl font-bold text-gray-900">42</h3>
+                            </div>
+                            <div class="p-3 bg-blue-50 rounded-lg text-ziv-blue"><i data-lucide="send" class="h-6 w-6"></i></div>
+                        </div>
+                        <p class="text-xs text-green-600 mt-4 flex items-center font-medium"><i data-lucide="trending-up" class="h-3 w-3 mr-1"></i> +12% ce mois</p>
+                    </div>
+                    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Rendez-vous B2B</p>
+                                <h3 class="text-3xl font-bold text-gray-900">18</h3>
+                            </div>
+                            <div class="p-3 bg-indigo-50 rounded-lg text-indigo-600"><i data-lucide="calendar" class="h-6 w-6"></i></div>
+                        </div>
+                        <p class="text-xs text-green-600 mt-4 flex items-center font-medium"><i data-lucide="trending-up" class="h-3 w-3 mr-1"></i> +4 cette semaine</p>
+                    </div>
+                    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Téléchargements Guide</p>
+                                <h3 class="text-3xl font-bold text-gray-900">1,248</h3>
+                            </div>
+                            <div class="p-3 bg-yellow-50 rounded-lg text-yellow-600"><i data-lucide="download" class="h-6 w-6"></i></div>
+                        </div>
+                        <p class="text-xs text-gray-500 mt-4 flex items-center">Leads générés (Email)</p>
+                    </div>
+                    <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500 mb-1">Vues du Blog (SEO)</p>
+                                <h3 class="text-3xl font-bold text-gray-900">8,590</h3>
+                            </div>
+                            <div class="p-3 bg-teal-50 rounded-lg text-teal-600"><i data-lucide="eye" class="h-6 w-6"></i></div>
+                        </div>
+                        <p class="text-xs text-green-600 mt-4 flex items-center font-medium"><i data-lucide="trending-up" class="h-3 w-3 mr-1"></i> +24% trafic organique</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-bold text-gray-900">Dernières Demandes (Leads)</h3>
+                            <button onclick="switchTab('crm')" class="text-sm text-ziv-cyan font-medium hover:text-cyan-700">Voir tout</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-sm text-gray-500">
+                                <thead class="text-xs text-gray-400 uppercase bg-gray-50">
+                                    <tr>
+                                        <th class="px-4 py-3 rounded-tl-lg">Contact</th>
+                                        <th class="px-4 py-3">Logiciel</th>
+                                        <th class="px-4 py-3">Date</th>
+                                        <th class="px-4 py-3 rounded-tr-lg">Statut</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="border-b border-gray-50">
+                                        <td class="px-4 py-4 font-medium text-gray-900">Jean Kouassi (SCI Bâtisseur)</td>
+                                        <td class="px-4 py-4"><span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md text-xs font-bold">LOTIGES ERP</span></td>
+                                        <td class="px-4 py-4">Aujourd'hui, 10:45</td>
+                                        <td class="px-4 py-4"><span class="bg-yellow-100 text-yellow-800 px-2.5 py-1 rounded-full text-xs font-medium flex w-max items-center"><i class="w-1.5 h-1.5 rounded-full bg-yellow-500 mr-1.5"></i> Nouveau</span></td>
+                                    </tr>
+                                    <tr class="border-b border-gray-50">
+                                        <td class="px-4 py-4 font-medium text-gray-900">Aminata Sylla</td>
+                                        <td class="px-4 py-4"><span class="bg-orange-50 text-orange-700 px-2.5 py-1 rounded-md text-xs font-bold">GESPAT</span></td>
+                                        <td class="px-4 py-4">Hier, 16:30</td>
+                                        <td class="px-4 py-4"><span class="bg-green-100 text-green-800 px-2.5 py-1 rounded-full text-xs font-medium flex w-max items-center"><i class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></i> Traité</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
+                        <h3 class="text-lg font-bold text-gray-900 mb-6">Actions Rapides</h3>
+                        <div class="space-y-3">
+                            <button onclick="switchTab('blog')" class="w-full flex items-center p-3 text-sm font-medium text-gray-700 bg-gray-50 rounded-xl hover:bg-ziv-cyan hover:text-white transition-colors border border-gray-100 hover:border-transparent group">
+                                <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center mr-3 group-hover:text-ziv-cyan text-gray-400 shadow-sm"><i data-lucide="edit" class="h-4 w-4"></i></div>
+                                Rédiger un article (SEO)
+                            </button>
+                            <button onclick="switchTab('logiciels')" class="w-full flex items-center p-3 text-sm font-medium text-gray-700 bg-gray-50 rounded-xl hover:bg-ziv-cyan hover:text-white transition-colors border border-gray-100 hover:border-transparent group">
+                                <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center mr-3 group-hover:text-ziv-cyan text-gray-400 shadow-sm"><i data-lucide="refresh-cw" class="h-4 w-4"></i></div>
+                                Mettre à jour les Tarifs
+                            </button>
+                            <button onclick="switchTab('seo')" class="w-full flex items-center p-3 text-sm font-medium text-gray-700 bg-gray-50 rounded-xl hover:bg-ziv-cyan hover:text-white transition-colors border border-gray-100 hover:border-transparent group">
+                                <div class="w-8 h-8 rounded-lg bg-white flex items-center justify-center mr-3 group-hover:text-ziv-cyan text-gray-400 shadow-sm"><i data-lucide="settings" class="h-4 w-4"></i></div>
+                                Modifier les Couleurs
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistiques Visiteurs (Nouveau) -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+                    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-lg font-bold text-gray-900">Trafic par Pays (Top 5)</h3>
+                            <span class="text-xs font-medium bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full">Ce mois</span>
+                        </div>
+                        <div class="space-y-5">
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-4 shadow-sm rounded-sm">🇨🇮</span>
+                                <div class="flex-grow">
+                                    <div class="flex justify-between mb-1.5">
+                                        <span class="text-sm font-bold text-gray-800">Côte d'Ivoire</span>
+                                        <span class="text-sm font-bold text-ziv-cyan">78%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-100 rounded-full h-2">
+                                        <div class="bg-ziv-cyan h-2 rounded-full" style="width: 78%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-4 shadow-sm rounded-sm">🇸🇳</span>
+                                <div class="flex-grow">
+                                    <div class="flex justify-between mb-1.5">
+                                        <span class="text-sm font-bold text-gray-800">Sénégal</span>
+                                        <span class="text-sm font-bold text-gray-600">8%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-100 rounded-full h-2">
+                                        <div class="bg-blue-400 h-2 rounded-full" style="width: 8%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-4 shadow-sm rounded-sm">🇲🇱</span>
+                                <div class="flex-grow">
+                                    <div class="flex justify-between mb-1.5">
+                                        <span class="text-sm font-bold text-gray-800">Mali</span>
+                                        <span class="text-sm font-bold text-gray-600">6%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-100 rounded-full h-2">
+                                        <div class="bg-blue-300 h-2 rounded-full" style="width: 6%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-4 shadow-sm rounded-sm">🇧🇫</span>
+                                <div class="flex-grow">
+                                    <div class="flex justify-between mb-1.5">
+                                        <span class="text-sm font-bold text-gray-800">Burkina Faso</span>
+                                        <span class="text-sm font-bold text-gray-600">5%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-100 rounded-full h-2">
+                                        <div class="bg-gray-400 h-2 rounded-full" style="width: 5%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <span class="text-2xl mr-4 shadow-sm rounded-sm">🌍</span>
+                                <div class="flex-grow">
+                                    <div class="flex justify-between mb-1.5">
+                                        <span class="text-sm font-bold text-gray-800">Reste du monde</span>
+                                        <span class="text-sm font-bold text-gray-600">3%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-100 rounded-full h-2">
+                                        <div class="bg-gray-300 h-2 rounded-full" style="width: 3%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 flex flex-col justify-center items-center text-center">
+                        <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-4">
+                            <i data-lucide="bar-chart-2" class="h-8 w-8 text-ziv-blue"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Connecter Google Analytics</h3>
+                        <p class="text-sm text-gray-500 mb-6 max-w-sm">Pour des données en temps réel sur l'acquisition de vos leads, reliez votre compte Analytics 4 dans la section SEO.</p>
+                        <button onclick="switchTab('seo')" class="bg-ziv-blue hover:bg-blue-800 text-white font-medium py-2 px-6 rounded-lg transition-colors text-sm shadow-sm">
+                            Configurer le Tracking
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-crm" class="view-section hidden">
+                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+                    <div class="p-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
+                        <div class="flex space-x-2">
+                            <button class="bg-ziv-navy text-white px-4 py-2 rounded-lg text-sm font-medium shadow-sm">Demandes de Démo</button>
+                            <button class="bg-white text-gray-600 border border-gray-200 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50">RDV Calendly</button>
+                        </div>
+                        <div class="relative">
+                            <i data-lucide="search" class="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400"></i>
+                            <input type="text" placeholder="Rechercher un contact..." class="pl-10 pr-4 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ziv-cyan focus:border-transparent w-64">
+                        </div>
+                    </div>
+                    <table class="w-full text-left text-sm text-gray-500">
+                        <thead class="text-xs text-gray-400 uppercase bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-4">Contact</th>
+                                <th class="px-6 py-4">Coordonnées</th>
+                                <th class="px-6 py-4">Intérêt</th>
+                                <th class="px-6 py-4">Statut</th>
+                                <th class="px-6 py-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <p class="font-bold text-gray-900">Jean Kouassi</p>
+                                    <p class="text-xs">SCI Bâtisseur</p>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <p class="text-gray-900">07 08 53 11 11</p>
+                                    <p class="text-xs">jean@scibatisseur.ci</p>
+                                </td>
+                                <td class="px-6 py-4"><span class="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md text-xs font-bold">LOTIGES ERP</span></td>
+                                <td class="px-6 py-4">
+                                    <select class="bg-yellow-50 border border-yellow-200 text-yellow-800 text-xs rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2">
+                                        <option selected>À contacter</option>
+                                        <option value="encours">En cours</option>
+                                        <option value="clos">Traité / Clos</option>
+                                    </select>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button class="text-gray-400 hover:text-ziv-cyan mr-2" title="Envoyer Email"><i data-lucide="mail" class="h-4 w-4"></i></button>
+                                    <button class="text-gray-400 hover:text-red-500" title="Supprimer"><i data-lucide="trash-2" class="h-4 w-4"></i></button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <p class="font-bold text-gray-900">Aminata Sylla</p>
+                                    <p class="text-xs">Agence Immo Plus</p>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <p class="text-gray-900">01 02 03 04 05</p>
+                                    <p class="text-xs">aminata@immoplus.ci</p>
+                                </td>
+                                <td class="px-6 py-4"><span class="bg-orange-50 text-orange-700 px-2.5 py-1 rounded-md text-xs font-bold">GESPAT</span></td>
+                                <td class="px-6 py-4">
+                                    <select class="bg-green-50 border border-green-200 text-green-800 text-xs rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2">
+                                        <option>À contacter</option>
+                                        <option value="encours">En cours</option>
+                                        <option selected value="clos">Traité / Clos</option>
+                                    </select>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <button class="text-gray-400 hover:text-ziv-cyan mr-2"><i data-lucide="mail" class="h-4 w-4"></i></button>
+                                    <button class="text-gray-400 hover:text-red-500"><i data-lucide="trash-2" class="h-4 w-4"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="view-logiciels" class="view-section hidden space-y-6">
+                <div class="flex justify-between items-center bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                    <p class="text-sm text-gray-600">Sélectionnez le logiciel à modifier pour mettre à jour la page d'accueil en temps réel.</p>
+                    <select id="software-selector" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-ziv-cyan focus:border-ziv-cyan block p-2.5 w-64 font-bold">
+                        <option value="lotiges">LOTIGES CRM</option>
+                        <option value="erp">LOTIGES ERP</option>
+                        <option value="vente">EASY VENTE</option>
+                        <option value="gespat">GESPAT</option>
+                        <option value="foncier">SUIT FONCIER</option>
+                        <option value="gedaj">GEDAJ</option>
+                        <option value="syndycarre">SYNDYCARRE</option>
+                    </select>
+                </div>
+
+                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-8">
+                    <form onsubmit="saveSettings(event)" class="space-y-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <!-- Infos basiques -->
+                            <div class="space-y-4">
+                                <h4 class="font-bold text-gray-900 border-b pb-2">Informations Générales</h4>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Nom du Logiciel</label>
+                                    <input type="text" value="LOTIGES CRM" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-ziv-cyan focus:border-ziv-cyan">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Sous-titre / Accroche</label>
+                                    <input type="text" value="Le Moteur Commercial de la Promotion Immobilière" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-ziv-cyan focus:border-ziv-cyan">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Description courte</label>
+                                    <textarea rows="3" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-ziv-cyan focus:border-ziv-cyan">La référence CRM conçue spécifiquement pour les promoteurs ouest-africains.</textarea>
+                                </div>
+                            </div>
+                            
+                            <!-- Tarifs & Medias -->
+                            <div class="space-y-4">
+                                <h4 class="font-bold text-gray-900 border-b pb-2">Tarification & Médias</h4>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Prix (FCFA / mois)</label>
+                                    <div class="flex">
+                                        <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md font-bold">FCFA</span>
+                                        <input type="number" value="75000" class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 block flex-1 min-w-0 w-full text-sm p-2.5 focus:ring-ziv-cyan focus:border-ziv-cyan">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">ID Vidéo YouTube (Démonstration)</label>
+                                    <div class="flex">
+                                        <span class="inline-flex items-center px-3 text-sm text-gray-500 bg-gray-100 border border-r-0 border-gray-300 rounded-l-md">youtube.com/watch?v=</span>
+                                        <input type="text" value="M7lc1UVf-VE" class="rounded-none rounded-r-lg bg-gray-50 border border-gray-300 text-gray-900 block flex-1 min-w-0 w-full text-sm p-2.5 focus:ring-ziv-cyan focus:border-ziv-cyan">
+                                    </div>
+                                    <p class="text-[10px] text-gray-400 mt-1">Laissez vide pour afficher "Vidéo bientôt disponible"</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Image de couverture (URL)</label>
+                                    <input type="text" value="https://images.unsplash.com/photo-1556761175" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg focus:ring-ziv-cyan focus:border-ziv-cyan text-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h4 class="font-bold text-gray-900 border-b pb-2 mb-4">Fonctionnalités & Bénéfices</h4>
+                            <p class="text-xs text-gray-500 mb-2">Séparer chaque point par un tiret (-)</p>
+                            <textarea rows="5" class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-ziv-cyan focus:border-ziv-cyan text-sm leading-relaxed">- Suivi détaillé de l'échéancier client (VEFA)
+- Génération automatisée des contrats de réservation
+- Pipeline commercial et qualification des leads
+- Tableau de bord de rentabilité par programme</textarea>
+                        </div>
+
+                        <div class="flex justify-end pt-4 border-t border-gray-100">
+                            <button type="submit" class="bg-ziv-navy hover:bg-ziv-blue text-white font-bold py-2.5 px-6 rounded-lg shadow-md transition-colors flex items-center">
+                                <i data-lucide="save" class="h-4 w-4 mr-2"></i> Enregistrer les modifications
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="view-blog" class="view-section hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-900">Gestion des Articles & Ressources</h2>
+                    <button class="bg-ziv-cyan hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition-colors flex items-center text-sm">
+                        <i data-lucide="plus" class="h-4 w-4 mr-2"></i> Nouvel Article
+                    </button>
+                </div>
+
+                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden mb-8">
+                    <table class="w-full text-left text-sm text-gray-500">
+                        <thead class="text-xs text-gray-400 uppercase bg-gray-50 border-b border-gray-100">
+                            <tr>
+                                <th class="px-6 py-4">Titre de l'article (SEO)</th>
+                                <th class="px-6 py-4">Catégorie</th>
+                                <th class="px-6 py-4">Vues</th>
+                                <th class="px-6 py-4">Statut</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-gray-900">Lutte contre le Blanchiment de Capitaux (LBC)...</td>
+                                <td class="px-6 py-4">Réglementation</td>
+                                <td class="px-6 py-4">1,240</td>
+                                <td class="px-6 py-4"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">Publié</span></td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-gray-400 hover:text-ziv-cyan mr-3"><i data-lucide="edit-2" class="h-4 w-4"></i></button>
+                                    <button class="text-gray-400 hover:text-red-500"><i data-lucide="trash-2" class="h-4 w-4"></i></button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 font-medium text-gray-900">VEFA : Les 3 erreurs fatales dans la gestion...</td>
+                                <td class="px-6 py-4">Promotion</td>
+                                <td class="px-6 py-4">856</td>
+                                <td class="px-6 py-4"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">Publié</span></td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="text-gray-400 hover:text-ziv-cyan mr-3"><i data-lucide="edit-2" class="h-4 w-4"></i></button>
+                                    <button class="text-gray-400 hover:text-red-500"><i data-lucide="trash-2" class="h-4 w-4"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Simple Editor Mockup -->
+                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-8">
+                    <h3 class="text-lg font-bold text-gray-900 mb-6 border-b pb-4">Éditeur d'Article (CMS)</h3>
+                    <form onsubmit="saveSettings(event)" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-1">Titre (H1 SEO)</label>
+                            <input type="text" placeholder="Ex: Comment obtenir son ACD en 2026..." class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-ziv-cyan focus:border-ziv-cyan">
+                        </div>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Catégorie</label>
+                                <select class="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg focus:ring-ziv-cyan focus:border-ziv-cyan">
+                                    <option>Réglementation</option>
+                                    <option>Promotion</option>
+                                    <option>Lotissement</option>
+                                    <option>Syndic</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Image de couverture</label>
+                                <input type="file" class="w-full text-sm text-gray-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-ziv-blue hover:file:bg-blue-100">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-gray-700 mb-2">Contenu de l'article (HTML supporté)</label>
+                            <!-- Mock Toolbar -->
+                            <div class="border border-gray-300 border-b-0 rounded-t-lg bg-gray-50 p-2 flex space-x-2">
+                                <button type="button" class="p-1.5 hover:bg-gray-200 rounded text-gray-700 font-bold">B</button>
+                                <button type="button" class="p-1.5 hover:bg-gray-200 rounded text-gray-700 italic">I</button>
+                                <button type="button" class="p-1.5 hover:bg-gray-200 rounded text-gray-700 underline">U</button>
+                                <div class="w-px h-6 bg-gray-300 mx-1 mt-1"></div>
+                                <button type="button" class="p-1.5 hover:bg-gray-200 rounded text-gray-700 text-sm"><i data-lucide="link" class="h-4 w-4"></i></button>
+                                <button type="button" class="p-1.5 hover:bg-gray-200 rounded text-gray-700 text-sm"><i data-lucide="image" class="h-4 w-4"></i></button>
+                            </div>
+                            <textarea rows="10" placeholder="Rédigez votre contenu ici..." class="w-full p-4 bg-white border border-gray-300 rounded-b-lg focus:ring-0 outline-none resize-y text-sm"></textarea>
+                        </div>
+                        <div class="flex justify-end pt-4">
+                            <button type="submit" class="bg-ziv-cyan hover:bg-cyan-600 text-white font-bold py-2.5 px-6 rounded-lg shadow-md transition-colors">
+                                Publier l'article
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- VIEW: TEMOIGNAGES -->
+            <div id="view-temoignages" class="view-section hidden space-y-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-900">Gestion des Témoignages Clients</h2>
+                    <button class="bg-ziv-cyan hover:bg-cyan-600 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition-colors flex items-center text-sm">
+                        <i data-lucide="plus" class="h-4 w-4 mr-2"></i> Ajouter un avis
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+                        <table class="w-full text-left text-sm text-gray-500">
+                            <thead class="text-xs text-gray-400 uppercase bg-gray-50 border-b border-gray-100">
+                                <tr>
+                                    <th class="px-6 py-4">Client / Entreprise</th>
+                                    <th class="px-6 py-4">Logiciel</th>
+                                    <th class="px-6 py-4">Statut</th>
+                                    <th class="px-6 py-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4">
+                                        <p class="font-bold text-gray-900">M. Sidibé Souleymane</p>
+                                        <p class="text-xs">ORIBAT</p>
+                                    </td>
+                                    <td class="px-6 py-4"><span class="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-bold">LOTIGES</span></td>
+                                    <td class="px-6 py-4"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">En ligne</span></td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-gray-400 hover:text-ziv-cyan mr-3"><i data-lucide="edit-2" class="h-4 w-4"></i></button>
+                                        <button class="text-gray-400 hover:text-red-500"><i data-lucide="trash-2" class="h-4 w-4"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4">
+                                        <p class="font-bold text-gray-900">Mme Koumba Wagué</p>
+                                        <p class="text-xs">KOUMBA PRESTIGE</p>
+                                    </td>
+                                    <td class="px-6 py-4"><span class="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs font-bold">LOTIGES</span></td>
+                                    <td class="px-6 py-4"><span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold">En ligne</span></td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-gray-400 hover:text-ziv-cyan mr-3"><i data-lucide="edit-2" class="h-4 w-4"></i></button>
+                                        <button class="text-gray-400 hover:text-red-500"><i data-lucide="trash-2" class="h-4 w-4"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 h-fit">
+                        <h3 class="text-lg font-bold text-gray-900 mb-4 border-b pb-2">Éditer le témoignage</h3>
+                        <form onsubmit="saveSettings(event, 'Témoignage')" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Nom du client</label>
+                                <input type="text" value="M. Sidibé Souleymane" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-ziv-cyan focus:border-ziv-cyan">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Entreprise & Poste</label>
+                                <input type="text" value="ORIBAT - Gérant" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-ziv-cyan focus:border-ziv-cyan">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Extrait du texte (Citations)</label>
+                                <textarea rows="4" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-ziv-cyan focus:border-ziv-cyan">"Le déploiement du logiciel LOTI'GES s'est parfaitement déroulé. C'est un véritable levier de performance pour notre structure."</textarea>
+                            </div>
+                            <button type="submit" class="w-full bg-ziv-navy hover:bg-ziv-blue text-white font-bold py-2.5 px-4 rounded-lg transition-colors text-sm flex justify-center items-center">
+                                <i data-lucide="save" class="h-4 w-4 mr-2"></i> Mettre à jour l'avis
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIEW: FAQ & CHATBOT -->
+            <div id="view-faq" class="view-section hidden space-y-6">
+                <div class="bg-gradient-to-r from-ziv-cyan to-teal-500 rounded-2xl p-8 text-white shadow-lg mb-8">
+                    <h2 class="text-2xl font-bold font-heading mb-2">Centre d'Assistance Interactif</h2>
+                    <p class="text-teal-50 text-sm">Gérez les questions fréquentes (FAQ SEO) et configurez les réponses automatiques du Chatbot B2B.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Config Chatbot -->
+                    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-8">
+                        <h3 class="text-lg font-bold text-gray-900 mb-6 flex items-center border-b pb-4">
+                            <i data-lucide="bot" class="h-5 w-5 mr-2 text-ziv-cyan"></i> Configuration du Chatbot
+                        </h3>
+                        <form onsubmit="saveSettings(event, 'Configuration Chatbot')" class="space-y-6">
+                            <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl border border-gray-200">
+                                <div>
+                                    <p class="font-bold text-gray-900 text-sm">Activer le Chatbot</p>
+                                    <p class="text-xs text-gray-500">Afficher la bulle flottante sur le site public</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" value="" class="sr-only peer" checked>
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-ziv-cyan"></div>
+                                </label>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Message d'accueil (Bulle d'accroche)</label>
+                                <input type="text" value="Besoin d'aide ? Laissez-moi vous guider vers le bon logiciel." class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-ziv-cyan focus:border-ziv-cyan">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-1">Premier message du bot (Ouverture)</label>
+                                <textarea rows="3" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-ziv-cyan focus:border-ziv-cyan">Bonjour ! 👋 Bienvenue sur ZIV PROPTECH. Pour vous guider précisément, quelle est votre activité principale ?</textarea>
+                            </div>
+
+                            <button type="submit" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-2.5 px-4 rounded-lg transition-colors text-sm">
+                                Sauvegarder le Chatbot
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Config FAQ -->
+                    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-8">
+                        <div class="flex justify-between items-center mb-6 border-b pb-4">
+                            <h3 class="text-lg font-bold text-gray-900 flex items-center">
+                                <i data-lucide="help-circle" class="h-5 w-5 mr-2 text-ziv-cyan"></i> Foire Aux Questions (FAQ)
+                            </h3>
+                            <button class="text-ziv-cyan hover:text-cyan-700 text-sm font-bold">+ Ajouter</button>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="border border-gray-200 rounded-xl p-4 bg-gray-50 relative group">
+                                <button class="absolute top-4 right-4 text-gray-400 hover:text-red-500 hidden group-hover:block"><i data-lucide="trash-2" class="h-4 w-4"></i></button>
+                                <input type="text" value="Vos logiciels sont-ils conformes OHADA ?" class="w-full bg-transparent font-bold text-sm text-gray-900 mb-2 border-none p-0 focus:ring-0 outline-none">
+                                <textarea rows="2" class="w-full bg-white border border-gray-200 rounded-lg text-xs p-2 text-gray-600 focus:ring-ziv-cyan outline-none">Absolument. Notre module comptable respecte le plan comptable SYSCOHADA révisé, idéal pour l'UEMOA.</textarea>
+                            </div>
+                            
+                            <div class="border border-gray-200 rounded-xl p-4 bg-gray-50 relative group">
+                                <button class="absolute top-4 right-4 text-gray-400 hover:text-red-500 hidden group-hover:block"><i data-lucide="trash-2" class="h-4 w-4"></i></button>
+                                <input type="text" value="Proposez-vous une formation ?" class="w-full bg-transparent font-bold text-sm text-gray-900 mb-2 border-none p-0 focus:ring-0 outline-none">
+                                <textarea rows="2" class="w-full bg-white border border-gray-200 rounded-lg text-xs p-2 text-gray-600 focus:ring-ziv-cyan outline-none">Oui, tout déploiement s'accompagne de sessions de formation pratiques pour vos équipes.</textarea>
+                            </div>
+                            
+                            <button onclick="saveSettings(event, 'Base FAQ')" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold py-2.5 px-4 rounded-lg transition-colors text-sm mt-4">
+                                Mettre à jour la FAQ
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="view-seo" class="view-section hidden space-y-8">
+                
+                <div class="bg-gradient-to-r from-ziv-navy to-ziv-blue rounded-2xl p-8 text-white shadow-lg">
+                    <h2 class="text-2xl font-bold font-heading mb-2">Configuration Globale du Site</h2>
+                    <p class="text-blue-200 text-sm">Modifiez ici l'identité visuelle de ZIV PROPTECH, vos intégrations de suivi Analytics et optimisez votre présence sur Google.</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- SEO & Tracking Form -->
+                    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-8 space-y-8">
+                        <form onsubmit="saveSettings(event, 'SEO et Tracking')" class="space-y-6">
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center border-b pb-2">
+                                    <i data-lucide="search" class="h-5 w-5 mr-2 text-ziv-cyan"></i> Référencement (SEO)
+                                </h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-1">Balise Title (Titre sur Google)</label>
+                                        <input type="text" value="ZIV PROPTECH | Logiciels Immobiliers en Côte d'Ivoire" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-ziv-cyan focus:border-ziv-cyan outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-1">Méta Description</label>
+                                        <textarea rows="3" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-ziv-cyan focus:border-ziv-cyan outline-none">Découvrez ZIV PROPTECH, la suite de logiciels immobiliers de référence en Côte d'Ivoire et Afrique de l'Ouest. Idéal pour générer des leads qualifiés...</textarea>
+                                        <div class="flex justify-between items-center mt-1">
+                                            <div class="w-2/3 bg-gray-200 rounded-full h-1.5"><div class="bg-green-500 h-1.5 rounded-full" style="width: 85%"></div></div>
+                                            <p class="text-[10px] text-gray-400">145 / 160 car.</p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-1">Mots-clés cibles (Keywords)</label>
+                                        <input type="text" value="logiciels immobiliers, Côte d'Ivoire, proptech, gestion locative, UEMOA" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-ziv-cyan focus:border-ziv-cyan outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-1">Image de partage (Réseaux Sociaux / Open Graph)</label>
+                                        <input type="file" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-ziv-blue hover:file:bg-blue-100">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center border-b pb-2 mt-8">
+                                    <i data-lucide="bar-chart-2" class="h-5 w-5 mr-2 text-ziv-cyan"></i> Tracking & Analytics
+                                </h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-1">ID Google Analytics (G4)</label>
+                                        <input type="text" placeholder="Ex: G-XXXXXXXXXX" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm font-mono focus:ring-ziv-cyan focus:border-ziv-cyan outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-1">ID Pixel Facebook (Meta)</label>
+                                        <input type="text" placeholder="Ex: 123456789012345" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm font-mono focus:ring-ziv-cyan focus:border-ziv-cyan outline-none">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button type="submit" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 px-4 rounded-xl transition-colors text-sm flex justify-center items-center mt-6">
+                                <i data-lucide="save" class="h-4 w-4 mr-2"></i> Sauvegarder SEO & Tracking
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Branding Form -->
+                    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-8 space-y-8">
+                        <form onsubmit="saveSettings(event, 'Identité Visuelle')" class="space-y-6">
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center border-b pb-2">
+                                    <i data-lucide="palette" class="h-5 w-5 mr-2 text-ziv-cyan"></i> Charte Graphique
+                                </h3>
+                                <div class="grid grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-2">Couleur Principale</label>
+                                        <div class="flex items-center space-x-3">
+                                            <input type="color" value="#00A8B5" class="h-10 w-10 rounded border border-gray-300 cursor-pointer">
+                                            <input type="text" value="#00A8B5" class="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg text-sm font-mono uppercase outline-none">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-2">Couleur Secondaire</label>
+                                        <div class="flex items-center space-x-3">
+                                            <input type="color" value="#0A1E4A" class="h-10 w-10 rounded border border-gray-300 cursor-pointer">
+                                            <input type="text" value="#0A1E4A" class="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg text-sm font-mono uppercase outline-none">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-gray-700 mb-1">Logo du site (Header)</label>
+                                    <input type="file" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200">
+                                </div>
+                                <div class="mt-3">
+                                    <label class="block text-sm font-bold text-gray-700 mb-1">Favicon (Onglet navigateur)</label>
+                                    <input type="file" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200">
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-lg font-bold text-gray-900 mb-4 flex items-center border-b pb-2 mt-8">
+                                    <i data-lucide="contact" class="h-5 w-5 mr-2 text-ziv-cyan"></i> Coordonnées Officielles
+                                </h3>
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-1">Numéros de Contact</label>
+                                        <input type="text" value="(+225) 27 22 43 51 88 / 07 08 53 11 11" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-ziv-cyan outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-1">Email de contact</label>
+                                        <input type="email" value="info@alertefoncier.ci" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-ziv-cyan outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-1">Adresse Physique</label>
+                                        <input type="text" value="Abidjan, Cité SYNATRESOR en face Pharmacie Jules Verne" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-ziv-cyan outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-bold text-gray-700 mb-1">Lien Page LinkedIn</label>
+                                        <input type="text" placeholder="https://linkedin.com/company/alerte-foncier" class="w-full p-2.5 bg-gray-50 border border-gray-300 rounded-lg text-sm focus:ring-ziv-cyan outline-none">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 px-4 rounded-xl transition-colors text-sm mt-6 flex items-center justify-center">
+                                <i data-lucide="save" class="h-4 w-4 mr-2"></i> Sauvegarder l'identité
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 flex items-start">
+                    <i data-lucide="info" class="h-6 w-6 text-ziv-blue mr-4 flex-shrink-0"></i>
+                    <div>
+                        <h4 class="font-bold text-blue-900 mb-1">Comment lier ce Back Office au site public ?</h4>
+                        <p class="text-sm text-blue-800 leading-relaxed">
+                            Ce tableau de bord est l'interface visuelle (Frontend Admin). Pour que les modifications enregistrées ici mettent à jour automatiquement votre site web public `index.html`, **une connexion à une base de données (comme Google Firebase ou un serveur propre) est nécessaire.**<br><br>
+                            Si vous souhaitez activer cette persistance des données, demandez l'intégration d'une base de données Cloud !
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Toast Notification System -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-gray-900 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center space-x-3 toast-enter hidden z-50">
+        <i data-lucide="check-circle" class="h-5 w-5 text-green-400"></i>
+        <span id="toast-message" class="font-medium text-sm">Modifications sauvegardées avec succès.</span>
+    </div>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        // Simple State & Navigation Logic
+        function switchTab(tabId) {
+            // Update Title
+            const titles = {
+                'dashboard': 'Tableau de bord',
+                'crm': 'Gestion CRM & Leads',
+                'logiciels': 'Catalogue Logiciels & Tarifs',
+                'blog': 'Blog & Ressources PropTech',
+                'temoignages': 'Témoignages Clients',
+                'faq': 'FAQ & Chatbot',
+                'seo': 'Apparence & SEO'
+            };
+            document.getElementById('header-title').textContent = titles[tabId] || 'Administration';
+
+            // Hide all views
+            document.querySelectorAll('.view-section').forEach(view => {
+                view.classList.add('hidden');
+            });
+
+            // Show selected view
+            const selectedView = document.getElementById(`view-${tabId}`);
+            if (selectedView) {
+                selectedView.classList.remove('hidden');
+            }
+
+            // Update nav styling
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-ziv-cyan', 'text-white');
+                btn.classList.add('text-gray-300');
+            });
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if(activeBtn) {
+                activeBtn.classList.remove('text-gray-300');
+                activeBtn.classList.add('bg-ziv-cyan', 'text-white');
+            }
+        }
+
+        // Mock form submission
+        function saveSettings(e, sectionName = 'Paramètres') {
+            if(e) e.preventDefault();
+            
+            // Show Toast
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            
+            if(toastMessage) toastMessage.textContent = `${sectionName} sauvegardé(s) avec succès.`;
+            
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.remove('toast-enter');
+                toast.classList.add('toast-enter-active');
+            }, 10);
+
+            // Hide Toast after 3s
+            setTimeout(() => {
+                toast.classList.remove('toast-enter-active');
+                toast.classList.add('toast-leave-active');
+                
+                setTimeout(() => {
+                    toast.classList.add('hidden');
+                    toast.classList.remove('toast-leave-active', 'toast-enter');
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

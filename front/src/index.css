@@ -1,0 +1,80 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans text-gray-800 bg-gray-50 antialiased relative;
+  }
+  ::selection {
+    @apply bg-ziv-cyan text-white;
+  }
+}
+
+@layer components {
+  .hero-pattern {
+    background-color: #0a1e4a;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300A8B5' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  .glass-nav {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+  }
+  .play-button-pulse {
+    animation: pulse-ring 2s infinite;
+  }
+  .animate-scroll {
+    animation: scroll 40s linear infinite;
+  }
+  .carousel-container:hover .animate-scroll {
+    animation-play-state: paused;
+  }
+  .mask-edges {
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    box-shadow: 0 0 0 0 rgba(0, 168, 181, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 15px rgba(0, 168, 181, 0);
+  }
+  100% {
+    transform: scale(0.8);
+    box-shadow: 0 0 0 0 rgba(0, 168, 181, 0);
+  }
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #00a8b5;
+}

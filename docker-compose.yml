@@ -1,0 +1,58 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: zivproptech_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./back/database/schema.postgres.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - zivtech_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./back
+    container_name: zivproptech_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PORT: 4000
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      JWT_SECRET: ${JWT_SECRET}
+      CORS_ORIGIN: ${CORS_ORIGIN}
+    networks:
+      - zivtech_network
+
+  frontend:
+    build:
+      context: ./front
+      args:
+        VITE_API_URL: /api
+    container_name: zivproptech_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - zivtech_network
+
+networks:
+  zivtech_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
