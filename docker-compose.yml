@@ -36,6 +36,8 @@ services:
       DB_NAME: ${DB_NAME}
       JWT_SECRET: ${JWT_SECRET}
       CORS_ORIGIN: ${CORS_ORIGIN}
+    volumes:
+      - uploads_data:/app/public/uploads
     networks:
       - zivtech_network
 
@@ -57,3 +59,4 @@ networks:
 
 volumes:
   postgres_data:
+  uploads_data:
