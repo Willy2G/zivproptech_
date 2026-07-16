@@ -25,12 +25,12 @@ export default function ModuleCard({ module }) {
       )}
 
       <div
-        className={`w-14 h-14 ${a.iconBg} rounded-xl flex items-center justify-center mb-6 ${a.iconHover} group-hover:text-white transition-colors duration-300 ${a.iconText}`}
+        className={`w-20 h-20 ${a.iconBg} rounded-xl flex items-center justify-center mb-6 ${a.iconHover} group-hover:text-white transition-colors duration-300 ${a.iconText}`}
       >
         {isImageLogo ? (
-          <img src={module.icon} alt="Logo" className="w-10 h-10 object-contain" />
+          <img src={module.icon} alt="Logo" className="w-14 h-14 object-contain" />
         ) : (
-          <Icon name={module.icon} className="h-7 w-7" />
+          <Icon name={module.icon} className="h-9 w-9" />
         )}
       </div>
       <h4 className={`text-xl font-bold text-gray-900 mb-3 ${a.titleHover} transition-colors`}>

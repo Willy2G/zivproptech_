@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BarChart2, Contact, Loader2, Palette, Save, Search, Upload, ImageIcon } from 'lucide-react';
+import { BarChart2, Calendar, Contact, Loader2, Palette, Save, Search, Upload, ImageIcon } from 'lucide-react';
 import { Field, TextInput, TextArea } from '../components/ui/FormControls.jsx';
 import { fetchSettings, updateSettings, uploadImage } from '../../services/api.js';
 import { useToast } from '../context/ToastContext.jsx';
@@ -26,6 +26,7 @@ export default function Seo() {
     primary_color: '#00A8B5', secondary_color: '#0A1E4A', logo_url: '', favicon_url: '',
     contact_phones: '', contact_email: '', contact_address: '',
     facebook_url: '', linkedin_url: '', youtube_url: '', twitter_url: '', instagram_url: '',
+    calendly_url: '',
   });
 
   useEffect(() => {
@@ -102,7 +103,7 @@ export default function Seo() {
         </div>
 
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-8">
-          <form onSubmit={save('Identité Visuelle', ['primary_color', 'secondary_color', 'logo_url', 'favicon_url', 'contact_phones', 'contact_email', 'contact_address', 'facebook_url', 'linkedin_url', 'youtube_url', 'twitter_url', 'instagram_url'])} className="space-y-6">
+          <form onSubmit={save('Identité Visuelle', ['primary_color', 'secondary_color', 'logo_url', 'favicon_url', 'contact_phones', 'contact_email', 'contact_address', 'facebook_url', 'linkedin_url', 'youtube_url', 'twitter_url', 'instagram_url', 'calendly_url'])} className="space-y-6">
             <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center border-b pb-2">
               <Palette className="h-5 w-5 mr-2 text-ziv-cyan" /> Charte Graphique
             </h3>
@@ -162,6 +163,14 @@ export default function Seo() {
             <Field label="YouTube"><TextInput value={form.youtube_url || ''} onChange={set('youtube_url')} placeholder="https://youtube.com/..." /></Field>
             <Field label="Instagram"><TextInput value={form.instagram_url || ''} onChange={set('instagram_url')} placeholder="https://instagram.com/..." /></Field>
             <Field label="Twitter"><TextInput value={form.twitter_url || ''} onChange={set('twitter_url')} placeholder="https://twitter.com/..." /></Field>
+
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center border-b pb-2 mt-8">
+              <Calendar className="h-5 w-5 mr-2 text-ziv-cyan" /> Intégration Calendly (Prise de RDV)
+            </h3>
+            <Field label="URL Calendly">
+              <TextInput value={form.calendly_url || ''} onChange={set('calendly_url')} placeholder="https://calendly.com/votre-compte" />
+            </Field>
+            <p className="text-xs text-gray-400 -mt-4">L'URL de votre page Calendly pour la prise de rendez-vous. Ex : https://calendly.com/votre-entreprise</p>
             <button type="submit" className="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 px-4 rounded-xl transition-colors text-sm mt-6 flex items-center justify-center">
               <Save className="h-4 w-4 mr-2" /> Sauvegarder l'identité
             </button>

@@ -1,25 +1,42 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Calendar, CheckCircle, Loader2 } from 'lucide-react';
 import Modal from './Modal.jsx';
 import { useModal } from '../../context/ModalContext.jsx';
+import { fetchCalendlyUrl } from '../../services/api.js';
 
-// URL Calendly : remplacez "alertefoncier" par votre vrai identifiant de compte.
-const CALENDLY_URL =
+const FALLBACK_CALENDLY_URL =
   'https://calendly.com/alertefoncier?hide_gdpr_banner=1&background_color=ffffff&text_color=0a1e4a&primary_color=00a8b5';
 
 export default function ExpertModal() {
   const { expertModal, closeExpert } = useModal();
+  const [calendlyUrl, setCalendlyUrl] = useState('');
 
-  // Charge le script Calendly une seule fois, a la premiere ouverture.
   useEffect(() => {
     if (!expertModal) return;
+
+    fetchCalendlyUrl()
+      .then((data) => {
+        const base = data.calendly_url || FALLBACK_CALENDLY_URL;
+        const url = base.includes('?')
+          ? base
+          : `${base}?hide_gdpr_banner=1&background_color=ffffff&text_color=0a1e4a&primary_color=00a8b5`;
+        setCalendlyUrl(url);
+      })
+      .catch(() => setCalendlyUrl(FALLBACK_CALENDLY_URL));
+  }, [expertModal]);
+
+  useEffect(() => {
+    if (!expertModal || !calendlyUrl) return;
     const src = 'https://assets.calendly.com/assets/external/widget.js';
-    if (document.querySelector(`script[src="${src}"]`)) return;
+    if (document.querySelector(`script[src="${src}"]`)) {
+      if (window.Calendly) window.Calendly.initInlineWidget({ url: calendlyUrl, parentElement: document.querySelector('.calendly-inline-widget') });
+      return;
+    }
     const script = document.createElement('script');
     script.src = src;
     script.async = true;
     document.body.appendChild(script);
-  }, [expertModal]);
+  }, [expertModal, calendlyUrl]);
 
   return (
     <Modal
@@ -55,19 +72,19 @@ export default function ExpertModal() {
       </div>
 
       <div className="w-full md:w-3/5 bg-white relative min-h-[550px] md:min-h-[600px] rounded-b-3xl md:rounded-bl-none md:rounded-r-3xl overflow-hidden">
-        {/* Etat de chargement (sous le widget) */}
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 z-0">
           <Loader2 className="h-10 w-10 text-ziv-cyan mb-4 animate-spin" />
           <p className="text-gray-500 text-sm font-medium">Chargement de l'agenda...</p>
           <p className="text-[10px] text-gray-400 mt-2">Intégration Calendly sécurisée</p>
         </div>
 
-        {/* Widget Calendly (rendu par widget.js via data-url) */}
-        <div
-          className="calendly-inline-widget absolute inset-0 z-10 w-full h-full"
-          data-url={CALENDLY_URL}
-          style={{ minWidth: '320px', height: '100%' }}
-        />
+        {calendlyUrl && (
+          <div
+            className="calendly-inline-widget absolute inset-0 z-10 w-full h-full"
+            data-url={calendlyUrl}
+            style={{ minWidth: '320px', height: '100%' }}
+          />
+        )}
       </div>
     </Modal>
   );

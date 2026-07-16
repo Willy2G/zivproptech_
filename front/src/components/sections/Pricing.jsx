@@ -15,11 +15,11 @@ function PlanCard({ plan, onSelect }) {
           Module Le Plus Populaire
         </div>
         <div className="flex items-center mb-4 mt-2">
-          <div className={`w-12 h-12 ${plan.iconBg} rounded-xl flex items-center justify-center ${plan.iconText} mr-3`}>
+          <div className={`w-16 h-16 ${plan.iconBg} rounded-xl flex items-center justify-center ${plan.iconText} mr-3`}>
             {isImageLogo ? (
-              <img src={plan.icon} alt="Logo" className="w-8 h-8 object-contain" />
+              <img src={plan.icon} alt="Logo" className="w-12 h-12 object-contain" />
             ) : (
-              <Icon name={plan.icon} className="h-6 w-6" />
+              <Icon name={plan.icon} className="h-8 w-8" />
             )}
           </div>
           <h4 className="text-2xl font-bold text-gray-900">{plan.title}</h4>
@@ -50,11 +50,11 @@ function PlanCard({ plan, onSelect }) {
   return (
     <div className={`bg-gray-50 rounded-2xl p-8 shadow-sm border border-gray-200 hover:shadow-xl ${plan.hoverBorder} transition-all duration-300 flex flex-col h-full relative`}>
       <div className="flex items-center mb-4">
-        <div className={`w-10 h-10 ${plan.iconBg} rounded-lg flex items-center justify-center ${plan.iconText} mr-3`}>
+        <div className={`w-14 h-14 ${plan.iconBg} rounded-lg flex items-center justify-center ${plan.iconText} mr-3`}>
           {isImageLogo ? (
-            <img src={plan.icon} alt="Logo" className="w-6 h-6 object-contain" />
+            <img src={plan.icon} alt="Logo" className="w-10 h-10 object-contain" />
           ) : (
-            <Icon name={plan.icon} className="h-5 w-5" />
+            <Icon name={plan.icon} className="h-7 w-7" />
           )}
         </div>
         <h4 className="text-xl font-bold text-gray-900">{plan.title}</h4>

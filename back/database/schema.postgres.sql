@@ -265,6 +265,7 @@ CREATE TABLE IF NOT EXISTS global_settings (
     sms_api_key VARCHAR(255),
     sms_api_token VARCHAR(255),
     sms_sender_id VARCHAR(50),
+    calendly_url VARCHAR(255) DEFAULT 'https://calendly.com/alertefoncier',
     updated_at TIMESTAMPTZ DEFAULT now(),
     CONSTRAINT chk_single_row CHECK (id = 1)
 );

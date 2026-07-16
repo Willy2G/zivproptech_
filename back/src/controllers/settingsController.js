@@ -9,6 +9,16 @@ export async function getSettings(_req, res) {
   }
 }
 
+export async function getCalendlyUrl(_req, res) {
+  try {
+    const result = await pool.query('SELECT calendly_url FROM global_settings WHERE id=1');
+    const row = result.rows[0];
+    return res.json({ calendly_url: row?.calendly_url || '' });
+  } catch (err) {
+    return res.status(500).json({ message: 'Erreur serveur.' });
+  }
+}
+
 export async function updateSettings(req, res) {
   const fields = req.body;
   const keys = Object.keys(fields).filter(k => k !== 'id');

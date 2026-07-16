@@ -57,6 +57,7 @@ export const deleteFaq = (id) => request(`/faqs/${id}`, { method: 'DELETE' });
 
 // Settings
 export const fetchSettings = () => request('/settings');
+export const fetchCalendlyUrl = () => request('/settings/calendly');
 export const updateSettings = (data) => request('/settings', { method: 'PUT', body: JSON.stringify(data) });
 
 // Visitor Stats
