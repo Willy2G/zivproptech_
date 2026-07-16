@@ -3,6 +3,8 @@ import { Edit2, Loader2, Plus, Trash2, ChevronLeft, ChevronRight } from 'lucide-
 import { Field, TextInput, TextArea, Select } from '../components/ui/FormControls.jsx';
 import { fetchPosts, createPost, updatePost, deletePost, uploadImage } from '../../services/api.js';
 import { useToast } from '../context/ToastContext.jsx';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const STATUS_BADGE = {
   published: { label: 'Publié', className: 'bg-green-100 text-green-800' },
@@ -136,7 +138,16 @@ export default function Blog() {
             </Field>
           </div>
           <Field label="Méta Description"><TextArea rows={2} value={form.meta_description} onChange={set('meta_description')} /></Field>
-          <Field label="Contenu (HTML)"><TextArea rows={10} value={form.content_html} onChange={set('content_html')} /></Field>
+          <Field label="Contenu (Éditeur Riche)">
+            <div className="bg-white">
+              <ReactQuill 
+                theme="snow" 
+                value={form.content_html} 
+                onChange={(content) => setForm(f => ({ ...f, content_html: content }))}
+                className="h-64 mb-12"
+              />
+            </div>
+          </Field>
           <div className="flex justify-end pt-4">
             {editing && <button type="button" onClick={resetForm} className="mr-4 text-gray-500 hover:text-gray-700 text-sm">Annuler</button>}
             <button type="submit" className="bg-ziv-cyan hover:bg-cyan-600 text-white font-bold py-2.5 px-6 rounded-lg shadow-md transition-colors">
