@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Save, Loader2, Upload, ImageIcon } from 'lucide-react';
 import { Field, TextInput, TextArea, Select, SaveButton } from '../components/ui/FormControls.jsx';
-import { fetchSoftwares, updateSoftware, uploadImage } from '../../services/api.js';
+import { fetchSoftwares, updateSoftware, createSoftware, deleteSoftware, uploadImage } from '../../services/api.js';
 import { useToast } from '../context/ToastContext.jsx';
 
 export default function Logiciels() {
@@ -11,6 +11,7 @@ export default function Logiciels() {
   const [selectedId, setSelectedId] = useState('');
   const [form, setForm] = useState({});
   const [uploadingLogo, setUploadingLogo] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   useEffect(() => {
     fetchSoftwares()
@@ -34,8 +35,15 @@ export default function Logiciels() {
 
   const handleSelect = (e) => {
     const id = e.target.value;
-    setSelectedId(id);
-    setForm(toForm(catalog.find(s => s.id === id)));
+    if (id === 'new') {
+      setIsCreating(true);
+      setSelectedId('');
+      setForm(toForm({}));
+    } else {
+      setIsCreating(false);
+      setSelectedId(id);
+      setForm(toForm(catalog.find(s => s.id === id) || {}));
+    }
   };
 
   const set = (key) => (e) => setForm(f => ({ ...f, [key]: e.target.value }));
@@ -57,17 +65,39 @@ export default function Logiciels() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const payload = {
+      ...form,
+      features: form.features.split('\n').map(s => s.replace(/^-\s*/, '').trim()).filter(Boolean),
+      benefits: form.benefits.split('\n').map(s => s.replace(/^-\s*/, '').trim()).filter(Boolean),
+    };
+    
     try {
-      await updateSoftware(selectedId, {
-        ...form,
-        features: form.features.split('\n').map(s => s.replace(/^-\s*/, '').trim()).filter(Boolean),
-        benefits: form.benefits.split('\n').map(s => s.replace(/^-\s*/, '').trim()).filter(Boolean),
-      });
-      showToast(`« ${form.name} » sauvegardé.`);
-      
-      // Update local catalog
-      setCatalog(prev => prev.map(s => s.id === selectedId ? { ...s, ...form } : s));
+      if (isCreating) {
+        if (!form.id) { showToast('ID requis pour un nouveau logiciel'); return; }
+        await createSoftware({ id: form.id, ...payload });
+        showToast(`Logiciel créé.`);
+        const data = await fetchSoftwares();
+        setCatalog(data);
+        setIsCreating(false);
+        setSelectedId(form.id);
+      } else {
+        await updateSoftware(selectedId, payload);
+        showToast(`« ${form.name} » sauvegardé.`);
+        setCatalog(prev => prev.map(s => s.id === selectedId ? { ...s, ...payload } : s));
+      }
     } catch { showToast('Erreur de sauvegarde.'); }
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm('Voulez-vous vraiment supprimer ce logiciel ?')) return;
+    try {
+      await deleteSoftware(selectedId);
+      showToast('Logiciel supprimé.');
+      const data = await fetchSoftwares();
+      setCatalog(data);
+      if (data.length) { setSelectedId(data[0].id); setForm(toForm(data[0])); }
+      else { setSelectedId(''); setForm(toForm({})); }
+    } catch { showToast('Erreur lors de la suppression.'); }
   };
 
   if (loading) return <div className="flex justify-center py-20 text-gray-400"><Loader2 className="h-6 w-6 animate-spin mr-2" /> Chargement...</div>;
@@ -76,8 +106,9 @@ export default function Logiciels() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between md:items-center gap-4 bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
         <p className="text-sm text-gray-600">Sélectionnez le logiciel à modifier.</p>
-        <Select value={selectedId} onChange={handleSelect} className="w-full md:w-64 font-bold">
+        <Select value={isCreating ? 'new' : selectedId} onChange={handleSelect} className="w-full md:w-64 font-bold">
           {catalog.map(sw => <option key={sw.id} value={sw.id}>{sw.name}</option>)}
+          <option value="new" className="text-ziv-cyan font-bold">+ Ajouter un Logiciel</option>
         </Select>
       </div>
 
@@ -86,6 +117,11 @@ export default function Logiciels() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="space-y-4">
               <h4 className="font-bold text-gray-900 border-b pb-2">Informations Générales</h4>
+              {isCreating && (
+                <Field label="ID du Logiciel (Unique, ex: mon_logiciel)">
+                  <TextInput value={form.id || ''} onChange={set('id')} />
+                </Field>
+              )}
               <Field label="Nom du Logiciel"><TextInput value={form.name} onChange={set('name')} /></Field>
               <Field label="Sous-titre / Accroche"><TextInput value={form.subtitle} onChange={set('subtitle')} /></Field>
               <Field label="Description courte"><TextArea rows={3} value={form.description} onChange={set('description')} /></Field>
@@ -152,7 +188,12 @@ export default function Logiciels() {
             <h4 className="font-bold text-gray-900 border-b pb-2 mb-4">Bénéfices (un par ligne)</h4>
             <TextArea rows={5} value={form.benefits} onChange={set('benefits')} />
           </div>
-          <div className="flex justify-end pt-4 border-t border-gray-100">
+          <div className="flex justify-between items-center pt-4 border-t border-gray-100">
+            {!isCreating && selectedId ? (
+              <button type="button" onClick={handleDelete} className="text-red-500 hover:text-red-700 text-sm font-semibold">
+                Supprimer ce logiciel
+              </button>
+            ) : <div></div>}
             <SaveButton><Save className="h-4 w-4 mr-2" /> Enregistrer</SaveButton>
           </div>
         </form>

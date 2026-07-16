@@ -34,7 +34,9 @@ export const deleteLead = (id) => request(`/leads/${id}`, { method: 'DELETE' });
 
 // Softwares
 export const fetchSoftwares = () => request('/softwares');
+export const createSoftware = (data) => request('/softwares', { method: 'POST', body: JSON.stringify(data) });
 export const updateSoftware = (id, data) => request(`/softwares/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+export const deleteSoftware = (id) => request(`/softwares/${id}`, { method: 'DELETE' });
 
 // Blog
 export const fetchPosts = () => request('/blog');

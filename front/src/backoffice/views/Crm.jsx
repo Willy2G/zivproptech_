@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Loader2, Mail, Search, Trash2, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, MessageSquare, Settings } from 'lucide-react';
+import { Loader2, Mail, Search, Trash2, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, MessageSquare, Settings, Send } from 'lucide-react';
 import SoftwareBadge from '../components/ui/SoftwareBadge.jsx';
+import Modal from '../../components/modals/Modal.jsx';
+import { Field, TextInput, TextArea, SaveButton } from '../components/ui/FormControls.jsx';
 import { leadStatuses } from '../data/mockLeads.js';
 import { fetchLeads, updateLeadStatus as apiUpdateStatus, deleteLead as apiDeleteLead } from '../../services/api.js';
 import { useToast } from '../context/ToastContext.jsx';
@@ -26,6 +28,22 @@ export default function Crm() {
   const [sortDir, setSortDir] = useState('desc');
   const [page, setPage] = useState(1);
   const perPage = 10;
+  const [msgModal, setMsgModal] = useState({ open: false, type: 'sms', recipient: '', subject: '', content: '' });
+
+  const openMsgModal = (type, recipient = '') => {
+    setMsgModal({ open: true, type, recipient, subject: '', content: '' });
+  };
+
+  const closeMsgModal = () => setMsgModal(m => ({ ...m, open: false }));
+
+  const handleSendMsg = (e) => {
+    e.preventDefault();
+    // Simulation d'envoi
+    setTimeout(() => {
+      showToast(`${msgModal.type === 'sms' ? 'SMS' : 'Email'} envoyé avec succès.`);
+      closeMsgModal();
+    }, 1000);
+  };
 
   useEffect(() => {
     fetchLeads()
@@ -78,10 +96,10 @@ export default function Crm() {
         <p className="text-sm text-gray-500 whitespace-nowrap">{processed.length} lead(s) trouvé(s)</p>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full xl:w-auto xl:justify-end">
           <div className="flex flex-wrap items-center gap-2">
-            <button className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-black transition-colors shadow-sm">
+            <button onClick={() => openMsgModal('sms')} className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-black transition-colors shadow-sm">
               <MessageSquare className="h-4 w-4" /> Envoi SMS
             </button>
-            <button className="flex items-center gap-2 bg-ziv-cyan text-white px-4 py-2 rounded-lg text-sm font-medium hover:brightness-110 transition-colors shadow-sm">
+            <button onClick={() => openMsgModal('email')} className="flex items-center gap-2 bg-ziv-cyan text-white px-4 py-2 rounded-lg text-sm font-medium hover:brightness-110 transition-colors shadow-sm">
               <Mail className="h-4 w-4" /> Envoi Email
             </button>
             <a href="/admin/seo" className="flex items-center gap-2 border border-gray-200 bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors shadow-sm">
@@ -139,8 +157,9 @@ export default function Crm() {
                   </td>
                   <td className="px-6 py-4 text-xs text-gray-400">{formatDate(lead.created_at)}</td>
                   <td className="px-6 py-4">
-                    <a href={`mailto:${lead.email}`} className="text-gray-400 hover:text-ziv-cyan mr-2"><Mail className="h-4 w-4" /></a>
-                    <button onClick={() => handleDelete(lead)} className="text-gray-400 hover:text-red-500"><Trash2 className="h-4 w-4" /></button>
+                    <button onClick={() => openMsgModal('email', lead.email)} className="text-gray-400 hover:text-ziv-cyan mr-2" title="Envoyer un email"><Mail className="h-4 w-4" /></button>
+                    <button onClick={() => openMsgModal('sms', lead.phone)} className="text-gray-400 hover:text-blue-500 mr-2" title="Envoyer un SMS"><MessageSquare className="h-4 w-4" /></button>
+                    <button onClick={() => handleDelete(lead)} className="text-gray-400 hover:text-red-500" title="Supprimer"><Trash2 className="h-4 w-4" /></button>
                   </td>
                 </tr>
               ))}
@@ -157,6 +176,52 @@ export default function Crm() {
           </div>
         </>
       )}
+
+      {/* Modal d'envoi de message */}
+      <Modal open={msgModal.open} onClose={closeMsgModal} maxWidth="sm:max-w-lg" contentClass="p-6">
+        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+          {msgModal.type === 'sms' ? <MessageSquare className="h-5 w-5 mr-2 text-ziv-cyan" /> : <Mail className="h-5 w-5 mr-2 text-ziv-cyan" />}
+          Envoyer un {msgModal.type === 'sms' ? 'SMS' : 'Email'}
+        </h3>
+        <form onSubmit={handleSendMsg} className="space-y-4">
+          <Field label={msgModal.type === 'sms' ? 'Numéro de téléphone' : 'Adresse Email'}>
+            <TextInput 
+              value={msgModal.recipient} 
+              onChange={e => setMsgModal(m => ({ ...m, recipient: e.target.value }))} 
+              placeholder={msgModal.type === 'sms' ? '+225 00 00 00 00 00' : 'contact@exemple.com'} 
+              required 
+            />
+          </Field>
+          
+          {msgModal.type === 'email' && (
+            <Field label="Sujet">
+              <TextInput 
+                value={msgModal.subject} 
+                onChange={e => setMsgModal(m => ({ ...m, subject: e.target.value }))} 
+                placeholder="Objet de l'email" 
+                required 
+              />
+            </Field>
+          )}
+
+          <Field label="Message">
+            <TextArea 
+              rows={5} 
+              value={msgModal.content} 
+              onChange={e => setMsgModal(m => ({ ...m, content: e.target.value }))} 
+              placeholder="Votre message..." 
+              required 
+            />
+          </Field>
+
+          <div className="flex justify-end pt-4 border-t border-gray-100">
+            <button type="button" onClick={closeMsgModal} className="px-4 py-2 text-gray-500 hover:text-gray-700 mr-4 font-semibold text-sm">
+              Annuler
+            </button>
+            <SaveButton><Send className="h-4 w-4 mr-2" /> Envoyer le message</SaveButton>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }
