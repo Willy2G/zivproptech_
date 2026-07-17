@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Loader2, Mail, Search, Trash2, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, MessageSquare, Settings, Send } from 'lucide-react';
+import { Loader2, Mail, Search, Trash2, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, MessageSquare, Settings, Send, Plus } from 'lucide-react';
 import SoftwareBadge from '../components/ui/SoftwareBadge.jsx';
 import Modal from '../../components/modals/Modal.jsx';
-import { Field, TextInput, TextArea, SaveButton } from '../components/ui/FormControls.jsx';
+import { Field, TextInput, TextArea, SaveButton, Select } from '../components/ui/FormControls.jsx';
 import { leadStatuses } from '../data/mockLeads.js';
-import { fetchLeads, updateLeadStatus as apiUpdateStatus, deleteLead as apiDeleteLead } from '../../services/api.js';
+import { fetchLeads, updateLeadStatus as apiUpdateStatus, deleteLead as apiDeleteLead, createLead } from '../../services/api.js';
 import { useToast } from '../context/ToastContext.jsx';
 
 const SELECT_STYLE = {
@@ -29,6 +29,7 @@ export default function Crm() {
   const [page, setPage] = useState(1);
   const perPage = 10;
   const [msgModal, setMsgModal] = useState({ open: false, type: 'sms', recipient: '', subject: '', content: '' });
+  const [createModal, setCreateModal] = useState({ open: false, full_name: '', email: '', phone: '', software_interest: 'suit_foncier' });
 
   const openMsgModal = (type, recipient = '') => {
     setMsgModal({ open: true, type, recipient, subject: '', content: '' });
@@ -90,20 +91,41 @@ export default function Crm() {
     catch { showToast('Erreur de suppression.'); }
   };
 
+  const handleCreateLead = async (e) => {
+    e.preventDefault();
+    try {
+      const payload = {
+        full_name: createModal.full_name,
+        email: createModal.email,
+        phone: createModal.phone,
+        software_interest: createModal.software_interest
+      };
+      const res = await createLead(payload);
+      setLeads(prev => [{ id: res.id, ...payload, status: 'new', created_at: new Date().toISOString() }, ...prev]);
+      showToast('Lead enregistré.');
+      setCreateModal({ open: false, full_name: '', email: '', phone: '', software_interest: 'suit_foncier' });
+    } catch (err) {
+      showToast(err.message || 'Erreur lors de la création.');
+    }
+  };
+
   return (
     <div className="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
       <div className="p-6 border-b border-gray-100 flex flex-col xl:flex-row justify-between items-center gap-4">
         <p className="text-sm text-gray-500 whitespace-nowrap">{processed.length} lead(s) trouvé(s)</p>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full xl:w-auto xl:justify-end">
           <div className="flex flex-wrap items-center gap-2">
-            <button onClick={() => openMsgModal('sms')} className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-black transition-colors shadow-sm">
-              <MessageSquare className="h-4 w-4" /> Envoi SMS
+            <button onClick={() => setCreateModal(m => ({ ...m, open: true }))} className="flex items-center gap-2 bg-ziv-cyan text-white px-4 py-2 rounded-lg text-sm font-medium hover:brightness-110 transition-colors shadow-sm">
+              <Plus className="h-4 w-4" /> Nouveau Lead
             </button>
-            <button onClick={() => openMsgModal('email')} className="flex items-center gap-2 bg-ziv-cyan text-white px-4 py-2 rounded-lg text-sm font-medium hover:brightness-110 transition-colors shadow-sm">
-              <Mail className="h-4 w-4" /> Envoi Email
+            <button onClick={() => openMsgModal('sms')} className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-black transition-colors shadow-sm hidden sm:flex">
+              <MessageSquare className="h-4 w-4" /> SMS
+            </button>
+            <button onClick={() => openMsgModal('email')} className="flex items-center gap-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors shadow-sm hidden sm:flex">
+              <Mail className="h-4 w-4" /> Email
             </button>
             <a href="/admin/seo" className="flex items-center gap-2 border border-gray-200 bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors shadow-sm">
-              <Settings className="h-4 w-4 text-gray-500" /> Config. Paramètres
+              <Settings className="h-4 w-4 text-gray-500" /> Paramètres
             </a>
           </div>
           <div className="relative w-full md:w-auto">
@@ -219,6 +241,42 @@ export default function Crm() {
               Annuler
             </button>
             <SaveButton><Send className="h-4 w-4 mr-2" /> Envoyer le message</SaveButton>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Modal Nouveau Lead */}
+      <Modal open={createModal.open} onClose={() => setCreateModal(m => ({ ...m, open: false }))} maxWidth="sm:max-w-md" contentClass="p-6">
+        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+          <Plus className="h-5 w-5 mr-2 text-ziv-cyan" /> Nouveau Lead
+        </h3>
+        <form onSubmit={handleCreateLead} className="space-y-4">
+          <Field label="Nom Complet / Entreprise">
+            <TextInput value={createModal.full_name} onChange={e => setCreateModal(m => ({ ...m, full_name: e.target.value }))} placeholder="Ex: Koffi B. (Aménagement Pro)" required />
+          </Field>
+          <Field label="Email">
+            <TextInput type="email" value={createModal.email} onChange={e => setCreateModal(m => ({ ...m, email: e.target.value }))} placeholder="contact@exemple.com" required />
+          </Field>
+          <Field label="Téléphone">
+            <TextInput value={createModal.phone} onChange={e => setCreateModal(m => ({ ...m, phone: e.target.value }))} placeholder="+225 00 00 00 00 00" required />
+          </Field>
+          <Field label="Intérêt Logiciel / Produit">
+            <Select value={createModal.software_interest} onChange={e => setCreateModal(m => ({ ...m, software_interest: e.target.value }))}>
+              <option value="suit_foncier">Suite ZIV PROPTECH Globale</option>
+              <option value="lotiges_erp">LOTI'GES ERP (Aménagement Foncier)</option>
+              <option value="lotiges_crm">LOTI'GES VEFA (Promotion)</option>
+              <option value="gespat">GESPAT (Gestion Locative)</option>
+              <option value="syndycarre">SYNDYCARRE (Syndic)</option>
+              <option value="gedaj">GEDAJ (LBC / Notaire)</option>
+              <option value="Guide Digitalisation">Guide Digitalisation</option>
+              <option value="Autre">Autre Demande</option>
+            </Select>
+          </Field>
+          <div className="flex justify-end pt-4 border-t border-gray-100">
+            <button type="button" onClick={() => setCreateModal(m => ({ ...m, open: false }))} className="px-4 py-2 text-gray-500 hover:text-gray-700 mr-4 font-semibold text-sm">
+              Annuler
+            </button>
+            <SaveButton>Enregistrer</SaveButton>
           </div>
         </form>
       </Modal>
