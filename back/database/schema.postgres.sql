@@ -266,6 +266,16 @@ CREATE TABLE IF NOT EXISTS global_settings (
     sms_api_token VARCHAR(255),
     sms_sender_id VARCHAR(50),
     calendly_url VARCHAR(255) DEFAULT 'https://calendly.com/alertefoncier',
+    demo_video_url VARCHAR(255),
+    guide_document_url VARCHAR(255),
+    guide_email_subject VARCHAR(255),
+    guide_email_content TEXT,
+    email_from_address VARCHAR(255) DEFAULT 'noreply@immosuit.com',
+    email_from_name VARCHAR(255) DEFAULT 'IMMOSUIT',
+    smtp_host VARCHAR(255),
+    smtp_port INT,
+    smtp_user VARCHAR(255),
+    smtp_pass VARCHAR(255),
     updated_at TIMESTAMPTZ DEFAULT now(),
     CONSTRAINT chk_single_row CHECK (id = 1)
 );
