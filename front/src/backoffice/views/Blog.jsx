@@ -20,7 +20,7 @@ export default function Blog() {
   const [page, setPage] = useState(1);
   const perPage = 5;
   const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ title: '', slug: '', category: CATEGORIES[0], content_html: '', meta_description: '', status: 'draft', cover_image: '' });
+  const [form, setForm] = useState({ title: '', slug: '', category: CATEGORIES[0], content_html: '', meta_description: '', status: 'draft', cover_image: '', sort_order: 0 });
 
   useEffect(() => {
     fetchPosts().then(setArticles).catch(() => showToast('Erreur chargement articles.')).finally(() => setLoading(false));
@@ -31,9 +31,9 @@ export default function Blog() {
 
   const set = (key) => (e) => setForm(f => ({ ...f, [key]: e.target.value }));
 
-  const resetForm = () => { setEditing(null); setForm({ title: '', slug: '', category: CATEGORIES[0], content_html: '', meta_description: '', status: 'draft', cover_image: '' }); };
+  const resetForm = () => { setEditing(null); setForm({ title: '', slug: '', category: CATEGORIES[0], content_html: '', meta_description: '', status: 'draft', cover_image: '', sort_order: 0 }); };
 
-  const handleEdit = (a) => { setEditing(a.id); setForm({ title: a.title, slug: a.slug, category: a.category, content_html: a.content_html, meta_description: a.meta_description || '', status: a.status, cover_image: a.cover_image || '' }); };
+  const handleEdit = (a) => { setEditing(a.id); setForm({ title: a.title, slug: a.slug, category: a.category, content_html: a.content_html, meta_description: a.meta_description || '', status: a.status, cover_image: a.cover_image || '', sort_order: a.sort_order || 0 }); };
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -84,6 +84,7 @@ export default function Blog() {
         <table className="w-full text-left text-sm text-gray-500">
           <thead className="text-xs text-gray-400 uppercase bg-gray-50 border-b"><tr>
             <th className="px-6 py-4">Titre</th><th className="px-6 py-4">Catégorie</th>
+            <th className="px-6 py-4">Ordre</th>
             <th className="px-6 py-4">Vues</th><th className="px-6 py-4">Statut</th><th className="px-6 py-4 text-right">Actions</th>
           </tr></thead>
           <tbody className="divide-y divide-gray-100">
@@ -93,6 +94,7 @@ export default function Blog() {
                 <tr key={a.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 font-medium text-gray-900 max-w-xs truncate">{a.title}</td>
                   <td className="px-6 py-4">{a.category}</td>
+                  <td className="px-6 py-4">{a.sort_order || 0}</td>
                   <td className="px-6 py-4">{a.views_count || 0}</td>
                   <td className="px-6 py-4"><span className={`${badge.className} px-2 py-1 rounded text-xs font-bold`}>{badge.label}</span></td>
                   <td className="px-6 py-4 text-right">
@@ -127,7 +129,7 @@ export default function Blog() {
               </label>
             </div>
           </Field>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Field label="Catégorie">
               <Select value={form.category} onChange={set('category')}>{CATEGORIES.map(c => <option key={c}>{c}</option>)}</Select>
             </Field>
@@ -135,6 +137,9 @@ export default function Blog() {
               <Select value={form.status} onChange={set('status')}>
                 <option value="draft">Brouillon</option><option value="published">Publié</option><option value="archived">Archivé</option>
               </Select>
+            </Field>
+            <Field label="Ordre d'affichage">
+              <TextInput type="number" value={form.sort_order} onChange={set('sort_order')} placeholder="0" />
             </Field>
           </div>
           <Field label="Méta Description"><TextArea rows={2} value={form.meta_description} onChange={set('meta_description')} /></Field>

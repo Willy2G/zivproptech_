@@ -127,6 +127,7 @@ CREATE TABLE IF NOT EXISTS blog_posts (
     views_count INTEGER DEFAULT 0,
     status post_status DEFAULT 'draft',
     admin_id UUID,
+    sort_order INTEGER DEFAULT 0,
     published_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ DEFAULT now(),
     updated_at TIMESTAMPTZ DEFAULT now(),
