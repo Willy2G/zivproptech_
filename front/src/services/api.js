@@ -30,6 +30,7 @@ export const uploadImage = (file) => {
 export const createLead = (payload) => request('/leads', { method: 'POST', body: JSON.stringify(payload) });
 export const fetchLeads = () => request('/leads');
 export const updateLeadStatus = (id, status) => request(`/leads/${id}`, { method: 'PATCH', body: JSON.stringify({ status }) });
+export const updateLead = (id, data) => request(`/leads/${id}`, { method: 'PUT', body: JSON.stringify(data) });
 export const deleteLead = (id) => request(`/leads/${id}`, { method: 'DELETE' });
 
 // Softwares

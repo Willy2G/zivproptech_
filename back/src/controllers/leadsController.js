@@ -139,6 +139,29 @@ export async function updateLeadStatus(req, res) {
 }
 
 /**
+ * PUT /api/leads/:id
+ * Met a jour un lead complet (back-office CRM).
+ */
+export async function updateLead(req, res) {
+  const { id } = req.params;
+  const { full_name, phone, email, software_interest, status } = req.body || {};
+
+  try {
+    const result = await pool.query(
+      `UPDATE leads SET full_name = $1, phone = $2, email = $3, software_interest = $4, status = $5 WHERE id = $6`,
+      [full_name, phone, email, software_interest, status, id]
+    );
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: 'Lead introuvable.' });
+    }
+    return res.json({ message: 'Lead mis à jour.', id });
+  } catch (err) {
+    console.error('Erreur UPDATE lead :', err.message);
+    return res.status(500).json({ message: 'Erreur serveur lors de la mise à jour.' });
+  }
+}
+
+/**
  * DELETE /api/leads/:id
  * Supprime un lead (back-office CRM).
  */

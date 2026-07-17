@@ -4,7 +4,7 @@ import SoftwareBadge from '../components/ui/SoftwareBadge.jsx';
 import Modal from '../../components/modals/Modal.jsx';
 import { Field, TextInput, TextArea, SaveButton, Select } from '../components/ui/FormControls.jsx';
 import { leadStatuses } from '../data/mockLeads.js';
-import { fetchLeads, updateLeadStatus as apiUpdateStatus, deleteLead as apiDeleteLead, createLead } from '../../services/api.js';
+import { fetchLeads, updateLeadStatus as apiUpdateStatus, deleteLead as apiDeleteLead, createLead, updateLead } from '../../services/api.js';
 import { useToast } from '../context/ToastContext.jsx';
 
 const SELECT_STYLE = {
@@ -29,7 +29,7 @@ export default function Crm() {
   const [page, setPage] = useState(1);
   const perPage = 10;
   const [msgModal, setMsgModal] = useState({ open: false, type: 'sms', recipient: '', subject: '', content: '' });
-  const [createModal, setCreateModal] = useState({ open: false, full_name: '', email: '', phone: '', software_interest: 'suit_foncier' });
+  const [leadModal, setLeadModal] = useState({ open: false, isEditing: false, id: null, full_name: '', email: '', phone: '', software_interest: 'suit_foncier', status: 'new' });
 
   const openMsgModal = (type, recipient = '') => {
     setMsgModal({ open: true, type, recipient, subject: '', content: '' });
@@ -91,22 +91,43 @@ export default function Crm() {
     catch { showToast('Erreur de suppression.'); }
   };
 
-  const handleCreateLead = async (e) => {
+  const handleSaveLead = async (e) => {
     e.preventDefault();
     try {
       const payload = {
-        full_name: createModal.full_name,
-        email: createModal.email,
-        phone: createModal.phone,
-        software_interest: createModal.software_interest
+        full_name: leadModal.full_name,
+        email: leadModal.email,
+        phone: leadModal.phone,
+        software_interest: leadModal.software_interest,
+        status: leadModal.status
       };
-      const res = await createLead(payload);
-      setLeads(prev => [{ id: res.id, ...payload, status: 'new', created_at: new Date().toISOString() }, ...prev]);
-      showToast('Lead enregistré.');
-      setCreateModal({ open: false, full_name: '', email: '', phone: '', software_interest: 'suit_foncier' });
+      
+      if (leadModal.isEditing) {
+        await updateLead(leadModal.id, payload);
+        setLeads(prev => prev.map(l => l.id === leadModal.id ? { ...l, ...payload } : l));
+        showToast('Lead mis à jour.');
+      } else {
+        const res = await createLead(payload);
+        setLeads(prev => [{ id: res.id, ...payload, created_at: new Date().toISOString() }, ...prev]);
+        showToast('Lead enregistré.');
+      }
+      setLeadModal({ open: false, isEditing: false, id: null, full_name: '', email: '', phone: '', software_interest: 'suit_foncier', status: 'new' });
     } catch (err) {
-      showToast(err.message || 'Erreur lors de la création.');
+      showToast(err.message || 'Erreur lors de la sauvegarde.');
     }
+  };
+
+  const openEditLead = (lead) => {
+    setLeadModal({
+      open: true,
+      isEditing: true,
+      id: lead.id,
+      full_name: lead.full_name,
+      email: lead.email || '',
+      phone: lead.phone || '',
+      software_interest: lead.software_interest || 'suit_foncier',
+      status: lead.status || 'new'
+    });
   };
 
   return (
@@ -115,7 +136,7 @@ export default function Crm() {
         <p className="text-sm text-gray-500 whitespace-nowrap">{processed.length} lead(s) trouvé(s)</p>
         <div className="flex flex-col md:flex-row items-center gap-4 w-full xl:w-auto xl:justify-end">
           <div className="flex flex-wrap items-center gap-2">
-            <button onClick={() => setCreateModal(m => ({ ...m, open: true }))} className="flex items-center gap-2 bg-ziv-cyan text-white px-4 py-2 rounded-lg text-sm font-medium hover:brightness-110 transition-colors shadow-sm">
+            <button onClick={() => setLeadModal(m => ({ ...m, open: true, isEditing: false, full_name: '', email: '', phone: '', software_interest: 'suit_foncier', status: 'new' }))} className="flex items-center gap-2 bg-ziv-cyan text-white px-4 py-2 rounded-lg text-sm font-medium hover:brightness-110 transition-colors shadow-sm">
               <Plus className="h-4 w-4" /> Nouveau Lead
             </button>
             <button onClick={() => openMsgModal('sms')} className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-black transition-colors shadow-sm hidden sm:flex">
@@ -179,6 +200,7 @@ export default function Crm() {
                   </td>
                   <td className="px-6 py-4 text-xs text-gray-400">{formatDate(lead.created_at)}</td>
                   <td className="px-6 py-4">
+                    <button onClick={() => openEditLead(lead)} className="text-gray-400 hover:text-blue-500 mr-2" title="Modifier le lead"><Settings className="h-4 w-4" /></button>
                     <button onClick={() => openMsgModal('email', lead.email)} className="text-gray-400 hover:text-ziv-cyan mr-2" title="Envoyer un email"><Mail className="h-4 w-4" /></button>
                     <button onClick={() => openMsgModal('sms', lead.phone)} className="text-gray-400 hover:text-blue-500 mr-2" title="Envoyer un SMS"><MessageSquare className="h-4 w-4" /></button>
                     <button onClick={() => handleDelete(lead)} className="text-gray-400 hover:text-red-500" title="Supprimer"><Trash2 className="h-4 w-4" /></button>
@@ -245,26 +267,27 @@ export default function Crm() {
         </form>
       </Modal>
 
-      {/* Modal Nouveau Lead */}
-      <Modal open={createModal.open} onClose={() => setCreateModal(m => ({ ...m, open: false }))} maxWidth="sm:max-w-md" contentClass="p-6">
+      {/* Modal Nouveau/Edition Lead */}
+      <Modal open={leadModal.open} onClose={() => setLeadModal(m => ({ ...m, open: false }))} maxWidth="sm:max-w-md" contentClass="p-6">
         <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-          <Plus className="h-5 w-5 mr-2 text-ziv-cyan" /> Nouveau Lead
+          <Plus className="h-5 w-5 mr-2 text-ziv-cyan" /> {leadModal.isEditing ? 'Modifier Lead' : 'Nouveau Lead'}
         </h3>
-        <form onSubmit={handleCreateLead} className="space-y-4">
+        <form onSubmit={handleSaveLead} className="space-y-4">
           <Field label="Nom Complet / Entreprise">
-            <TextInput value={createModal.full_name} onChange={e => setCreateModal(m => ({ ...m, full_name: e.target.value }))} placeholder="Ex: Koffi B. (Aménagement Pro)" required />
+            <TextInput value={leadModal.full_name} onChange={e => setLeadModal(m => ({ ...m, full_name: e.target.value }))} placeholder="Ex: Koffi B. (Aménagement Pro)" required />
           </Field>
           <Field label="Email">
-            <TextInput type="email" value={createModal.email} onChange={e => setCreateModal(m => ({ ...m, email: e.target.value }))} placeholder="contact@exemple.com" required />
+            <TextInput type="email" value={leadModal.email} onChange={e => setLeadModal(m => ({ ...m, email: e.target.value }))} placeholder="contact@exemple.com" required />
           </Field>
           <Field label="Téléphone">
-            <TextInput value={createModal.phone} onChange={e => setCreateModal(m => ({ ...m, phone: e.target.value }))} placeholder="+225 00 00 00 00 00" required />
+            <TextInput value={leadModal.phone} onChange={e => setLeadModal(m => ({ ...m, phone: e.target.value }))} placeholder="+225 00 00 00 00 00" required />
           </Field>
           <Field label="Intérêt Logiciel / Produit">
-            <Select value={createModal.software_interest} onChange={e => setCreateModal(m => ({ ...m, software_interest: e.target.value }))}>
+            <Select value={leadModal.software_interest} onChange={e => setLeadModal(m => ({ ...m, software_interest: e.target.value }))}>
               <option value="suit_foncier">Suite ZIV PROPTECH Globale</option>
               <option value="lotiges_erp">LOTI'GES ERP (Aménagement Foncier)</option>
               <option value="lotiges_crm">LOTI'GES VEFA (Promotion)</option>
+              <option value="easy_vente">EASY VENTE (Commercialisation)</option>
               <option value="gespat">GESPAT (Gestion Locative)</option>
               <option value="syndycarre">SYNDYCARRE (Syndic)</option>
               <option value="gedaj">GEDAJ (LBC / Notaire)</option>
@@ -272,8 +295,15 @@ export default function Crm() {
               <option value="Autre">Autre Demande</option>
             </Select>
           </Field>
+          {leadModal.isEditing && (
+            <Field label="Statut">
+              <Select value={leadModal.status} onChange={e => setLeadModal(m => ({ ...m, status: e.target.value }))}>
+                {Object.entries(leadStatuses).map(([v, { label }]) => <option key={v} value={v}>{label}</option>)}
+              </Select>
+            </Field>
+          )}
           <div className="flex justify-end pt-4 border-t border-gray-100">
-            <button type="button" onClick={() => setCreateModal(m => ({ ...m, open: false }))} className="px-4 py-2 text-gray-500 hover:text-gray-700 mr-4 font-semibold text-sm">
+            <button type="button" onClick={() => setLeadModal(m => ({ ...m, open: false }))} className="px-4 py-2 text-gray-500 hover:text-gray-700 mr-4 font-semibold text-sm">
               Annuler
             </button>
             <SaveButton>Enregistrer</SaveButton>

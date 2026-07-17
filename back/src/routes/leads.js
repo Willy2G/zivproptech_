@@ -4,6 +4,7 @@ import {
   listLeads,
   updateLeadStatus,
   deleteLead,
+  updateLead,
 } from '../controllers/leadsController.js';
 
 const router = Router();
@@ -16,6 +17,9 @@ router.get('/', listLeads);
 
 // PATCH  /api/leads/:id  -> mise a jour du statut (back-office CRM)
 router.patch('/:id', updateLeadStatus);
+
+// PUT    /api/leads/:id  -> mise a jour du lead complet (back-office CRM)
+router.put('/:id', updateLead);
 
 // DELETE /api/leads/:id  -> suppression (back-office CRM)
 router.delete('/:id', deleteLead);
