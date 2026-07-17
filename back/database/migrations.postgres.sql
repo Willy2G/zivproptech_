@@ -18,8 +18,12 @@ ALTER TABLE global_settings ADD COLUMN IF NOT EXISTS smtp_pass VARCHAR(255);
 
 ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS sort_order INTEGER DEFAULT 0;
 
+-- Nettoyage des données fictives de visites (383 visites)
+DELETE FROM visitor_stats;
+
 -- Vous pouvez ajouter de nouvelles tables ici de cette façon :
 -- CREATE TABLE IF NOT EXISTS new_feature_table (
 --    id SERIAL PRIMARY KEY,
 --    name VARCHAR(100)
 -- );
+

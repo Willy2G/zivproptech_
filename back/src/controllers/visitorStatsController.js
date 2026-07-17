@@ -34,3 +34,21 @@ export async function getVisitorStats(req, res) {
     return res.status(500).json({ message: 'Erreur serveur.' });
   }
 }
+
+export async function trackVisitor(req, res) {
+  const { country_code = 'CI', country_name = "Côte d'Ivoire", is_unique = false } = req.body;
+  try {
+    await pool.query(
+      `INSERT INTO visitor_stats (visit_date, country_code, country_name, unique_visitors, page_views)
+       VALUES (CURRENT_DATE, $1, $2, $3, 1)
+       ON CONFLICT (visit_date, country_code) DO UPDATE
+       SET page_views = visitor_stats.page_views + 1,
+           unique_visitors = visitor_stats.unique_visitors + $3`,
+      [country_code, country_name, is_unique ? 1 : 0]
+    );
+    return res.status(204).send();
+  } catch (err) {
+    console.error('Erreur trackVisitor:', err.message);
+    return res.status(500).json({ message: 'Erreur serveur.' });
+  }
+}

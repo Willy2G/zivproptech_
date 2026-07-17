@@ -70,3 +70,4 @@ export const fetchVisitorStats = (from, to) => {
   const qs = params.toString();
   return request(`/visitor-stats${qs ? '?' + qs : ''}`);
 };
+export const trackVisit = (data) => request('/visitor-stats/track', { method: 'POST', body: JSON.stringify(data) });
