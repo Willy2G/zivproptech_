@@ -263,7 +263,10 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-bold text-gray-900">Trafic par Pays (Top 5)</h3>
+            <h3 className="text-lg font-bold text-gray-900">
+              Trafic par Pays (Top 5)
+              <span className="block text-sm font-normal text-gray-500 mt-1">Total Global: {totalVisitors} visites</span>
+            </h3>
             <span className="text-xs font-medium bg-gray-100 text-gray-600 px-2.5 py-1 rounded-full">
               {periodLabel}
             </span>

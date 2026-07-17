@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { pool } from '../config/db.js';
+import { sendEmail, sendSmsCampaign } from '../utils/communication.js';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -13,6 +14,7 @@ const ALLOWED_SOFTWARE = new Set([
   'gedaj',
   'syndycarre',
   'multiple',
+  'Guide Digitalisation',
 ]);
 
 /**
@@ -60,6 +62,31 @@ export async function createLead(req, res) {
         lead.status,
       ]
     );
+
+    // Envoi de l'email pour le guide
+    if (lead.software_interest === 'Guide Digitalisation') {
+      const settingsResult = await pool.query('SELECT * FROM global_settings WHERE id = 1');
+      if (settingsResult.rows.length > 0) {
+        const settings = settingsResult.rows[0];
+        
+        const subject = settings.guide_email_subject || 'Voici votre guide de la Digitalisation Immobilière';
+        const documentUrl = settings.guide_document_url || '#';
+        const bodyContent = settings.guide_email_content || 'Bonjour, merci pour votre téléchargement. Veuillez trouver le guide ci-joint.';
+        
+        const htmlContent = `
+          <p>${bodyContent.replace(/\n/g, '<br>')}</p>
+          <br/>
+          <p><a href="${documentUrl}" style="background-color: #00A8B5; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Télécharger le guide</a></p>
+        `;
+        
+        await sendEmail(settings, lead.email, subject, htmlContent);
+        
+        // Envoi SMS (optionnel si le tel est renseigné)
+        if (lead.phone && lead.phone !== 'Non renseigné') {
+          await sendSmsCampaign(settings, 'Guide Digitalisation', [lead.phone], 'Merci pour votre téléchargement. Vérifiez vos emails pour obtenir le guide.');
+        }
+      }
+    }
 
     return res.status(201).json({
       message: 'Demande enregistrée avec succès.',

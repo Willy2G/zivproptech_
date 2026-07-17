@@ -5,6 +5,18 @@
 -- Exemple : Ajout de la colonne calendly_url si elle n'existe pas
 ALTER TABLE global_settings ADD COLUMN IF NOT EXISTS calendly_url VARCHAR(255) DEFAULT 'https://calendly.com/alertefoncier';
 
+ALTER TABLE global_settings ADD COLUMN IF NOT EXISTS demo_video_url VARCHAR(255);
+ALTER TABLE global_settings ADD COLUMN IF NOT EXISTS guide_document_url VARCHAR(255);
+ALTER TABLE global_settings ADD COLUMN IF NOT EXISTS guide_email_subject VARCHAR(255);
+ALTER TABLE global_settings ADD COLUMN IF NOT EXISTS guide_email_content TEXT;
+ALTER TABLE global_settings ADD COLUMN IF NOT EXISTS email_from_address VARCHAR(255) DEFAULT 'noreply@immosuit.com';
+ALTER TABLE global_settings ADD COLUMN IF NOT EXISTS email_from_name VARCHAR(255) DEFAULT 'IMMOSUIT';
+ALTER TABLE global_settings ADD COLUMN IF NOT EXISTS smtp_host VARCHAR(255);
+ALTER TABLE global_settings ADD COLUMN IF NOT EXISTS smtp_port INT;
+ALTER TABLE global_settings ADD COLUMN IF NOT EXISTS smtp_user VARCHAR(255);
+ALTER TABLE global_settings ADD COLUMN IF NOT EXISTS smtp_pass VARCHAR(255);
+
+
 -- Vous pouvez ajouter de nouvelles tables ici de cette façon :
 -- CREATE TABLE IF NOT EXISTS new_feature_table (
 --    id SERIAL PRIMARY KEY,

@@ -2,24 +2,19 @@ import { useState, useEffect } from 'react';
 import { Briefcase, HardHat, HelpCircle, Play, Star, TrendingUp, Calendar, Loader2 } from 'lucide-react';
 import ModuleCard from './ModuleCard.jsx';
 import { useModal } from '../../context/ModalContext.jsx';
-import { fetchSoftwares } from '../../services/api.js';
+import { fetchSoftwares, fetchSettings } from '../../services/api.js';
 import { softwareStylesMap } from '../../utils/softwareStyles.js';
 
-// Carte "heros" de l'ERP integral, en tete de la section.
-function ErpHeroCard({ onClick, erpData }) {
-  if (!erpData) return null; // ou un skeleton loader
+function ErpHeroCard({ onClick, erpData, demoVideoUrl }) {
+  if (!erpData) return null;
 
   return (
     <div className="mb-16">
-      <button
-        type="button"
-        onClick={onClick}
-        className="w-full text-left bg-gradient-to-r from-ziv-navy via-blue-900 to-ziv-blue rounded-3xl p-8 md:p-12 shadow-2xl text-white cursor-pointer group transform hover:-translate-y-2 transition-all duration-500 relative overflow-hidden flex flex-col md:flex-row items-center justify-between border border-blue-800"
-      >
+      <div className="w-full text-left bg-gradient-to-r from-ziv-navy via-blue-900 to-ziv-blue rounded-3xl p-8 md:p-12 shadow-2xl text-white group transform hover:-translate-y-2 transition-all duration-500 relative overflow-hidden flex flex-col md:flex-row items-center justify-between border border-blue-800">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2000&q=80')] opacity-10 bg-cover bg-center mix-blend-overlay group-hover:opacity-20 transition-opacity duration-700" />
         <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-ziv-cyan/20 to-transparent" />
 
-        <div className="relative z-10 md:w-2/3 md:pr-8 mb-8 md:mb-0">
+        <div className="relative z-10 md:w-2/3 md:pr-8 mb-8 md:mb-0 cursor-pointer" onClick={onClick}>
           <div className="inline-flex items-center px-3 py-1 rounded-full bg-ziv-cyan/20 border border-ziv-cyan/30 text-cyan-300 text-xs font-bold uppercase tracking-wider mb-4">
             <Star className="h-3 w-3 mr-2 fill-current" /> La Solution Intégrale (ERP)
           </div>
@@ -43,15 +38,25 @@ function ErpHeroCard({ onClick, erpData }) {
         </div>
 
         <div className="relative z-10 md:w-1/3 flex justify-end w-full">
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl text-center w-full max-w-sm group-hover:bg-white/20 transition-colors">
-            <div className="w-16 h-16 bg-ziv-cyan rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(0,168,181,0.5)] play-button-pulse">
-              <Play className="h-6 w-6 text-white ml-1" />
+          {demoVideoUrl ? (
+            <a href={demoVideoUrl} target="_blank" rel="noopener noreferrer" className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl text-center w-full max-w-sm hover:bg-white/20 transition-colors block cursor-pointer">
+              <div className="w-16 h-16 bg-ziv-cyan rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(0,168,181,0.5)] play-button-pulse">
+                <Play className="h-6 w-6 text-white ml-1" />
+              </div>
+              <span className="text-white font-bold text-lg block mb-1">Explorer l'ERP</span>
+              <span className="text-cyan-200 text-sm">Voir la démonstration vidéo</span>
+            </a>
+          ) : (
+            <div className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-2xl text-center w-full max-w-sm hover:bg-white/20 transition-colors block cursor-pointer" onClick={onClick}>
+              <div className="w-16 h-16 bg-ziv-cyan rounded-full flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(0,168,181,0.5)] play-button-pulse">
+                <Play className="h-6 w-6 text-white ml-1" />
+              </div>
+              <span className="text-white font-bold text-lg block mb-1">Explorer l'ERP</span>
+              <span className="text-cyan-200 text-sm">Voir la démonstration vidéo</span>
             </div>
-            <span className="text-white font-bold text-lg block mb-1">Explorer l'ERP</span>
-            <span className="text-cyan-200 text-sm">Voir la démonstration vidéo</span>
-          </div>
+          )}
         </div>
-      </button>
+      </div>
     </div>
   );
 }
@@ -61,16 +66,20 @@ export default function Solutions() {
   const [softwares, setSoftwares] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [demoVideoUrl, setDemoVideoUrl] = useState('');
 
   useEffect(() => {
-    fetchSoftwares()
-      .then((data) => {
-        setSoftwares(data || []);
+    Promise.all([fetchSoftwares(), fetchSettings().catch(() => ({}))])
+      .then(([softwareData, settingsData]) => {
+        setSoftwares(softwareData || []);
+        if (settingsData && settingsData.demo_video_url) {
+          setDemoVideoUrl(settingsData.demo_video_url);
+        }
         setLoading(false);
       })
       .catch((err) => {
         console.error(err);
-        setError("Impossible de charger les logiciels.");
+        setError("Impossible de charger les données.");
         setLoading(false);
       });
   }, []);
@@ -123,7 +132,7 @@ export default function Solutions() {
 
         {!loading && !error && (
           <>
-            {erpData && <ErpHeroCard onClick={() => openSoftware('lotiges_erp')} erpData={erpData} />}
+            {erpData && <ErpHeroCard onClick={() => openSoftware('lotiges_erp')} erpData={erpData} demoVideoUrl={demoVideoUrl} />}
 
             <div className="flex items-center justify-between mb-8">
               <h4 className="text-2xl font-heading font-bold text-ziv-navy">

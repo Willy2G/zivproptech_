@@ -26,7 +26,8 @@ export default function Seo() {
     primary_color: '#00A8B5', secondary_color: '#0A1E4A', logo_url: '', favicon_url: '',
     contact_phones: '', contact_email: '', contact_address: '',
     facebook_url: '', linkedin_url: '', youtube_url: '', twitter_url: '', instagram_url: '',
-    calendly_url: '',
+    calendly_url: '', demo_video_url: '', guide_document_url: '', guide_email_subject: '', guide_email_content: '',
+    email_from_name: '', email_from_address: '', smtp_host: '', smtp_port: '', smtp_user: '', smtp_pass: '',
   });
 
   useEffect(() => {
@@ -103,7 +104,7 @@ export default function Seo() {
         </div>
 
         <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-8">
-          <form onSubmit={save('Identité Visuelle', ['primary_color', 'secondary_color', 'logo_url', 'favicon_url', 'contact_phones', 'contact_email', 'contact_address', 'facebook_url', 'linkedin_url', 'youtube_url', 'twitter_url', 'instagram_url', 'calendly_url'])} className="space-y-6">
+          <form onSubmit={save('Identité Visuelle', ['primary_color', 'secondary_color', 'logo_url', 'favicon_url', 'contact_phones', 'contact_email', 'contact_address', 'facebook_url', 'linkedin_url', 'youtube_url', 'twitter_url', 'instagram_url', 'calendly_url', 'demo_video_url'])} className="space-y-6">
             <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center border-b pb-2">
               <Palette className="h-5 w-5 mr-2 text-ziv-cyan" /> Charte Graphique
             </h3>
@@ -171,6 +172,14 @@ export default function Seo() {
               <TextInput value={form.calendly_url || ''} onChange={set('calendly_url')} placeholder="https://calendly.com/votre-compte" />
             </Field>
             <p className="text-xs text-gray-400 -mt-4">L'URL de votre page Calendly pour la prise de rendez-vous. Ex : https://calendly.com/votre-entreprise</p>
+            
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center border-b pb-2 mt-8">
+              <Calendar className="h-5 w-5 mr-2 text-ziv-cyan" /> Démonstration Vidéo
+            </h3>
+            <Field label="Lien de la Vidéo (L'Écosystème ZIV PROPTECH)">
+              <TextInput value={form.demo_video_url || ''} onChange={set('demo_video_url')} placeholder="https://www.youtube.com/watch?v=..." />
+            </Field>
+
             <button type="submit" className="w-full bg-gray-900 hover:bg-black text-white font-bold py-3 px-4 rounded-xl transition-colors text-sm mt-6 flex items-center justify-center">
               <Save className="h-4 w-4 mr-2" /> Sauvegarder l'identité
             </button>
@@ -179,19 +188,46 @@ export default function Seo() {
       </div>
 
       <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-8 mt-8">
-        <form onSubmit={save('Configuration SMS/Email', ['sms_api_key', 'sms_sender_id', 'sms_api_token', 'sms_api_url'])} className="space-y-6">
+        <form onSubmit={save('Configuration SMS/Email', ['sms_sender_id', 'sms_api_token', 'sms_api_url', 'guide_document_url', 'guide_email_subject', 'guide_email_content', 'email_from_name', 'email_from_address', 'smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass'])} className="space-y-6">
           <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center border-b pb-2">
-            Configuration de l'API SMS / Email
+            Configuration SMS (API)
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Field label="Expéditeur (Sender)"><TextInput value={form.sms_sender_id || ''} onChange={set('sms_sender_id')} placeholder="Ex: ZIV TECH" /></Field>
+            <Field label="Endpoint (URL de l'API)"><TextInput value={form.sms_api_url || ''} onChange={set('sms_api_url')} placeholder="https://apis.letexto.com" /></Field>
+            <Field label="Token (Bearer)"><TextInput value={form.sms_api_token || ''} onChange={set('sms_api_token')} placeholder="Votre token d'authentification" /></Field>
+          </div>
+
+          <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center border-b pb-2 mt-8">
+            Configuration Email (SMTP)
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Field label="URL de l'API SMS (Endpoint)"><TextInput value={form.sms_api_url || ''} onChange={set('sms_api_url')} placeholder="https://api.sms-provider.com/v1/send" /></Field>
-            <Field label="Clé API (API Key)"><TextInput value={form.sms_api_key || ''} onChange={set('sms_api_key')} placeholder="Votre clé API" /></Field>
-            <Field label="Token (Auth Token)"><TextInput value={form.sms_api_token || ''} onChange={set('sms_api_token')} placeholder="Token d'authentification" /></Field>
-            <Field label="ID Expéditeur (Sender ID)"><TextInput value={form.sms_sender_id || ''} onChange={set('sms_sender_id')} placeholder="Ex: ZIV TECH" /></Field>
+            <Field label="Nom de l'Expéditeur"><TextInput value={form.email_from_name || ''} onChange={set('email_from_name')} placeholder="IMMOSUIT" /></Field>
+            <Field label="Email de l'Expéditeur"><TextInput value={form.email_from_address || ''} onChange={set('email_from_address')} placeholder="noreply@immosuit.com" /></Field>
+            <Field label="Serveur SMTP (Host)"><TextInput value={form.smtp_host || ''} onChange={set('smtp_host')} placeholder="smtp.votredomaine.com" /></Field>
+            <Field label="Port SMTP"><TextInput type="number" value={form.smtp_port || ''} onChange={set('smtp_port')} placeholder="587 ou 465" /></Field>
+            <Field label="Utilisateur SMTP"><TextInput value={form.smtp_user || ''} onChange={set('smtp_user')} placeholder="contact@immosuit.com" /></Field>
+            <Field label="Mot de passe SMTP"><TextInput type="password" value={form.smtp_pass || ''} onChange={set('smtp_pass')} placeholder="••••••••" /></Field>
+          </div>
+          
+          <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center border-b pb-2 mt-8">
+            Envoi du Guide (Centre de Connaissances)
+          </h3>
+          <div className="space-y-4">
+            <Field label="Lien du Document Guide (PDF)">
+              <TextInput value={form.guide_document_url || ''} onChange={set('guide_document_url')} placeholder="https://votresite.com/guide.pdf" />
+            </Field>
+            <Field label="Sujet de l'Email">
+              <TextInput value={form.guide_email_subject || ''} onChange={set('guide_email_subject')} placeholder="Voici votre guide gratuit" />
+            </Field>
+            <div>
+              <label className="block text-sm font-bold text-gray-700 mb-1">Contenu de l'Email</label>
+              <TextArea rows={4} value={form.guide_email_content || ''} onChange={set('guide_email_content')} placeholder="Bonjour, merci pour votre téléchargement..." />
+            </div>
           </div>
           
           <button type="submit" className="w-full md:w-auto bg-gray-900 hover:bg-black text-white font-bold py-3 px-8 rounded-xl transition-colors text-sm flex justify-center items-center mt-6">
-            <Save className="h-4 w-4 mr-2" /> Sauvegarder la configuration SMS
+            <Save className="h-4 w-4 mr-2" /> Sauvegarder la configuration
           </button>
         </form>
       </div>
