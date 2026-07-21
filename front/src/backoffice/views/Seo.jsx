@@ -21,6 +21,7 @@ export default function Seo() {
   const [loading, setLoading] = useState(true);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [uploadingFavicon, setUploadingFavicon] = useState(false);
+  const [uploadingGuide, setUploadingGuide] = useState(false);
   const [form, setForm] = useState({
     seo_title: '', seo_meta_desc: '', seo_keywords: '', google_analytics_id: '', facebook_pixel_id: '',
     primary_color: '#00A8B5', secondary_color: '#0A1E4A', logo_url: '', favicon_url: '',
@@ -215,7 +216,14 @@ export default function Seo() {
           </h3>
           <div className="space-y-4">
             <Field label="Lien du Document Guide (PDF)">
-              <TextInput value={form.guide_document_url || ''} onChange={set('guide_document_url')} placeholder="https://votresite.com/guide.pdf" />
+              <div className="flex space-x-2">
+                <TextInput value={form.guide_document_url || ''} onChange={set('guide_document_url')} placeholder="https://votresite.com/guide.pdf" />
+                <label className="flex items-center justify-center px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
+                  {uploadingGuide ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Upload className="w-4 h-4 mr-2" />}
+                  <span className="text-sm font-medium text-gray-700">{uploadingGuide ? 'Upload...' : 'Uploader'}</span>
+                  <input type="file" accept="application/pdf" className="hidden" onChange={e => handleFileUpload(e, 'guide_document_url', setUploadingGuide)} disabled={uploadingGuide} />
+                </label>
+              </div>
             </Field>
             <Field label="Sujet de l'Email">
               <TextInput value={form.guide_email_subject || ''} onChange={set('guide_email_subject')} placeholder="Voici votre guide gratuit" />

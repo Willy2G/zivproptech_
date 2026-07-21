@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
   },
   filename: (_req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, 'logo-' + uniqueSuffix + path.extname(file.originalname));
+    cb(null, 'file-' + uniqueSuffix + path.extname(file.originalname));
   }
 });
 
@@ -25,10 +25,10 @@ const upload = multer({
   storage,
   limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB max
   fileFilter: (_req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
+    if (file.mimetype.startsWith('image/') || file.mimetype === 'application/pdf') {
       cb(null, true);
     } else {
-      cb(new Error('Seules les images sont autorisées.'));
+      cb(new Error('Seuls les images et les PDF sont autorisés.'));
     }
   }
 });
@@ -40,9 +40,9 @@ router.post('/', upload.single('image'), (req, res) => {
     }
     // L'URL relative pour accéder au fichier depuis le front
     const fileUrl = `/uploads/${req.file.filename}`;
-    res.status(201).json({ url: fileUrl, message: 'Image uploadée avec succès.' });
+    res.status(201).json({ url: fileUrl, message: 'Fichier uploadé avec succès.' });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur lors de l\'upload de l\'image.' });
+    res.status(500).json({ message: 'Erreur lors de l\'upload du fichier.' });
   }
 });
 

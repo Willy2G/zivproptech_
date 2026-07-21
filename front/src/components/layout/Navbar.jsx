@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { BookOpen, Calendar, Menu } from 'lucide-react';
 import Logo from '../ui/Logo.jsx';
 import { useModal } from '../../context/ModalContext.jsx';
+import { fetchSettings } from '../../services/api.js';
 
 const NAV_LINKS = [
   { href: '/#solutions', label: 'Notre Écosystème' },
@@ -14,17 +15,31 @@ export default function Navbar() {
   const { openExpert } = useModal();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [calendlyUrl, setCalendlyUrl] = useState('');
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener('scroll', onScroll);
+    
+    fetchSettings()
+      .then(settings => {
+        if (settings && settings.calendly_url) {
+          setCalendlyUrl(settings.calendly_url);
+        }
+      })
+      .catch(() => {});
+      
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   const handleRdv = (e) => {
     e.preventDefault();
     setMobileOpen(false);
-    openExpert();
+    if (calendlyUrl) {
+      window.open(calendlyUrl, '_blank', 'noopener,noreferrer');
+    } else {
+      openExpert();
+    }
   };
 
   return (
