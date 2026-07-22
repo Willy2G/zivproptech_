@@ -25,8 +25,11 @@ DO $$ BEGIN
 EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 
 DO $$ BEGIN
-    CREATE TYPE lead_status AS ENUM ('new', 'in_progress', 'closed');
-EXCEPTION WHEN duplicate_object THEN NULL; END $$;
+    CREATE TYPE lead_status AS ENUM ('new', 'in_progress', 'closed', 'completed', 'postponed');
+EXCEPTION WHEN duplicate_object THEN
+    ALTER TYPE lead_status ADD VALUE IF NOT EXISTS 'completed';
+    ALTER TYPE lead_status ADD VALUE IF NOT EXISTS 'postponed';
+END $$;
 
 DO $$ BEGIN
     CREATE TYPE post_status AS ENUM ('draft', 'published', 'archived');

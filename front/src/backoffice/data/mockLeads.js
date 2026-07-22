@@ -27,5 +27,7 @@ export const mockLeads = [
 export const leadStatuses = {
   new: { label: 'À contacter', badge: 'bg-yellow-100 text-yellow-800', dot: 'bg-yellow-500' },
   in_progress: { label: 'En cours', badge: 'bg-blue-100 text-blue-800', dot: 'bg-blue-500' },
-  closed: { label: 'Traité / Clos', badge: 'bg-green-100 text-green-800', dot: 'bg-green-500' },
+  closed: { label: 'Traité / Clos', badge: 'bg-gray-100 text-gray-800', dot: 'bg-gray-500' },
+  completed: { label: 'RDV Effectué', badge: 'bg-green-100 text-green-800', dot: 'bg-green-500' },
+  postponed: { label: 'RDV Reporté', badge: 'bg-orange-100 text-orange-800', dot: 'bg-orange-500' },
 };

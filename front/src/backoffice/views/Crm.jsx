@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Loader2, Mail, Search, Trash2, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, MessageSquare, Settings, Send, Plus } from 'lucide-react';
+import { Loader2, Mail, Search, Trash2, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, MessageSquare, Settings, Send, Plus, CheckCircle, XCircle } from 'lucide-react';
 import SoftwareBadge from '../components/ui/SoftwareBadge.jsx';
 import Modal from '../../components/modals/Modal.jsx';
 import { Field, TextInput, TextArea, SaveButton, Select } from '../components/ui/FormControls.jsx';
@@ -10,7 +10,9 @@ import { useToast } from '../context/ToastContext.jsx';
 const SELECT_STYLE = {
   new: 'bg-yellow-50 border-yellow-200 text-yellow-800',
   in_progress: 'bg-blue-50 border-blue-200 text-blue-800',
-  closed: 'bg-green-50 border-green-200 text-green-800',
+  closed: 'bg-gray-50 border-gray-200 text-gray-800',
+  completed: 'bg-green-50 border-green-200 text-green-800',
+  postponed: 'bg-orange-50 border-orange-200 text-orange-800',
 };
 
 function formatDate(value) {
@@ -79,8 +81,25 @@ export default function Crm() {
   const paginated = processed.slice((page - 1) * perPage, page * perPage);
 
   const handleStatus = async (lead, status) => {
-    setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, status } : l));
-    try { await apiUpdateStatus(lead.id, status); showToast('Statut mis à jour.'); }
+    let newMessage = lead.message;
+    if (status === 'postponed' && lead.software_interest === 'Rendez-vous') {
+      const newDate = prompt("Veuillez saisir la nouvelle date et heure (ex: Mardi 15h) :");
+      if (newDate) {
+        newMessage = (lead.message ? lead.message + '\n\n' : '') + `[Reporté] Nouvelle date : ${newDate}`;
+      }
+    }
+
+    const payload = { ...lead, status, message: newMessage };
+    setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, status, message: newMessage } : l));
+    
+    try { 
+      if (status === 'postponed') {
+        await updateLead(lead.id, payload);
+      } else {
+        await apiUpdateStatus(lead.id, status); 
+      }
+      showToast('Statut mis à jour.'); 
+    }
     catch { showToast('Erreur de mise à jour.'); }
   };
 
@@ -191,7 +210,14 @@ export default function Crm() {
                     <p className="text-gray-900">{lead.phone}</p>
                     <p className="text-xs">{lead.email}</p>
                   </td>
-                  <td className="px-6 py-4"><SoftwareBadge value={lead.software_interest} /></td>
+                  <td className="px-6 py-4">
+                    <SoftwareBadge value={lead.software_interest} />
+                    {lead.software_interest === 'Rendez-vous' && lead.message && (
+                      <div className="mt-2 text-xs text-gray-600 bg-gray-50 p-2 rounded-md border border-gray-100 max-w-[200px] break-words whitespace-pre-wrap">
+                        {lead.message}
+                      </div>
+                    )}
+                  </td>
                   <td className="px-6 py-4">
                     <select value={lead.status} onChange={e => handleStatus(lead, e.target.value)}
                       className={`border text-xs rounded-lg block w-full p-2 focus:ring-2 ${SELECT_STYLE[lead.status] || ''}`}>
@@ -200,10 +226,24 @@ export default function Crm() {
                   </td>
                   <td className="px-6 py-4 text-xs text-gray-400">{formatDate(lead.created_at)}</td>
                   <td className="px-6 py-4">
-                    <button onClick={() => openEditLead(lead)} className="text-gray-400 hover:text-blue-500 mr-2" title="Modifier le lead"><Settings className="h-4 w-4" /></button>
-                    <button onClick={() => openMsgModal('email', lead.email)} className="text-gray-400 hover:text-ziv-cyan mr-2" title="Envoyer un email"><Mail className="h-4 w-4" /></button>
-                    <button onClick={() => openMsgModal('sms', lead.phone)} className="text-gray-400 hover:text-blue-500 mr-2" title="Envoyer un SMS"><MessageSquare className="h-4 w-4" /></button>
-                    <button onClick={() => handleDelete(lead)} className="text-gray-400 hover:text-red-500" title="Supprimer"><Trash2 className="h-4 w-4" /></button>
+                    {lead.software_interest === 'Rendez-vous' && lead.status === 'new' && (
+                      <span className="inline-flex mr-2 align-middle">
+                        <button onClick={() => handleStatus(lead, 'in_progress')} className="text-green-500 hover:text-green-600 mr-1 bg-green-50 p-1.5 rounded" title="Confirmer le rendez-vous"><CheckCircle className="h-4 w-4" /></button>
+                        <button onClick={() => handleStatus(lead, 'closed')} className="text-red-500 hover:text-red-600 bg-red-50 p-1.5 rounded" title="Refuser le rendez-vous"><XCircle className="h-4 w-4" /></button>
+                        <span className="text-gray-200 mx-2 self-center">|</span>
+                      </span>
+                    )}
+                    {lead.software_interest === 'Rendez-vous' && lead.status === 'in_progress' && (
+                      <span className="inline-flex mr-2 align-middle">
+                        <button onClick={() => handleStatus(lead, 'completed')} className="text-teal-500 hover:text-teal-600 mr-1 bg-teal-50 p-1.5 rounded" title="Marquer comme Effectué"><CheckCircle className="h-4 w-4" /></button>
+                        <button onClick={() => handleStatus(lead, 'postponed')} className="text-orange-500 hover:text-orange-600 bg-orange-50 p-1.5 rounded" title="Reporter le rendez-vous"><Settings className="h-4 w-4" /></button>
+                        <span className="text-gray-200 mx-2 self-center">|</span>
+                      </span>
+                    )}
+                    <button onClick={() => openEditLead(lead)} className="text-gray-400 hover:text-blue-500 mr-2 align-middle" title="Modifier le lead"><Settings className="h-4 w-4" /></button>
+                    <button onClick={() => openMsgModal('email', lead.email)} className="text-gray-400 hover:text-ziv-cyan mr-2 align-middle" title="Envoyer un email"><Mail className="h-4 w-4" /></button>
+                    <button onClick={() => openMsgModal('sms', lead.phone)} className="text-gray-400 hover:text-blue-500 mr-2 align-middle" title="Envoyer un SMS"><MessageSquare className="h-4 w-4" /></button>
+                    <button onClick={() => handleDelete(lead)} className="text-gray-400 hover:text-red-500 align-middle" title="Supprimer"><Trash2 className="h-4 w-4" /></button>
                   </td>
                 </tr>
               ))}

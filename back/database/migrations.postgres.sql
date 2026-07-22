@@ -27,3 +27,7 @@ ALTER TABLE blog_posts ADD COLUMN IF NOT EXISTS sort_order INTEGER DEFAULT 0;
 --    name VARCHAR(100)
 -- );
 
+DO $$ BEGIN
+    ALTER TYPE lead_status ADD VALUE IF NOT EXISTS 'completed';
+    ALTER TYPE lead_status ADD VALUE IF NOT EXISTS 'postponed';
+EXCEPTION WHEN duplicate_object THEN NULL; END $$;

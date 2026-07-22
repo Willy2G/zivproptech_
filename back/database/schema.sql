@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS leads (
     software_interest VARCHAR(50) NOT NULL,
     consulting_type VARCHAR(50) DEFAULT NULL,
     message TEXT,
-    status ENUM('new', 'in_progress', 'closed') DEFAULT 'new',
+    status ENUM('new', 'in_progress', 'closed', 'completed', 'postponed') DEFAULT 'new',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

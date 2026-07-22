@@ -8,6 +8,7 @@ export const softwareBadges = {
   gedaj: { label: 'GEDAJ', className: 'bg-red-50 text-red-700' },
   syndycarre: { label: 'SYNDYCARRE', className: 'bg-emerald-50 text-emerald-700' },
   multiple: { label: 'ÉCOSYSTÈME', className: 'bg-gray-100 text-gray-700' },
+  'Rendez-vous': { label: 'RENDEZ-VOUS', className: 'bg-fuchsia-50 text-fuchsia-700' },
 };
 
 export function getSoftwareBadge(value) {

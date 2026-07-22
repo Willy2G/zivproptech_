@@ -132,7 +132,7 @@ export async function listLeads(_req, res) {
   }
 }
 
-const ALLOWED_STATUS = new Set(['new', 'in_progress', 'closed']);
+const ALLOWED_STATUS = new Set(['new', 'in_progress', 'closed', 'completed', 'postponed']);
 
 /**
  * PATCH /api/leads/:id
@@ -164,12 +164,12 @@ export async function updateLeadStatus(req, res) {
  */
 export async function updateLead(req, res) {
   const { id } = req.params;
-  const { full_name, phone, email, software_interest, status } = req.body || {};
+  const { full_name, phone, email, software_interest, status, message } = req.body || {};
 
   try {
     const result = await pool.query(
-      `UPDATE leads SET full_name = $1, phone = $2, email = $3, software_interest = $4, status = $5 WHERE id = $6`,
-      [full_name, phone, email, software_interest, status, id]
+      `UPDATE leads SET full_name = $1, phone = $2, email = $3, software_interest = $4, status = $5, message = $6 WHERE id = $7`,
+      [full_name, phone, email, software_interest, status, message, id]
     );
     if (result.rowCount === 0) {
       return res.status(404).json({ message: 'Lead introuvable.' });
