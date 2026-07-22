@@ -149,13 +149,12 @@ export default function ExpertModal() {
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Date et heure souhaitées *</label>
               <input
-                type="text"
+                type="datetime-local"
                 name="date"
                 required
                 value={formData.date}
                 onChange={handleChange}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-ziv-cyan focus:border-ziv-cyan"
-                placeholder="Ex: Jeudi prochain à 14h"
               />
             </div>
             <div>
