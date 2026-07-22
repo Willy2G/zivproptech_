@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Loader2, Mail, Search, Trash2, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, MessageSquare, Settings, Send, Plus, CheckCircle, XCircle } from 'lucide-react';
+import Swal from 'sweetalert2';
 import SoftwareBadge from '../components/ui/SoftwareBadge.jsx';
 import Modal from '../../components/modals/Modal.jsx';
 import { Field, TextInput, TextArea, SaveButton, Select } from '../components/ui/FormControls.jsx';
@@ -83,10 +84,20 @@ export default function Crm() {
   const handleStatus = async (lead, status) => {
     let newMessage = lead.message;
     if (status === 'postponed' && lead.software_interest === 'Rendez-vous') {
-      const newDate = prompt("Veuillez saisir la nouvelle date et heure (ex: Mardi 15h) :");
-      if (newDate) {
-        newMessage = (lead.message ? lead.message + '\n\n' : '') + `[Reporté] Nouvelle date : ${newDate}`;
-      }
+      const { value: newDate } = await Swal.fire({
+        title: 'Reporter le rendez-vous',
+        input: 'text',
+        inputLabel: 'Veuillez saisir la nouvelle date et heure (ex: Mardi 15h)',
+        inputPlaceholder: 'Entrez la date...',
+        showCancelButton: true,
+        confirmButtonText: 'Valider',
+        cancelButtonText: 'Annuler',
+        confirmButtonColor: '#00A8B5',
+      });
+      
+      if (!newDate) return;
+
+      newMessage = (lead.message ? lead.message + '\n\n' : '') + `[Reporté] Nouvelle date : ${newDate}`;
     }
 
     const payload = { ...lead, status, message: newMessage };
@@ -104,7 +115,19 @@ export default function Crm() {
   };
 
   const handleDelete = async (lead) => {
-    if (!window.confirm(`Supprimer « ${lead.full_name} » ?`)) return;
+    const result = await Swal.fire({
+      title: 'Confirmer la suppression',
+      text: `Voulez-vous vraiment supprimer « ${lead.full_name} » ?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#ef4444',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Oui, supprimer',
+      cancelButtonText: 'Annuler'
+    });
+
+    if (!result.isConfirmed) return;
+
     setLeads(prev => prev.filter(l => l.id !== lead.id));
     try { await apiDeleteLead(lead.id); showToast('Lead supprimé.'); }
     catch { showToast('Erreur de suppression.'); }
