@@ -15,6 +15,7 @@ const ALLOWED_SOFTWARE = new Set([
   'syndycarre',
   'multiple',
   'Guide Digitalisation',
+  'Rendez-vous',
 ]);
 
 /**
@@ -84,6 +85,25 @@ export async function createLead(req, res) {
         // Envoi SMS (optionnel si le tel est renseigné)
         if (lead.phone && lead.phone !== 'Non renseigné') {
           await sendSmsCampaign(settings, 'Guide Digitalisation', [lead.phone], 'Merci pour votre téléchargement. Vérifiez vos emails pour obtenir le guide.');
+        }
+      }
+    }
+
+    // Envoi de l'email pour le Rendez-vous
+    if (lead.software_interest === 'Rendez-vous') {
+      const settingsResult = await pool.query('SELECT * FROM global_settings WHERE id = 1');
+      if (settingsResult.rows.length > 0) {
+        const settings = settingsResult.rows[0];
+        const subject = 'Nouvelle demande de Rendez-vous / Audit';
+        const htmlContent = `
+          <h3>Nouvelle demande de Rendez-vous</h3>
+          <p><strong>Nom :</strong> ${lead.full_name}</p>
+          <p><strong>Téléphone :</strong> ${lead.phone}</p>
+          <p><strong>Email :</strong> ${lead.email}</p>
+          <p><strong>Détails & Date souhaitée :</strong><br/> ${String(lead.message).replace(/\n/g, '<br/>')}</p>
+        `;
+        if (settings.contact_email) {
+          await sendEmail(settings, settings.contact_email, subject, htmlContent);
         }
       }
     }
