@@ -23,9 +23,7 @@ export default function Navbar() {
     
     fetchSettings()
       .then(settings => {
-        if (settings && settings.calendly_url) {
-          setCalendlyUrl(settings.calendly_url);
-        }
+        // removed calendly url setup here
       })
       .catch(() => {});
       
@@ -35,11 +33,7 @@ export default function Navbar() {
   const handleRdv = (e) => {
     e.preventDefault();
     setMobileOpen(false);
-    if (calendlyUrl) {
-      window.open(calendlyUrl, '_blank', 'noopener,noreferrer');
-    } else {
-      openExpert();
-    }
+    openExpert();
   };
 
   return (

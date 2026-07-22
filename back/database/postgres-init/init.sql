@@ -18,7 +18,7 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 -- ------------------------------------------------------------------------------
 -- Types ENUM (idempotents : ignorés s'ils existent déjà)
 -- ------------------------------------------------------------------------------
-DROP TABLE IF EXISTS admins, leads, softwares, blog_posts, testimonials, faqs, pages, site_sections, visitor_stats, chatbot_flows, global_settings CASCADE;
+
 
 DO $$ BEGIN
     CREATE TYPE admin_role AS ENUM ('super_admin', 'editor', 'sales');
@@ -145,7 +145,7 @@ CREATE INDEX IF NOT EXISTS idx_blog_status ON blog_posts(status);
 -- ==============================================================================
 -- 5. TABLE : testimonials (Preuve Sociale B2B)
 -- ==============================================================================
-DROP TABLE IF EXISTS testimonials CASCADE;
+
 CREATE TABLE IF NOT EXISTS testimonials (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     client_name VARCHAR(100) NOT NULL,
@@ -163,7 +163,7 @@ CREATE TABLE IF NOT EXISTS testimonials (
 -- ==============================================================================
 -- 6. TABLE : faqs (Base de connaissances)
 -- ==============================================================================
-DROP TABLE IF EXISTS faqs CASCADE;
+
 CREATE TABLE IF NOT EXISTS faqs (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     question VARCHAR(255) NOT NULL,
@@ -237,7 +237,7 @@ CREATE TRIGGER trg_chatbot_updated BEFORE UPDATE ON chatbot_flows
 -- ==============================================================================
 -- 7. TABLE : global_settings (Configuration unique du site et charte graphique)
 -- ==============================================================================
-DROP TABLE IF EXISTS global_settings CASCADE;
+
 CREATE TABLE IF NOT EXISTS global_settings (
     id INTEGER PRIMARY KEY DEFAULT 1,
     seo_title VARCHAR(255) DEFAULT 'ZIV PROPTECH | Logiciels Immobiliers',
