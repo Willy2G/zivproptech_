@@ -30,27 +30,42 @@ export default function ExpertModal() {
   useEffect(() => {
     if (!expertModal || !calendlyUrl) return;
     
-    // Reset loading state when opening
     setIsLoading(true);
 
     const handleMessage = (e) => {
-      if (e.data && e.data.event && e.data.event.indexOf('calendly') === 0) {
-        setIsLoading(false);
-      }
+      try {
+        const data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data;
+        if (data && data.event && data.event.includes('calendly')) {
+          setIsLoading(false);
+        }
+      } catch (err) {}
     };
     window.addEventListener('message', handleMessage);
 
+    // Fallback: always hide spinner after a few seconds
+    const fallbackTimer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+
+    const container = document.querySelector('.calendly-inline-widget');
+    if (container) container.innerHTML = '';
+
     const src = 'https://assets.calendly.com/assets/external/widget.js';
-    if (document.querySelector(`script[src="${src}"]`)) {
-      if (window.Calendly) window.Calendly.initInlineWidget({ url: calendlyUrl, parentElement: document.querySelector('.calendly-inline-widget') });
+    if (window.Calendly) {
+      window.Calendly.initInlineWidget({ url: calendlyUrl, parentElement: container });
     } else {
-      const script = document.createElement('script');
-      script.src = src;
-      script.async = true;
-      document.body.appendChild(script);
+      if (!document.querySelector(`script[src="${src}"]`)) {
+        const script = document.createElement('script');
+        script.src = src;
+        script.async = true;
+        document.body.appendChild(script);
+      }
     }
 
-    return () => window.removeEventListener('message', handleMessage);
+    return () => {
+      window.removeEventListener('message', handleMessage);
+      clearTimeout(fallbackTimer);
+    };
   }, [expertModal, calendlyUrl]);
 
   return (
@@ -97,7 +112,7 @@ export default function ExpertModal() {
 
         {calendlyUrl && (
           <div
-            className={`calendly-inline-widget absolute inset-0 z-10 w-full h-full transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+            className="calendly-inline-widget absolute inset-0 z-10 w-full h-full"
             data-url={calendlyUrl}
             style={{ minWidth: '320px', height: '100%' }}
           />
