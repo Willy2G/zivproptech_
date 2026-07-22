@@ -10,9 +10,11 @@ const FALLBACK_CALENDLY_URL =
 export default function ExpertModal() {
   const { expertModal, closeExpert } = useModal();
   const [calendlyUrl, setCalendlyUrl] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!expertModal) return;
+    if (calendlyUrl) return; // Only fetch once
 
     fetchCalendlyUrl()
       .then((data) => {
@@ -23,19 +25,32 @@ export default function ExpertModal() {
         setCalendlyUrl(url);
       })
       .catch(() => setCalendlyUrl(FALLBACK_CALENDLY_URL));
-  }, [expertModal]);
+  }, [expertModal, calendlyUrl]);
 
   useEffect(() => {
     if (!expertModal || !calendlyUrl) return;
+    
+    // Reset loading state when opening
+    setIsLoading(true);
+
+    const handleMessage = (e) => {
+      if (e.data && e.data.event && e.data.event.indexOf('calendly') === 0) {
+        setIsLoading(false);
+      }
+    };
+    window.addEventListener('message', handleMessage);
+
     const src = 'https://assets.calendly.com/assets/external/widget.js';
     if (document.querySelector(`script[src="${src}"]`)) {
       if (window.Calendly) window.Calendly.initInlineWidget({ url: calendlyUrl, parentElement: document.querySelector('.calendly-inline-widget') });
-      return;
+    } else {
+      const script = document.createElement('script');
+      script.src = src;
+      script.async = true;
+      document.body.appendChild(script);
     }
-    const script = document.createElement('script');
-    script.src = src;
-    script.async = true;
-    document.body.appendChild(script);
+
+    return () => window.removeEventListener('message', handleMessage);
   }, [expertModal, calendlyUrl]);
 
   return (
@@ -72,15 +87,17 @@ export default function ExpertModal() {
       </div>
 
       <div className="w-full md:w-3/5 bg-white relative min-h-[550px] md:min-h-[600px] rounded-b-3xl md:rounded-bl-none md:rounded-r-3xl overflow-hidden">
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 z-0">
-          <Loader2 className="h-10 w-10 text-ziv-cyan mb-4 animate-spin" />
-          <p className="text-gray-500 text-sm font-medium">Chargement de l'agenda...</p>
-          <p className="text-[10px] text-gray-400 mt-2">Intégration Calendly sécurisée</p>
-        </div>
+        {isLoading && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 z-0">
+            <Loader2 className="h-10 w-10 text-ziv-cyan mb-4 animate-spin" />
+            <p className="text-gray-500 text-sm font-medium">Chargement de l'agenda...</p>
+            <p className="text-[10px] text-gray-400 mt-2">Intégration Calendly sécurisée</p>
+          </div>
+        )}
 
         {calendlyUrl && (
           <div
-            className="calendly-inline-widget absolute inset-0 z-10 w-full h-full"
+            className={`calendly-inline-widget absolute inset-0 z-10 w-full h-full transition-opacity duration-300 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
             data-url={calendlyUrl}
             style={{ minWidth: '320px', height: '100%' }}
           />
