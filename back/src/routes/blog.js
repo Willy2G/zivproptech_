@@ -1,7 +1,8 @@
 import { Router } from 'express';
-import { listPosts, createPost, updatePost, deletePost, getPostBySlug } from '../controllers/blogController.js';
+import { listPosts, createPost, updatePost, deletePost, getPostBySlug, sharePostRedirect } from '../controllers/blogController.js';
 const router = Router();
 router.get('/', listPosts);
+router.get('/share/:slug', sharePostRedirect);
 router.get('/slug/:slug', getPostBySlug);
 router.post('/', createPost);
 router.put('/:id', updatePost);

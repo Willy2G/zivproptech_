@@ -5,7 +5,8 @@ import { fetchPosts } from '../services/api.js';
 
 function CardShareButton({ title, slug }) {
   const [copied, setCopied] = useState(false);
-  const articleUrl = `${window.location.origin}/blog/${slug}`;
+  const apiUrl = import.meta.env.VITE_API_URL || `${window.location.origin}/api`;
+  const articleUrl = `${apiUrl}/blog/share/${slug}?front=${encodeURIComponent(window.location.origin)}`;
 
   const handleShare = async (e) => {
     e.preventDefault();

@@ -68,3 +68,51 @@ export async function deletePost(req, res) {
     return res.status(500).json({ message: 'Erreur serveur.' });
   }
 }
+
+export async function sharePostRedirect(req, res) {
+  const { slug } = req.params;
+  const frontUrl = req.query.front || 'http://localhost:5173';
+  
+  try {
+    const result = await pool.query('SELECT * FROM blog_posts WHERE slug = $1 AND status = $2', [slug, 'published']);
+    if (result.rowCount === 0) {
+      return res.redirect(`${frontUrl}/blog`);
+    }
+    
+    const post = result.rows[0];
+    const targetUrl = `${frontUrl}/blog/${slug}`;
+    const cleanImageUrl = post.cover_image && post.cover_image.startsWith('/') 
+      ? `${req.protocol}://${req.get('host')}${post.cover_image}`
+      : post.cover_image;
+    
+    const html = `
+      <!DOCTYPE html>
+      <html lang="fr">
+      <head>
+        <meta charset="UTF-8">
+        <meta property="og:title" content="${post.title}">
+        <meta property="og:description" content="${post.meta_description || ''}">
+        ${cleanImageUrl ? `<meta property="og:image" content="${cleanImageUrl}">` : ''}
+        <meta property="og:url" content="${targetUrl}">
+        <meta property="og:type" content="article">
+        
+        <meta name="twitter:card" content="summary_large_image">
+        <meta name="twitter:title" content="${post.title}">
+        <meta name="twitter:description" content="${post.meta_description || ''}">
+        ${cleanImageUrl ? `<meta name="twitter:image" content="${cleanImageUrl}">` : ''}
+        
+        <meta http-equiv="refresh" content="0; url=${targetUrl}">
+        <script>window.location.replace("${targetUrl}");</script>
+        <title>${post.title}</title>
+      </head>
+      <body>
+        <p>Redirection vers l'article...</p>
+      </body>
+      </html>
+    `;
+    
+    res.send(html);
+  } catch (err) {
+    res.redirect(`${frontUrl}/blog`);
+  }
+}

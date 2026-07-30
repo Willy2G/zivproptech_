@@ -109,7 +109,9 @@ export default function BlogPost() {
   const dateStr = post.published_at || post.created_at;
   const formattedDate = dateStr ? new Date(dateStr).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
   const readTime = post.read_time_minutes ? `${post.read_time_minutes} min` : '5 min';
-  const articleUrl = window.location.href;
+  
+  const apiUrl = import.meta.env.VITE_API_URL || `${window.location.origin}/api`;
+  const articleUrl = `${apiUrl}/blog/share/${post.slug}?front=${encodeURIComponent(window.location.origin)}`;
 
   return (
     <article className="bg-white min-h-screen pt-20">
