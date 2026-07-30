@@ -1,97 +1,54 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Calendar, Clock, Loader2, ArrowLeft, Share2, Facebook, Linkedin, Mail, Link2, Check, MessageCircle } from 'lucide-react';
+import { Calendar, Clock, Loader2, ArrowLeft, Share2, Link2, Check } from 'lucide-react';
 import { fetchPostBySlug } from '../services/api.js';
 
-function ShareButtons({ title, url, compact = false }) {
+function ShareButton({ title, url, compact = false }) {
   const [copied, setCopied] = useState(false);
-  const encodedUrl = encodeURIComponent(url);
-  const encodedTitle = encodeURIComponent(title);
 
-  const handleCopy = (e) => {
+  const handleShare = async (e) => {
     e.preventDefault();
     e.stopPropagation();
-    navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: title,
+          url: url
+        });
+      } catch (err) {
+        console.error("Erreur de partage:", err);
+      }
+    } else {
+      navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
-
-  const shareLinks = [
-    {
-      name: 'Facebook',
-      icon: Facebook,
-      href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-      color: 'hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2]',
-      textColor: 'text-[#1877F2]',
-    },
-    {
-      name: 'X',
-      icon: () => (
-        <svg viewBox="0 0 24 24" className={compact ? 'h-4 w-4' : 'h-5 w-5'} fill="currentColor">
-          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-        </svg>
-      ),
-      href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
-      color: 'hover:bg-black hover:text-white hover:border-black',
-      textColor: 'text-black',
-    },
-    {
-      name: 'LinkedIn',
-      icon: Linkedin,
-      href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
-      color: 'hover:bg-[#0A66C2] hover:text-white hover:border-[#0A66C2]',
-      textColor: 'text-[#0A66C2]',
-    },
-    {
-      name: 'WhatsApp',
-      icon: MessageCircle,
-      href: `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`,
-      color: 'hover:bg-[#25D366] hover:text-white hover:border-[#25D366]',
-      textColor: 'text-[#25D366]',
-    },
-    {
-      name: 'Email',
-      icon: Mail,
-      href: `mailto:?subject=${encodedTitle}&body=${encodedTitle}%0A%0A${encodedUrl}`,
-      color: 'hover:bg-gray-700 hover:text-white hover:border-gray-700',
-      textColor: 'text-gray-600',
-    },
-  ];
 
   const btnBase = compact
     ? 'w-9 h-9 rounded-lg text-sm'
-    : 'w-10 h-10 rounded-xl text-sm';
+    : 'flex items-center text-gray-400 hover:text-ziv-cyan transition-colors text-sm font-medium';
 
   return (
-    <div className={`flex items-center ${compact ? 'gap-1.5' : 'gap-2'} flex-wrap`}>
-      {shareLinks.map(({ name, icon: Icon, href, color, textColor }) => (
-        <a
-          key={name}
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          title={`Partager sur ${name}`}
-          className={`${btnBase} flex items-center justify-center border border-gray-200 bg-white ${textColor} ${color} transition-all duration-200 shadow-sm hover:shadow-md`}
-        >
-          <Icon className={compact ? 'h-4 w-4' : 'h-5 w-5'} />
-        </a>
-      ))}
-      <button
-        onClick={handleCopy}
-        title="Copier le lien"
-        className={`${btnBase} flex items-center justify-center border transition-all duration-200 shadow-sm hover:shadow-md ${
-          copied
-            ? 'bg-green-500 text-white border-green-500'
-            : 'border-gray-200 bg-white text-gray-500 hover:bg-ziv-cyan hover:text-white hover:border-ziv-cyan'
-        }`}
-      >
-        {copied ? <Check className={compact ? 'h-4 w-4' : 'h-5 w-5'} /> : <Link2 className={compact ? 'h-4 w-4' : 'h-5 w-5'} />}
-      </button>
-    </div>
+    <button
+      onClick={handleShare}
+      title="Partager"
+      className={compact ? `${btnBase} flex items-center justify-center border transition-all duration-200 shadow-sm hover:shadow-md ${copied ? 'bg-green-500 text-white border-green-500' : 'border-gray-200 bg-white text-gray-500 hover:bg-ziv-cyan hover:text-white hover:border-ziv-cyan'}` : btnBase}
+    >
+      {compact ? (
+        copied ? <Check className="h-4 w-4" /> : <Share2 className="h-4 w-4" />
+      ) : (
+        <>
+          {copied ? <Check className="h-4 w-4 mr-2 text-green-500" /> : <Share2 className="h-4 w-4 mr-2" />}
+          {copied ? <span className="text-green-500">Copié !</span> : 'Partager'}
+        </>
+      )}
+    </button>
   );
 }
 
-export { ShareButtons };
+export { ShareButton };
 
 export default function BlogPost() {
   const { slug } = useParams();
@@ -105,6 +62,30 @@ export default function BlogPost() {
       .catch(err => setError(err.message))
       .finally(() => setLoading(false));
   }, [slug]);
+
+  useEffect(() => {
+    if (post) {
+      document.title = `${post.title} | ZIV PropTech`;
+      
+      const setMetaTag = (property, content) => {
+        let meta = document.querySelector(`meta[property="${property}"]`);
+        if (!meta) {
+          meta = document.createElement('meta');
+          meta.setAttribute('property', property);
+          document.head.appendChild(meta);
+        }
+        meta.setAttribute('content', content);
+      };
+
+      setMetaTag('og:title', post.title);
+      setMetaTag('og:description', post.meta_description || '');
+      setMetaTag('og:type', 'article');
+      setMetaTag('og:url', window.location.href);
+      if (post.cover_image) {
+        setMetaTag('og:image', post.cover_image);
+      }
+    }
+  }, [post]);
 
   if (loading) {
     return (
@@ -159,11 +140,8 @@ export default function BlogPost() {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 border-b border-gray-100 pb-4 gap-3">
-          <span className="text-sm font-medium text-gray-500 flex items-center gap-2">
-            <Share2 className="h-4 w-4" /> Partager cet article
-          </span>
-          <ShareButtons title={post.title} url={articleUrl} />
+        <div className="flex justify-end mb-8 border-b border-gray-100 pb-4">
+          <ShareButton title={post.title} url={articleUrl} />
         </div>
         
         <div
@@ -171,14 +149,7 @@ export default function BlogPost() {
           dangerouslySetInnerHTML={{ __html: post.content_html }}
         />
 
-        <div className="mt-16 pt-8 border-t border-gray-200">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-10">
-            <span className="text-sm font-medium text-gray-500">Vous avez aimé ? Partagez !</span>
-            <ShareButtons title={post.title} url={articleUrl} />
-          </div>
-        </div>
-
-        <div className="pt-2 bg-gray-50 rounded-2xl p-8 text-center">
+        <div className="mt-16 pt-10 border-t border-gray-200 bg-gray-50 rounded-2xl p-8 text-center">
           <h3 className="text-2xl font-bold font-heading text-ziv-navy mb-4">Vous souhaitez digitaliser vos processus ?</h3>
           <p className="text-gray-600 mb-8 max-w-2xl mx-auto">Découvrez comment ZIV PropTech peut vous aider à automatiser votre gestion locative, sécuriser vos projets VEFA ou piloter vos lotissements.</p>
           <Link to="/" className="inline-flex bg-ziv-navy hover:bg-ziv-blue text-white font-bold py-3 px-8 rounded-xl transition duration-300 shadow-md">
