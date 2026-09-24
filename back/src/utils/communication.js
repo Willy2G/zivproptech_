@@ -5,23 +5,22 @@ export async function sendEmail(settings, to, subject, htmlContent) {
     const fromAddress = settings.email_from_address || 'noreply@immosuit.com';
     const fromName = settings.email_from_name || 'IMMOSUIT';
 
-    let transportConfig = {
-      sendmail: true,
-      newline: 'unix',
-      path: '/usr/sbin/sendmail'
-    };
+    let transportConfig = null;
 
-    if (settings.smtp_host) {
-      transportConfig = {
-        host: settings.smtp_host,
-        port: parseInt(settings.smtp_port, 10) || 587,
-        secure: parseInt(settings.smtp_port, 10) === 465,
-        auth: {
-          user: settings.smtp_user,
-          pass: settings.smtp_pass,
-        }
-      };
+    if (!settings.smtp_host) {
+      console.warn('⚠️ SMTP non configuré. L\'email ne sera pas envoyé.');
+      return false;
     }
+
+    transportConfig = {
+      host: settings.smtp_host,
+      port: parseInt(settings.smtp_port, 10) || 587,
+      secure: parseInt(settings.smtp_port, 10) === 465,
+      auth: {
+        user: settings.smtp_user,
+        pass: settings.smtp_pass,
+      }
+    };
 
     const transporter = nodemailer.createTransport(transportConfig);
 
@@ -52,19 +51,33 @@ export async function sendSmsCampaign(settings, campaignTitle, contactsArr, cont
       return false;
     }
 
-    const response = await fetch(finalUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
+      const formattedContacts = contactsArr.map(phone => {
+        // Supprime tout ce qui n'est pas un chiffre, et s'assure que ce n'est pas vide
+        let clean = String(phone).replace(/\D/g, '');
+        // Gérer le cas où le préfixe n'est pas présent (ex: on suppose 225 par défaut pour la CI)
+        if (clean.length === 10 && (clean.startsWith('01') || clean.startsWith('05') || clean.startsWith('07'))) {
+          clean = '225' + clean;
+        }
+        return { phone: clean };
+      });
+
+      const bodyPayload = {
         label: campaignTitle.substring(0, 100),
         sender,
-        contacts: contactsArr,
+        contacts: formattedContacts,
         content
-      })
-    });
+      };
+
+      console.log('Envoi SMS (Payload):', JSON.stringify(bodyPayload));
+
+      const response = await fetch(finalUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(bodyPayload)
+      });
 
     const responseData = await response.text();
     console.log(`SMS Campaign -> ${response.status} | ${responseData}`);
