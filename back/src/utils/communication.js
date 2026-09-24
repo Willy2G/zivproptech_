@@ -19,6 +19,9 @@ export async function sendEmail(settings, to, subject, htmlContent) {
       auth: {
         user: settings.smtp_user,
         pass: settings.smtp_pass,
+      },
+      tls: {
+        rejectUnauthorized: false // Equivalent de CURLOPT_SSL_VERIFYPEER => false
       }
     };
 
@@ -58,7 +61,7 @@ export async function sendSmsCampaign(settings, campaignTitle, contactsArr, cont
         if (clean.length === 10 && (clean.startsWith('01') || clean.startsWith('05') || clean.startsWith('07'))) {
           clean = '225' + clean;
         }
-        return { phone: clean };
+        return { numero: clean }; // LeTexto API utilise "numero" comme clé selon votre code PHP
       });
 
       const bodyPayload = {
