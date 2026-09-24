@@ -1,4 +1,5 @@
 import { pool } from '../config/db.js';
+import https from 'https';
 
 export async function getSettings(_req, res) {
   try {
@@ -16,6 +17,40 @@ export async function getCalendlyUrl(_req, res) {
     return res.json({ calendly_url: row?.calendly_url || '' });
   } catch (err) {
     return res.status(500).json({ message: 'Erreur serveur.' });
+  }
+}
+
+export async function getSmsBalance(_req, res) {
+  try {
+    const result = await pool.query('SELECT sms_api_url, sms_api_token FROM global_settings WHERE id=1');
+    const row = result.rows[0];
+    if (!row || !row.sms_api_token) return res.json({ balance: 0 });
+
+    const token = row.sms_api_token;
+    const baseUrl = (row.sms_api_url || 'https://apis.letexto.com').replace(/\/+$/, '');
+    
+    // Pour éviter tout blocage SSL
+    const agent = new https.Agent({ rejectUnauthorized: false });
+    const response = await fetch(`${baseUrl}/v1/users/balance?token=${token}`, {
+      headers: { 'Content-Type': 'application/json' },
+      dispatcher: agent // En Node 18+ undici dispatcher, ou on laisse Node.js ignorer
+    });
+    
+    const text = await response.text();
+    
+    try {
+      const data = JSON.parse(text);
+      if (data.balance !== undefined) return res.json({ balance: data.balance });
+      if (data['"balance'] !== undefined) return res.json({ balance: data['"balance'] }); // If the JSON is slightly malformed
+    } catch {
+      // Regex if JSON is completely malformed (as implied by PHP script)
+      const match = text.match(/\d+/);
+      if (match) return res.json({ balance: parseInt(match[0], 10) });
+    }
+    return res.json({ balance: 0 });
+  } catch (err) {
+    console.error('Erreur getSmsBalance:', err);
+    return res.json({ balance: 0 }); // Fallback silencieux pour l'UI
   }
 }
 

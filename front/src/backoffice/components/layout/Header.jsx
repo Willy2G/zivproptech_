@@ -1,6 +1,8 @@
+import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Bell, ExternalLink, LogOut } from 'lucide-react';
+import { Bell, ExternalLink, LogOut, MessageSquare } from 'lucide-react';
 import { navItems } from '../../data/navigation.js';
+import { fetchSmsBalance } from '../../../services/api.js';
 
 export default function Header() {
   const { pathname } = useLocation();
@@ -10,6 +12,14 @@ export default function Header() {
 
   const user = JSON.parse(localStorage.getItem('adminUser') || '{}');
   const initials = user.name ? user.name.substring(0, 2).toUpperCase() : 'AD';
+
+  const [smsBalance, setSmsBalance] = useState(null);
+
+  useEffect(() => {
+    fetchSmsBalance()
+      .then(res => setSmsBalance(res.balance))
+      .catch(() => setSmsBalance(null));
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('adminToken');
@@ -29,6 +39,15 @@ export default function Header() {
         >
           <ExternalLink className="h-5 w-5" />
         </Link>
+        
+        {smsBalance !== null && (
+          <div className="flex items-center space-x-1.5 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200" title="Solde SMS restant (LeTexto)">
+            <MessageSquare className="h-4 w-4 text-ziv-cyan" />
+            <span className="text-sm font-bold text-gray-700">{smsBalance}</span>
+            <span className="text-xs text-gray-500 font-medium">SMS</span>
+          </div>
+        )}
+
         <button type="button" className="relative text-gray-400 hover:text-ziv-cyan transition-colors">
           <Bell className="h-5 w-5" />
           <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full border-2 border-white" />
