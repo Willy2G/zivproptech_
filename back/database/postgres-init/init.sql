@@ -280,6 +280,8 @@ CREATE TABLE IF NOT EXISTS global_settings (
     smtp_port INT,
     smtp_user VARCHAR(255),
     smtp_pass VARCHAR(255),
+    notification_cc_emails TEXT,
+    notification_cc_phones TEXT,
     updated_at TIMESTAMPTZ DEFAULT now(),
     CONSTRAINT chk_single_row CHECK (id = 1)
 );

@@ -28,6 +28,7 @@ const ALLOWED_COLUMNS = new Set([
   'facebook_url', 'twitter_url', 'instagram_url', 'linkedin_url', 'youtube_url',
   'maintenance_mode',
   'sms_api_url', 'sms_api_key', 'sms_api_token', 'sms_sender_id',
+  'notification_cc_emails', 'notification_cc_phones',
   'calendly_url',
   'demo_video_url',
   'guide_document_url', 'guide_email_subject', 'guide_email_content',

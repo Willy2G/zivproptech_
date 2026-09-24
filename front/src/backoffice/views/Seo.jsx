@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { BarChart2, Calendar, Contact, Loader2, Palette, Save, Search, Upload, ImageIcon } from 'lucide-react';
+import { useEffect, useState, useRef } from 'react';
+import { BarChart2, Bell, Calendar, Contact, Loader2, Mail, Palette, Phone, Plus, Save, Search, Upload, ImageIcon, X } from 'lucide-react';
 import { Field, TextInput, TextArea } from '../components/ui/FormControls.jsx';
 import { fetchSettings, updateSettings, uploadImage } from '../../services/api.js';
 import { useToast } from '../context/ToastContext.jsx';
@@ -12,6 +12,76 @@ function ColorField({ label, value, onChange }) {
         <input type="color" value={value} onChange={e => onChange(e.target.value)} className="h-10 w-10 rounded border border-gray-300 cursor-pointer" />
         <input type="text" value={value} onChange={e => onChange(e.target.value)} className="w-full p-2 bg-gray-50 border border-gray-300 rounded-lg text-sm font-mono uppercase outline-none" />
       </div>
+    </div>
+  );
+}
+
+function TagField({ label, icon, tags, onAdd, onRemove, placeholder, type, tagColor }) {
+  const [inputValue, setInputValue] = useState('');
+  const inputRef = useRef(null);
+
+  const handleAdd = () => {
+    if (inputValue.trim()) {
+      const added = onAdd(inputValue);
+      if (added !== false) setInputValue('');
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      handleAdd();
+    }
+    if (e.key === 'Backspace' && !inputValue && tags.length > 0) {
+      onRemove(tags.length - 1);
+    }
+  };
+
+  return (
+    <div>
+      <label className="block text-sm font-bold text-gray-700 mb-2 flex items-center">
+        <span className="text-ziv-cyan mr-2">{icon}</span> {label}
+      </label>
+      <div
+        className="min-h-[48px] p-2 bg-gray-50 border border-gray-300 rounded-lg flex flex-wrap items-center gap-2 cursor-text transition-all focus-within:ring-2 focus-within:ring-ziv-cyan/30 focus-within:border-ziv-cyan"
+        onClick={() => inputRef.current?.focus()}
+      >
+        {tags.map((tag, idx) => (
+          <span
+            key={idx}
+            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${tagColor} transition-all hover:shadow-sm group`}
+          >
+            {tag}
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); onRemove(idx); }}
+              className="ml-1.5 p-0.5 rounded-full hover:bg-black/10 transition-colors"
+            >
+              <X className="h-3 w-3" />
+            </button>
+          </span>
+        ))}
+        <div className="flex items-center flex-1 min-w-[140px]">
+          <input
+            ref={inputRef}
+            type={type || 'text'}
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={tags.length === 0 ? placeholder : 'Ajouter...'}
+            className="flex-1 bg-transparent border-none outline-none text-sm py-1 min-w-[100px]"
+          />
+          <button
+            type="button"
+            onClick={handleAdd}
+            className="p-1.5 text-gray-400 hover:text-ziv-cyan hover:bg-ziv-cyan/10 rounded-lg transition-colors"
+            title="Ajouter"
+          >
+            <Plus className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+      <p className="text-[10px] text-gray-400 mt-1">Appuyez sur Entrée ou virgule pour ajouter</p>
     </div>
   );
 }
@@ -29,6 +99,7 @@ export default function Seo() {
     facebook_url: '', linkedin_url: '', youtube_url: '', twitter_url: '', instagram_url: '',
     calendly_url: '', demo_video_url: '', guide_document_url: '', guide_email_subject: '', guide_email_content: '',
     email_from_name: '', email_from_address: '', smtp_host: '', smtp_port: '', smtp_user: '', smtp_pass: '',
+    notification_cc_emails: '', notification_cc_phones: '',
   });
 
   useEffect(() => {
@@ -61,6 +132,24 @@ export default function Seo() {
     } finally {
       setUploading(false);
     }
+  };
+
+  // --- Tag Input helpers ---
+  const parseTagString = (str) => (str || '').split(',').map(s => s.trim()).filter(Boolean);
+  const tagsToString = (arr) => arr.join(', ');
+
+  const addTag = (fieldKey, value) => {
+    const current = parseTagString(form[fieldKey]);
+    const trimmed = value.trim();
+    if (!trimmed || current.includes(trimmed)) return false;
+    setForm(f => ({ ...f, [fieldKey]: tagsToString([...current, trimmed]) }));
+    return true;
+  };
+
+  const removeTag = (fieldKey, index) => {
+    const current = parseTagString(form[fieldKey]);
+    current.splice(index, 1);
+    setForm(f => ({ ...f, [fieldKey]: tagsToString(current) }));
   };
 
   if (loading) return <div className="flex justify-center py-20 text-gray-400"><Loader2 className="h-6 w-6 animate-spin mr-2" /> Chargement...</div>;
@@ -189,7 +278,7 @@ export default function Seo() {
       </div>
 
       <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-8 mt-8">
-        <form onSubmit={save('Configuration SMS/Email', ['sms_sender_id', 'sms_api_token', 'sms_api_url', 'guide_document_url', 'guide_email_subject', 'guide_email_content', 'email_from_name', 'email_from_address', 'smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass'])} className="space-y-6">
+        <form onSubmit={save('Configuration SMS/Email', ['sms_sender_id', 'sms_api_token', 'sms_api_url', 'guide_document_url', 'guide_email_subject', 'guide_email_content', 'email_from_name', 'email_from_address', 'smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass', 'notification_cc_emails', 'notification_cc_phones'])} className="space-y-6">
           <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center border-b pb-2">
             Configuration SMS (API)
           </h3>
@@ -211,6 +300,36 @@ export default function Seo() {
             <Field label="Mot de passe SMTP"><TextInput type="password" value={form.smtp_pass || ''} onChange={set('smtp_pass')} placeholder="••••••••" /></Field>
           </div>
           
+          <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center border-b pb-2 mt-8">
+            <Bell className="h-5 w-5 mr-2 text-ziv-cyan" /> Destinataires des Notifications (Leads)
+          </h3>
+          <p className="text-sm text-gray-500 -mt-2 mb-4">
+            Lorsqu'un prospect s'inscrit via le site public, une notification sera envoyée automatiquement par <strong>Email</strong> et <strong>SMS</strong> aux destinataires ci-dessous.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <TagField
+              label="Emails en copie (CC)"
+              icon={<Mail className="h-4 w-4" />}
+              tags={parseTagString(form.notification_cc_emails)}
+              onAdd={(val) => addTag('notification_cc_emails', val)}
+              onRemove={(idx) => removeTag('notification_cc_emails', idx)}
+              placeholder="ex: commercial@ziv.ci"
+              type="email"
+              tagColor="bg-blue-50 text-blue-700 border-blue-200"
+            />
+            <TagField
+              label="Téléphones de notification (SMS)"
+              icon={<Phone className="h-4 w-4" />}
+              tags={parseTagString(form.notification_cc_phones)}
+              onAdd={(val) => addTag('notification_cc_phones', val)}
+              onRemove={(idx) => removeTag('notification_cc_phones', idx)}
+              placeholder="ex: +225 07 08 53 11 11"
+              type="tel"
+              tagColor="bg-green-50 text-green-700 border-green-200"
+            />
+          </div>
+
           <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center border-b pb-2 mt-8">
             Envoi du Guide (Centre de Connaissances)
           </h3>

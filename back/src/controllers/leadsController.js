@@ -64,49 +64,102 @@ export async function createLead(req, res) {
       ]
     );
 
-    // Envoi de l'email pour le guide
+    // --- Récupérer les paramètres globaux pour les notifications ---
+    const settingsResult = await pool.query('SELECT * FROM global_settings WHERE id = 1');
+    const settings = settingsResult.rows.length > 0 ? settingsResult.rows[0] : {};
+
+    // Parser les destinataires CC depuis les settings
+    const ccEmails = (settings.notification_cc_emails || '')
+      .split(',')
+      .map(e => e.trim())
+      .filter(e => e.length > 0);
+    const ccPhones = (settings.notification_cc_phones || '')
+      .split(',')
+      .map(p => p.trim())
+      .filter(p => p.length > 0);
+
+    // --- Email HTML de notification interne (pour les CC) ---
+    const notifSubject = `🔔 Nouveau prospect : ${lead.full_name} — ${lead.software_interest}`;
+    const notifHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, #0A1E4A, #00A8B5); padding: 24px; border-radius: 12px 12px 0 0;">
+          <h2 style="color: #fff; margin: 0; font-size: 20px;">🔔 Nouveau Lead Enregistré</h2>
+        </div>
+        <div style="background: #f9fafb; padding: 24px; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 12px 12px;">
+          <table style="width: 100%; border-collapse: collapse;">
+            <tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Nom</td><td style="padding: 8px 0; font-weight: bold; font-size: 14px;">${lead.full_name}</td></tr>
+            <tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Email</td><td style="padding: 8px 0; font-size: 14px;"><a href="mailto:${lead.email}">${lead.email}</a></td></tr>
+            <tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Téléphone</td><td style="padding: 8px 0; font-size: 14px;"><a href="tel:${lead.phone}">${lead.phone}</a></td></tr>
+            <tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Intérêt</td><td style="padding: 8px 0; font-weight: bold; color: #00A8B5; font-size: 14px;">${lead.software_interest}</td></tr>
+            ${lead.consulting_type ? `<tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Type conseil</td><td style="padding: 8px 0; font-size: 14px;">${lead.consulting_type}</td></tr>` : ''}
+            ${lead.message ? `<tr><td style="padding: 8px 0; color: #6b7280; font-size: 14px;">Message</td><td style="padding: 8px 0; font-size: 14px;">${String(lead.message).replace(/\n/g, '<br/>')}</td></tr>` : ''}
+          </table>
+          <p style="color: #9ca3af; font-size: 12px; margin-top: 16px; text-align: center;">Notification automatique — ZIV PROPTECH CRM</p>
+        </div>
+      </div>
+    `;
+
+    // SMS de notification interne (pour les CC)
+    const notifSms = `Nouveau lead: ${lead.full_name} | ${lead.software_interest} | Tel: ${lead.phone} | Email: ${lead.email}`;
+
+    // --- Logique spécifique : Guide Digitalisation ---
     if (lead.software_interest === 'Guide Digitalisation') {
-      const settingsResult = await pool.query('SELECT * FROM global_settings WHERE id = 1');
-      if (settingsResult.rows.length > 0) {
-        const settings = settingsResult.rows[0];
-        
-        const subject = settings.guide_email_subject || 'Voici votre guide de la Digitalisation Immobilière';
-        const documentUrl = settings.guide_document_url || '#';
-        const bodyContent = settings.guide_email_content || 'Bonjour, merci pour votre téléchargement. Veuillez trouver le guide ci-joint.';
-        
-        const htmlContent = `
-          <p>${bodyContent.replace(/\n/g, '<br>')}</p>
-          <br/>
-          <p><a href="${documentUrl}" style="background-color: #00A8B5; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Télécharger le guide</a></p>
-        `;
-        
-        await sendEmail(settings, lead.email, subject, htmlContent);
-        
-        // Envoi SMS (optionnel si le tel est renseigné)
-        if (lead.phone && lead.phone !== 'Non renseigné') {
-          await sendSmsCampaign(settings, 'Guide Digitalisation', [lead.phone], 'Merci pour votre téléchargement. Vérifiez vos emails pour obtenir le guide.');
-        }
+      const subject = settings.guide_email_subject || 'Voici votre guide de la Digitalisation Immobilière';
+      const documentUrl = settings.guide_document_url || '#';
+      const bodyContent = settings.guide_email_content || 'Bonjour, merci pour votre téléchargement. Veuillez trouver le guide ci-joint.';
+
+      const htmlContent = `
+        <p>${bodyContent.replace(/\n/g, '<br>')}</p>
+        <br/>
+        <p><a href="${documentUrl}" style="background-color: #00A8B5; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Télécharger le guide</a></p>
+      `;
+
+      await sendEmail(settings, lead.email, subject, htmlContent);
+
+      if (lead.phone && lead.phone !== 'Non renseigné') {
+        await sendSmsCampaign(settings, 'Guide Digitalisation', [lead.phone], 'Merci pour votre téléchargement. Vérifiez vos emails pour obtenir le guide.');
       }
     }
 
-    // Envoi de l'email pour le Rendez-vous
+    // --- Logique spécifique : Rendez-vous ---
     if (lead.software_interest === 'Rendez-vous') {
-      const settingsResult = await pool.query('SELECT * FROM global_settings WHERE id = 1');
-      if (settingsResult.rows.length > 0) {
-        const settings = settingsResult.rows[0];
-        const subject = 'Nouvelle demande de Rendez-vous / Audit';
-        const htmlContent = `
-          <h3>Nouvelle demande de Rendez-vous</h3>
-          <p><strong>Nom :</strong> ${lead.full_name}</p>
-          <p><strong>Téléphone :</strong> ${lead.phone}</p>
-          <p><strong>Email :</strong> ${lead.email}</p>
-          <p><strong>Détails & Date souhaitée :</strong><br/> ${String(lead.message).replace(/\n/g, '<br/>')}</p>
-        `;
-        if (settings.contact_email) {
-          await sendEmail(settings, settings.contact_email, subject, htmlContent);
-        }
+      const subject = 'Nouvelle demande de Rendez-vous / Audit';
+      const htmlContent = `
+        <h3>Nouvelle demande de Rendez-vous</h3>
+        <p><strong>Nom :</strong> ${lead.full_name}</p>
+        <p><strong>Téléphone :</strong> ${lead.phone}</p>
+        <p><strong>Email :</strong> ${lead.email}</p>
+        <p><strong>Détails & Date souhaitée :</strong><br/> ${String(lead.message).replace(/\n/g, '<br/>')}</p>
+      `;
+      if (settings.contact_email) {
+        await sendEmail(settings, settings.contact_email, subject, htmlContent);
       }
     }
+
+    // --- Envoi des notifications CC (Email + SMS) pour TOUS les types de leads ---
+    const ccNotifPromises = [];
+
+    for (const ccEmail of ccEmails) {
+      ccNotifPromises.push(
+        sendEmail(settings, ccEmail, notifSubject, notifHtml)
+          .catch(err => console.error(`Erreur notif email CC ${ccEmail}:`, err.message))
+      );
+    }
+
+    if (ccPhones.length > 0) {
+      ccNotifPromises.push(
+        sendSmsCampaign(settings, `Lead: ${lead.full_name}`, ccPhones, notifSms)
+          .catch(err => console.error('Erreur notif SMS CC:', err.message))
+      );
+    }
+
+    // Lancer les notifications CC en parallèle sans bloquer la réponse
+    Promise.allSettled(ccNotifPromises).then(results => {
+      const failures = results.filter(r => r.status === 'rejected');
+      if (failures.length > 0) {
+        console.warn(`${failures.length} notification(s) CC en échec.`);
+      }
+    });
 
     return res.status(201).json({
       message: 'Demande enregistrée avec succès.',

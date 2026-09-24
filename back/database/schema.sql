@@ -145,6 +145,8 @@ CREATE TABLE IF NOT EXISTS global_settings (
     sms_api_key VARCHAR(255),
     sms_api_token VARCHAR(255),
     sms_sender_id VARCHAR(50),
+    notification_cc_emails TEXT,
+    notification_cc_phones TEXT,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
