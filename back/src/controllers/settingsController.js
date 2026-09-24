@@ -24,33 +24,40 @@ export async function getSmsBalance(_req, res) {
   try {
     const result = await pool.query('SELECT sms_api_url, sms_api_token FROM global_settings WHERE id=1');
     const row = result.rows[0];
-    if (!row || !row.sms_api_token) return res.json({ balance: 0 });
+    if (!row || !row.sms_api_token) return res.json({ balance: null });
 
     const token = row.sms_api_token;
-    const baseUrl = (row.sms_api_url || 'https://apis.letexto.com').replace(/\/+$/, '');
-    
-    // Pour éviter tout blocage SSL
-    const agent = new https.Agent({ rejectUnauthorized: false });
-    const response = await fetch(`${baseUrl}/v1/users/balance?token=${token}`, {
-      headers: { 'Content-Type': 'application/json' },
-      dispatcher: agent // En Node 18+ undici dispatcher, ou on laisse Node.js ignorer
+    // Normaliser l'URL : extraire la racine même si l'utilisateur a collé un chemin complet
+    let baseUrl = (row.sms_api_url || 'https://apis.letexto.com').trim().replace(/\/+$/, '');
+    const v1Idx = baseUrl.indexOf('/v1');
+    if (v1Idx !== -1) baseUrl = baseUrl.substring(0, v1Idx);
+
+    const balanceUrl = `${baseUrl}/v1/users/balance?token=${token}`;
+    console.log('📊 Fetching SMS balance from:', balanceUrl);
+
+    // Utiliser https.get natif (équivalent exact de curl_init en PHP)
+    const data = await new Promise((resolve, reject) => {
+      https.get(balanceUrl, { rejectUnauthorized: false }, (response) => {
+        let body = '';
+        response.on('data', chunk => { body += chunk; });
+        response.on('end', () => resolve(body));
+      }).on('error', reject);
     });
-    
-    const text = await response.text();
-    
+
+    console.log('📊 SMS Balance raw response:', data);
+
     try {
-      const data = JSON.parse(text);
-      if (data.balance !== undefined) return res.json({ balance: data.balance });
-      if (data['"balance'] !== undefined) return res.json({ balance: data['"balance'] }); // If the JSON is slightly malformed
+      const parsed = JSON.parse(data);
+      if (parsed.balance !== undefined) return res.json({ balance: parsed.balance });
     } catch {
-      // Regex if JSON is completely malformed (as implied by PHP script)
-      const match = text.match(/\d+/);
-      if (match) return res.json({ balance: parseInt(match[0], 10) });
+      // Fallback : extraire le premier nombre trouvé (comme le LTRIM/RTRIM du PHP)
+      const match = data.match(/[\d.]+/);
+      if (match) return res.json({ balance: parseFloat(match[0]) });
     }
     return res.json({ balance: 0 });
   } catch (err) {
-    console.error('Erreur getSmsBalance:', err);
-    return res.json({ balance: 0 }); // Fallback silencieux pour l'UI
+    console.error('❌ Erreur getSmsBalance:', err.message);
+    return res.json({ balance: null });
   }
 }
 

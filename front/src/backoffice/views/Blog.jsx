@@ -11,7 +11,7 @@ const STATUS_BADGE = {
   draft: { label: 'Brouillon', className: 'bg-gray-100 text-gray-700' },
   archived: { label: 'Archivé', className: 'bg-red-100 text-red-700' },
 };
-const CATEGORIES = ['Réglementatigit on', 'Promotion', 'Lotissement', 'Syndic', 'Gestion Locative', 'Tech'];
+const CATEGORIES = ['Réglementation', 'Promotion', 'Lotissement', 'Syndic', 'Gestion Locative', 'Tech'];
 
 function formatNumber(n) {
   if (n >= 1000) return (n / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
