@@ -43,8 +43,10 @@ export default function Header() {
         {smsBalance !== null && (
           <div className="flex items-center space-x-1.5 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-200" title="Solde SMS restant (LeTexto)">
             <MessageSquare className="h-4 w-4 text-ziv-cyan" />
-            <span className="text-sm font-bold text-gray-700">{smsBalance}</span>
-            <span className="text-xs text-gray-500 font-medium">SMS</span>
+            <span className="text-sm font-bold text-gray-700">
+              {Math.floor(smsBalance / 20)} SMS
+            </span>
+            <span className="text-xs text-gray-500 font-medium">· {smsBalance} F</span>
           </div>
         )}
 
