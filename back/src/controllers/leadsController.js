@@ -113,11 +113,18 @@ export async function createLead(req, res) {
       const documentUrl = settings.guide_document_url || '#';
       const bodyContent = settings.guide_email_content || 'Bonjour, merci pour votre téléchargement. Veuillez trouver le guide ci-joint.';
 
-      const htmlContent = `
-        <p>${bodyContent.replace(/\n/g, '<br>')}</p>
-        <br/>
-        <p><a href="${documentUrl}" style="background-color: #00A8B5; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Télécharger le guide</a></p>
-      `;
+      const htmlContent = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+        <div style="background:linear-gradient(135deg,#0A1E4A,#00A8B5);padding:24px;border-radius:12px 12px 0 0;">
+          <h2 style="color:#fff;margin:0;font-size:18px;">${subject}</h2>
+        </div>
+        <div style="background:#f9fafb;padding:24px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;">
+          <p style="font-size:14px;color:#374151;line-height:1.6;">${bodyContent.replace(/\n/g, '<br>')}</p>
+          <div style="text-align: center; margin-top: 30px; margin-bottom: 20px;">
+            <a href="${documentUrl}" style="background-color: #00A8B5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">Télécharger le guide</a>
+          </div>
+          <p style="color:#9ca3af;font-size:11px;margin-top:24px;text-align:center;">ZIV PROPTECH</p>
+        </div>
+      </div>`;
 
       await sendEmail(settings, lead.email, subject, htmlContent);
 
@@ -129,13 +136,18 @@ export async function createLead(req, res) {
     // --- Logique spécifique : Rendez-vous ---
     if (lead.software_interest === 'Rendez-vous') {
       const subject = 'Nouvelle demande de Rendez-vous / Audit';
-      const htmlContent = `
-        <h3>Nouvelle demande de Rendez-vous</h3>
-        <p><strong>Nom :</strong> ${lead.full_name}</p>
-        <p><strong>Téléphone :</strong> ${lead.phone}</p>
-        <p><strong>Email :</strong> ${lead.email}</p>
-        <p><strong>Détails & Date souhaitée :</strong><br/> ${String(lead.message).replace(/\n/g, '<br/>')}</p>
-      `;
+      const htmlContent = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+        <div style="background:linear-gradient(135deg,#0A1E4A,#00A8B5);padding:24px;border-radius:12px 12px 0 0;">
+          <h2 style="color:#fff;margin:0;font-size:18px;">Nouvelle demande de Rendez-vous</h2>
+        </div>
+        <div style="background:#f9fafb;padding:24px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;">
+          <p style="font-size:14px;color:#374151;line-height:1.6;"><strong>Nom :</strong> ${lead.full_name}</p>
+          <p style="font-size:14px;color:#374151;line-height:1.6;"><strong>Téléphone :</strong> ${lead.phone}</p>
+          <p style="font-size:14px;color:#374151;line-height:1.6;"><strong>Email :</strong> ${lead.email}</p>
+          <p style="font-size:14px;color:#374151;line-height:1.6;"><strong>Détails & Date souhaitée :</strong><br/> ${String(lead.message).replace(/\n/g, '<br/>')}</p>
+          <p style="color:#9ca3af;font-size:11px;margin-top:24px;text-align:center;">ZIV PROPTECH CRM</p>
+        </div>
+      </div>`;
       if (settings.contact_email) {
         await sendEmail(settings, settings.contact_email, subject, htmlContent);
       }
