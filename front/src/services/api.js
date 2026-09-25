@@ -32,6 +32,8 @@ export const fetchLeads = () => request('/leads');
 export const updateLeadStatus = (id, status) => request(`/leads/${id}`, { method: 'PATCH', body: JSON.stringify({ status }) });
 export const updateLead = (id, data) => request(`/leads/${id}`, { method: 'PUT', body: JSON.stringify(data) });
 export const deleteLead = (id) => request(`/leads/${id}`, { method: 'DELETE' });
+export const sendMessage = (data) => request('/leads/send-message', { method: 'POST', body: JSON.stringify(data) });
+export const sendCampaign = (data) => request('/leads/send-campaign', { method: 'POST', body: JSON.stringify(data) });
 
 // Softwares
 export const fetchSoftwares = () => request('/softwares');

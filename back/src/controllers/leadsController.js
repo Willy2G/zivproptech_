@@ -78,8 +78,8 @@ export async function createLead(req, res) {
       .filter(e => e.length > 0);
     const ccPhones = (settings.notification_cc_phones || '')
       .split(',')
-      .map(p => p.trim())
-      .filter(p => p.length > 0);
+      .map(p => p.trim().replace(/[^\d+]/g, ''))
+      .filter(p => p.length > 5);
 
     // --- Email HTML de notification interne (pour les CC) ---
     const notifSubject = `🔔 Nouveau prospect : ${lead.full_name} — ${lead.software_interest}`;

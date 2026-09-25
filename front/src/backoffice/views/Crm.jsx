@@ -5,7 +5,7 @@ import SoftwareBadge from '../components/ui/SoftwareBadge.jsx';
 import Modal from '../../components/modals/Modal.jsx';
 import { Field, TextInput, TextArea, SaveButton, Select } from '../components/ui/FormControls.jsx';
 import { leadStatuses } from '../data/mockLeads.js';
-import { fetchLeads, updateLeadStatus as apiUpdateStatus, deleteLead as apiDeleteLead, createLead, updateLead } from '../../services/api.js';
+import { fetchLeads, updateLeadStatus as apiUpdateStatus, deleteLead as apiDeleteLead, createLead, updateLead, sendMessage, sendCampaign } from '../../services/api.js';
 import { useToast } from '../context/ToastContext.jsx';
 
 const SELECT_STYLE = {
@@ -31,22 +31,42 @@ export default function Crm() {
   const [sortDir, setSortDir] = useState('desc');
   const [page, setPage] = useState(1);
   const perPage = 10;
-  const [msgModal, setMsgModal] = useState({ open: false, type: 'sms', recipient: '', subject: '', content: '' });
+  const [msgModal, setMsgModal] = useState({ open: false, type: 'sms', recipient: '', subject: '', content: '', isCampaign: false });
+  const [sending, setSending] = useState(false);
   const [leadModal, setLeadModal] = useState({ open: false, isEditing: false, id: null, full_name: '', email: '', phone: '', software_interest: 'suit_foncier', status: 'new' });
 
-  const openMsgModal = (type, recipient = '') => {
-    setMsgModal({ open: true, type, recipient, subject: '', content: '' });
+  const openMsgModal = (type, recipient = '', isCampaign = false) => {
+    setMsgModal({ open: true, type, recipient, subject: '', content: '', isCampaign });
   };
 
   const closeMsgModal = () => setMsgModal(m => ({ ...m, open: false }));
 
-  const handleSendMsg = (e) => {
+  const handleSendMsg = async (e) => {
     e.preventDefault();
-    // Simulation d'envoi
-    setTimeout(() => {
-      showToast(`${msgModal.type === 'sms' ? 'SMS' : 'Email'} envoyé avec succès.`);
+    setSending(true);
+    try {
+      if (msgModal.isCampaign) {
+        const res = await sendCampaign({
+          type: msgModal.type,
+          subject: msgModal.subject,
+          content: msgModal.content,
+        });
+        showToast(res.message || 'Campagne envoyée.');
+      } else {
+        const res = await sendMessage({
+          type: msgModal.type,
+          recipient: msgModal.recipient,
+          subject: msgModal.subject,
+          content: msgModal.content,
+        });
+        showToast(res.message || `${msgModal.type === 'sms' ? 'SMS' : 'Email'} envoyé.`);
+      }
       closeMsgModal();
-    }, 1000);
+    } catch (err) {
+      showToast(err.message || 'Erreur lors de l\'envoi.');
+    } finally {
+      setSending(false);
+    }
   };
 
   useEffect(() => {
@@ -181,11 +201,11 @@ export default function Crm() {
             <button onClick={() => setLeadModal(m => ({ ...m, open: true, isEditing: false, full_name: '', email: '', phone: '', software_interest: 'suit_foncier', status: 'new' }))} className="flex items-center gap-2 bg-ziv-cyan text-white px-4 py-2 rounded-lg text-sm font-medium hover:brightness-110 transition-colors shadow-sm">
               <Plus className="h-4 w-4" /> Nouveau Lead
             </button>
-            <button onClick={() => openMsgModal('sms')} className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-black transition-colors shadow-sm hidden sm:flex">
-              <MessageSquare className="h-4 w-4" /> SMS
+            <button onClick={() => openMsgModal('sms', '', true)} className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-black transition-colors shadow-sm hidden sm:flex">
+              <MessageSquare className="h-4 w-4" /> Campagne SMS
             </button>
-            <button onClick={() => openMsgModal('email')} className="flex items-center gap-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors shadow-sm hidden sm:flex">
-              <Mail className="h-4 w-4" /> Email
+            <button onClick={() => openMsgModal('email', '', true)} className="flex items-center gap-2 bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors shadow-sm hidden sm:flex">
+              <Mail className="h-4 w-4" /> Campagne Email
             </button>
             <a href="/admin/seo" className="flex items-center gap-2 border border-gray-200 bg-white text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors shadow-sm">
               <Settings className="h-4 w-4 text-gray-500" /> Paramètres
@@ -288,17 +308,24 @@ export default function Crm() {
       <Modal open={msgModal.open} onClose={closeMsgModal} maxWidth="sm:max-w-lg" contentClass="p-6">
         <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
           {msgModal.type === 'sms' ? <MessageSquare className="h-5 w-5 mr-2 text-ziv-cyan" /> : <Mail className="h-5 w-5 mr-2 text-ziv-cyan" />}
-          Envoyer un {msgModal.type === 'sms' ? 'SMS' : 'Email'}
+          {msgModal.isCampaign ? `Campagne ${msgModal.type === 'sms' ? 'SMS' : 'Email'}` : `Envoyer un ${msgModal.type === 'sms' ? 'SMS' : 'Email'}`}
         </h3>
+        {msgModal.isCampaign && (
+          <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-700">
+            Ce message sera envoyé à <strong>tous les leads</strong> enregistrés dans le CRM.
+          </div>
+        )}
         <form onSubmit={handleSendMsg} className="space-y-4">
-          <Field label={msgModal.type === 'sms' ? 'Numéro de téléphone' : 'Adresse Email'}>
-            <TextInput 
-              value={msgModal.recipient} 
-              onChange={e => setMsgModal(m => ({ ...m, recipient: e.target.value }))} 
-              placeholder={msgModal.type === 'sms' ? '+225 00 00 00 00 00' : 'contact@exemple.com'} 
-              required 
-            />
-          </Field>
+          {!msgModal.isCampaign && (
+            <Field label={msgModal.type === 'sms' ? 'Numéro de téléphone' : 'Adresse Email'}>
+              <TextInput 
+                value={msgModal.recipient} 
+                onChange={e => setMsgModal(m => ({ ...m, recipient: e.target.value }))} 
+                placeholder={msgModal.type === 'sms' ? '+225 00 00 00 00 00' : 'contact@exemple.com'} 
+                required 
+              />
+            </Field>
+          )}
           
           {msgModal.type === 'email' && (
             <Field label="Sujet">
@@ -322,10 +349,13 @@ export default function Crm() {
           </Field>
 
           <div className="flex justify-end pt-4 border-t border-gray-100">
-            <button type="button" onClick={closeMsgModal} className="px-4 py-2 text-gray-500 hover:text-gray-700 mr-4 font-semibold text-sm">
+            <button type="button" onClick={closeMsgModal} className="px-4 py-2 text-gray-500 hover:text-gray-700 mr-4 font-semibold text-sm" disabled={sending}>
               Annuler
             </button>
-            <SaveButton><Send className="h-4 w-4 mr-2" /> Envoyer le message</SaveButton>
+            <SaveButton disabled={sending}>
+              {sending ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Send className="h-4 w-4 mr-2" />}
+              {sending ? 'Envoi en cours...' : (msgModal.isCampaign ? 'Lancer la campagne' : 'Envoyer le message')}
+            </SaveButton>
           </div>
         </form>
       </Modal>
