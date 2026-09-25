@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://zivproptech.com/sitemap.xml

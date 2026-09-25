@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { BarChart2, Bell, Calendar, Contact, Loader2, Mail, Palette, Phone, Plus, Save, Search, Upload, ImageIcon, X } from 'lucide-react';
+import { BarChart2, Bell, Calendar, Contact, Loader2, Mail, Palette, Phone, Plus, Save, Search, Upload, ImageIcon, X, Eye } from 'lucide-react';
 import { Field, TextInput, TextArea } from '../components/ui/FormControls.jsx';
 import { fetchSettings, updateSettings, uploadImage } from '../../services/api.js';
 import { useToast } from '../context/ToastContext.jsx';
@@ -340,6 +340,17 @@ export default function Seo() {
             <Field label="Lien du Document Guide (PDF)">
               <div className="flex space-x-2">
                 <TextInput value={form.guide_document_url || ''} onChange={set('guide_document_url')} placeholder="https://votresite.com/guide.pdf" />
+                {form.guide_document_url && (
+                  <a
+                    href={form.guide_document_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center px-3 py-2 bg-blue-50 text-ziv-blue border border-blue-100 rounded-lg hover:bg-blue-100 transition-colors"
+                    title="Prévisualiser le document"
+                  >
+                    <Eye className="w-4 h-4" />
+                  </a>
+                )}
                 <label className="flex items-center justify-center px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
                   {uploadingGuide ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Upload className="w-4 h-4 mr-2" />}
                   <span className="text-sm font-medium text-gray-700">{uploadingGuide ? 'Upload...' : 'Uploader'}</span>

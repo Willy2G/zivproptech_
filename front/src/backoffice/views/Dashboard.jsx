@@ -122,7 +122,25 @@ export default function Dashboard() {
 
   const periodLabel = periodPreset === 'all' ? 'Toutes les données' : periodPreset === 'custom' ? `${dateFrom || '…'} → ${dateTo || '…'}` : `${PERIOD_PRESETS.find(p => p.value === periodPreset)?.label}`;
 
-  const totalVisitors = visitorStats.reduce((sum, row) => sum + (parseInt(row.unique_visitors, 10) || 0), 0);
+  const mergedVisitorStats = useMemo(() => {
+    const statsMap = {};
+    visitorStats.forEach(stat => {
+      const code = stat.country_code;
+      let name = stat.country_name || code;
+      if (name.toLowerCase() === 'ivory coast') name = "Côte d'Ivoire";
+      
+      if (!statsMap[code]) {
+        statsMap[code] = { ...stat, country_name: name, unique_visitors: 0, page_views: 0 };
+      } else if (name === "Côte d'Ivoire") {
+        statsMap[code].country_name = name;
+      }
+      statsMap[code].unique_visitors += parseInt(stat.unique_visitors, 10) || 0;
+      statsMap[code].page_views += parseInt(stat.page_views, 10) || 0;
+    });
+    return Object.values(statsMap).sort((a, b) => b.unique_visitors - a.unique_visitors);
+  }, [visitorStats]);
+
+  const totalVisitors = mergedVisitorStats.reduce((sum, row) => sum + row.unique_visitors, 0);
 
   return (
     <>
@@ -272,15 +290,15 @@ export default function Dashboard() {
             </span>
           </div>
           <div className="space-y-5">
-            {visitorStats.slice(0, 5).map((row) => {
-              const count = parseInt(row.unique_visitors, 10) || 0;
+            {mergedVisitorStats.slice(0, 5).map((row) => {
+              const count = row.unique_visitors;
               const percent = totalVisitors > 0 ? Math.round((count / totalVisitors) * 100) : 0;
               return (
               <div key={row.country_code} className="flex items-center">
                 <span className="text-2xl mr-4 shadow-sm rounded-sm">{getFlagEmoji(row.country_code)}</span>
                 <div className="flex-grow">
                   <div className="flex justify-between mb-1.5">
-                    <span className="text-sm font-bold text-gray-800">{row.country_name || row.country_code}</span>
+                    <span className="text-sm font-bold text-gray-800">{row.country_name}</span>
                     <span className={`text-sm font-bold ${percent >= 50 ? 'text-ziv-cyan' : 'text-gray-600'}`}>
                       {percent}%
                     </span>
@@ -291,7 +309,7 @@ export default function Dashboard() {
                 </div>
               </div>
             )})}
-            {visitorStats.length === 0 && <div className="text-sm text-gray-500 text-center py-4">Aucune donnée sur cette période</div>}
+            {mergedVisitorStats.length === 0 && <div className="text-sm text-gray-500 text-center py-4">Aucune donnée sur cette période</div>}
           </div>
         </div>
 
