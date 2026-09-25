@@ -126,7 +126,10 @@ export async function createLead(req, res) {
         </div>
       </div>`;
 
-      await sendEmail(settings, lead.email, subject, htmlContent);
+      const guideEmailSent = await sendEmail(settings, lead.email, subject, htmlContent);
+      if (!guideEmailSent) {
+        console.error(`⚠️ ÉCHEC envoi guide email à ${lead.email} — vérifier la config SMTP (FROM: ${settings.email_from_address || settings.smtp_user || 'NON CONFIGURÉ'})`);
+      }
 
       if (lead.phone && lead.phone !== 'Non renseigné') {
         await sendSmsCampaign(settings, 'Guide Digitalisation', [lead.phone], 'Merci pour votre téléchargement. Vérifiez vos emails pour obtenir le guide.');
@@ -135,8 +138,9 @@ export async function createLead(req, res) {
 
     // --- Logique spécifique : Rendez-vous ---
     if (lead.software_interest === 'Rendez-vous') {
-      const subject = 'Nouvelle demande de Rendez-vous / Audit';
-      const htmlContent = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+      // Notification interne à l'admin
+      const adminSubject = 'Nouvelle demande de Rendez-vous / Audit';
+      const adminHtml = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
         <div style="background:linear-gradient(135deg,#0A1E4A,#00A8B5);padding:24px;border-radius:12px 12px 0 0;">
           <h2 style="color:#fff;margin:0;font-size:18px;">Nouvelle demande de Rendez-vous</h2>
         </div>
@@ -149,7 +153,49 @@ export async function createLead(req, res) {
         </div>
       </div>`;
       if (settings.contact_email) {
-        await sendEmail(settings, settings.contact_email, subject, htmlContent);
+        await sendEmail(settings, settings.contact_email, adminSubject, adminHtml);
+      }
+
+      // Accusé de réception au demandeur
+      const leadSubject = 'Votre demande de rendez-vous a bien été reçue';
+      const leadHtml = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+        <div style="background:linear-gradient(135deg,#0A1E4A,#00A8B5);padding:24px;border-radius:12px 12px 0 0;">
+          <h2 style="color:#fff;margin:0;font-size:18px;">Rendez-vous confirmé ✓</h2>
+        </div>
+        <div style="background:#f9fafb;padding:24px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;">
+          <p style="font-size:14px;color:#374151;line-height:1.6;">Bonjour <strong>${lead.full_name}</strong>,</p>
+          <p style="font-size:14px;color:#374151;line-height:1.6;">Nous avons bien reçu votre demande de rendez-vous. Un consultant expert ZIV Proptech vous contactera très prochainement pour confirmer la date et l'heure.</p>
+          <p style="font-size:14px;color:#374151;line-height:1.6;"><strong>Récapitulatif :</strong></p>
+          <p style="font-size:14px;color:#374151;line-height:1.6;">${String(lead.message).replace(/\n/g, '<br/>')}</p>
+          <p style="font-size:14px;color:#374151;line-height:1.6;margin-top:16px;">À très bientôt,<br/><strong>L'équipe ZIV PROPTECH</strong></p>
+          <p style="color:#9ca3af;font-size:11px;margin-top:24px;text-align:center;">ZIV PROPTECH</p>
+        </div>
+      </div>`;
+      const rdvEmailSent = await sendEmail(settings, lead.email, leadSubject, leadHtml);
+      if (!rdvEmailSent) {
+        console.error(`⚠️ ÉCHEC envoi accusé RDV à ${lead.email}`);
+      }
+    }
+
+    // --- Accusé de réception pour les demandes de devis/démo (tous les autres types) ---
+    if (lead.software_interest !== 'Guide Digitalisation' && lead.software_interest !== 'Rendez-vous') {
+      const leadSubject = 'Votre demande a bien été enregistrée — ZIV PROPTECH';
+      const softwareLabel = lead.software_interest || 'Suite ZIV PROPTECH';
+      const leadHtml = `<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;">
+        <div style="background:linear-gradient(135deg,#0A1E4A,#00A8B5);padding:24px;border-radius:12px 12px 0 0;">
+          <h2 style="color:#fff;margin:0;font-size:18px;">Demande reçue ✓</h2>
+        </div>
+        <div style="background:#f9fafb;padding:24px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;">
+          <p style="font-size:14px;color:#374151;line-height:1.6;">Bonjour <strong>${lead.full_name}</strong>,</p>
+          <p style="font-size:14px;color:#374151;line-height:1.6;">Nous avons bien reçu votre demande concernant <strong>${softwareLabel}</strong>.</p>
+          <p style="font-size:14px;color:#374151;line-height:1.6;">Notre équipe commerciale en Côte d'Ivoire vous contactera très prochainement pour vous accompagner dans votre projet de digitalisation.</p>
+          <p style="font-size:14px;color:#374151;line-height:1.6;margin-top:16px;">Cordialement,<br/><strong>L'équipe ZIV PROPTECH</strong></p>
+          <p style="color:#9ca3af;font-size:11px;margin-top:24px;text-align:center;">ZIV PROPTECH — Solutions Immobilières Digitales</p>
+        </div>
+      </div>`;
+      const devisEmailSent = await sendEmail(settings, lead.email, leadSubject, leadHtml);
+      if (!devisEmailSent) {
+        console.error(`⚠️ ÉCHEC envoi accusé devis à ${lead.email}`);
       }
     }
 

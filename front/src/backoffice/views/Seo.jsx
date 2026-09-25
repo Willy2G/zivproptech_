@@ -292,11 +292,14 @@ export default function Seo() {
             Configuration Email (SMTP)
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Field label="Nom de l'Expéditeur"><TextInput value={form.email_from_name || ''} onChange={set('email_from_name')} placeholder="IMMOSUIT" /></Field>
-            <Field label="Email de l'Expéditeur"><TextInput value={form.email_from_address || ''} onChange={set('email_from_address')} placeholder="noreply@immosuit.com" /></Field>
+            <Field label="Nom de l'Expéditeur"><TextInput value={form.email_from_name || ''} onChange={set('email_from_name')} placeholder="ZIV PROPTECH" /></Field>
+            <Field label="Email de l'Expéditeur">
+              <TextInput value={form.email_from_address || ''} onChange={set('email_from_address')} placeholder="Identique à l'Utilisateur SMTP" />
+              <p className="text-xs text-amber-600 mt-1">⚠️ Doit correspondre à l'Utilisateur SMTP ci-dessous, sinon les emails seront rejetés par Gmail, Yahoo, etc.</p>
+            </Field>
             <Field label="Serveur SMTP (Host)"><TextInput value={form.smtp_host || ''} onChange={set('smtp_host')} placeholder="smtp.votredomaine.com" /></Field>
             <Field label="Port SMTP"><TextInput type="number" value={form.smtp_port || ''} onChange={set('smtp_port')} placeholder="587 ou 465" /></Field>
-            <Field label="Utilisateur SMTP"><TextInput value={form.smtp_user || ''} onChange={set('smtp_user')} placeholder="contact@immosuit.com" /></Field>
+            <Field label="Utilisateur SMTP"><TextInput value={form.smtp_user || ''} onChange={set('smtp_user')} placeholder="contact@votredomaine.com" /></Field>
             <Field label="Mot de passe SMTP"><TextInput type="password" value={form.smtp_pass || ''} onChange={set('smtp_pass')} placeholder="••••••••" /></Field>
           </div>
           

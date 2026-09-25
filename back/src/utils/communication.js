@@ -18,8 +18,11 @@ function getLetextoBaseUrl(rawUrl) {
 
 export async function sendEmail(settings, to, subject, htmlContent, attachments = []) {
   try {
-    const fromAddress = settings.email_from_address || 'noreply@immosuit.com';
-    const fromName = settings.email_from_name || 'IMMOSUIT';
+    // Utiliser smtp_user comme expéditeur par défaut pour passer les vérifications SPF/DKIM
+    const fromAddress = settings.email_from_address || settings.smtp_user || 'noreply@immosuit.com';
+    const fromName = settings.email_from_name || 'ZIV PROPTECH';
+    // L'enveloppe sender DOIT être le smtp_user authentifié pour que SPF passe
+    const envelopeSender = settings.smtp_user || fromAddress;
 
     let transportConfig;
 
@@ -50,18 +53,27 @@ export async function sendEmail(settings, to, subject, htmlContent, attachments 
 
     const transporter = nodemailer.createTransport(transportConfig);
 
+    console.log(`📧 Envoi email: FROM="${fromName}" <${fromAddress}> | TO=${to} | SUBJECT=${subject} | ENVELOPE=${envelopeSender}`);
+
     const info = await transporter.sendMail({
       from: `"${fromName}" <${fromAddress}>`,
       to,
       subject,
       html: htmlContent,
       attachments,
+      // L'enveloppe sender garantit que le serveur SMTP accepte l'email
+      // et que le SPF du domaine authentifié est vérifié côté destinataire
+      envelope: {
+        from: envelopeSender,
+        to,
+      },
     });
 
-    console.log(`✅ Email envoyé à ${to} | ${info.messageId}`);
+    console.log(`✅ Email envoyé à ${to} | MessageId: ${info.messageId} | Response: ${info.response || 'OK'}`);
     return true;
   } catch (error) {
     console.error(`❌ Erreur envoi email à ${to}:`, error.message);
+    console.error(`❌ Détails:`, error.stack);
     return false;
   }
 }
