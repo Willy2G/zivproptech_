@@ -16,7 +16,7 @@ function getLetextoBaseUrl(rawUrl) {
   return idx !== -1 ? url.substring(0, idx) : url;
 }
 
-export async function sendEmail(settings, to, subject, htmlContent) {
+export async function sendEmail(settings, to, subject, htmlContent, attachments = []) {
   try {
     const fromAddress = settings.email_from_address || 'noreply@immosuit.com';
     const fromName = settings.email_from_name || 'IMMOSUIT';
@@ -55,6 +55,7 @@ export async function sendEmail(settings, to, subject, htmlContent) {
       to,
       subject,
       html: htmlContent,
+      attachments,
     });
 
     console.log(`✅ Email envoyé à ${to} | ${info.messageId}`);

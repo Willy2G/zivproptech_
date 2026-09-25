@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Loader2, Mail, Search, Trash2, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, MessageSquare, Settings, Send, Plus, CheckCircle, XCircle } from 'lucide-react';
+import { Loader2, Mail, Search, Trash2, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, MessageSquare, Settings, Send, Plus, CheckCircle, XCircle, Paperclip } from 'lucide-react';
 import Swal from 'sweetalert2';
 import SoftwareBadge from '../components/ui/SoftwareBadge.jsx';
 import Modal from '../../components/modals/Modal.jsx';
 import { Field, TextInput, TextArea, SaveButton, Select } from '../components/ui/FormControls.jsx';
 import { leadStatuses } from '../data/mockLeads.js';
-import { fetchLeads, updateLeadStatus as apiUpdateStatus, deleteLead as apiDeleteLead, createLead, updateLead, sendMessage, sendCampaign } from '../../services/api.js';
+import { fetchLeads, updateLeadStatus as apiUpdateStatus, deleteLead as apiDeleteLead, createLead, updateLead, sendMessage, sendCampaign, uploadImage } from '../../services/api.js';
 import { useToast } from '../context/ToastContext.jsx';
 
 const SELECT_STYLE = {
@@ -31,15 +31,31 @@ export default function Crm() {
   const [sortDir, setSortDir] = useState('desc');
   const [page, setPage] = useState(1);
   const perPage = 10;
-  const [msgModal, setMsgModal] = useState({ open: false, type: 'sms', recipient: '', subject: '', content: '', isCampaign: false });
+  const [msgModal, setMsgModal] = useState({ open: false, type: 'sms', recipient: '', subject: '', content: '', attachment: '', isCampaign: false });
+  const [uploadingFile, setUploadingFile] = useState(false);
   const [sending, setSending] = useState(false);
   const [leadModal, setLeadModal] = useState({ open: false, isEditing: false, id: null, full_name: '', email: '', phone: '', software_interest: 'suit_foncier', status: 'new' });
 
   const openMsgModal = (type, recipient = '', isCampaign = false) => {
-    setMsgModal({ open: true, type, recipient, subject: '', content: '', isCampaign });
+    setMsgModal({ open: true, type, recipient, subject: '', content: '', attachment: '', isCampaign });
   };
 
   const closeMsgModal = () => setMsgModal(m => ({ ...m, open: false }));
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadingFile(true);
+    try {
+      const res = await uploadImage(file);
+      setMsgModal(m => ({ ...m, attachment: res.url }));
+      showToast('Fichier joint avec succès.');
+    } catch (err) {
+      showToast(err.message || 'Erreur lors de l\'upload.');
+    } finally {
+      setUploadingFile(false);
+    }
+  };
 
   const handleSendMsg = async (e) => {
     e.preventDefault();
@@ -50,6 +66,7 @@ export default function Crm() {
           type: msgModal.type,
           subject: msgModal.subject,
           content: msgModal.content,
+          attachment: msgModal.attachment
         });
         showToast(res.message || 'Campagne envoyée.');
       } else {
@@ -58,6 +75,7 @@ export default function Crm() {
           recipient: msgModal.recipient,
           subject: msgModal.subject,
           content: msgModal.content,
+          attachment: msgModal.attachment
         });
         showToast(res.message || `${msgModal.type === 'sms' ? 'SMS' : 'Email'} envoyé.`);
       }
@@ -328,14 +346,30 @@ export default function Crm() {
           )}
           
           {msgModal.type === 'email' && (
-            <Field label="Sujet">
-              <TextInput 
-                value={msgModal.subject} 
-                onChange={e => setMsgModal(m => ({ ...m, subject: e.target.value }))} 
-                placeholder="Objet de l'email" 
-                required 
-              />
-            </Field>
+            <>
+              <Field label="Sujet">
+                <TextInput 
+                  value={msgModal.subject} 
+                  onChange={e => setMsgModal(m => ({ ...m, subject: e.target.value }))} 
+                  placeholder="Objet de l'email" 
+                  required 
+                />
+              </Field>
+              <Field label="Pièce jointe (Optionnel)">
+                <div className="flex items-center space-x-4">
+                  <label className="flex items-center justify-center px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-100 transition-colors whitespace-nowrap">
+                    {uploadingFile ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Paperclip className="w-4 h-4 mr-2" />}
+                    <span className="text-sm font-medium text-gray-700">{uploadingFile ? 'Upload...' : 'Joindre un fichier'}</span>
+                    <input type="file" className="hidden" onChange={handleFileUpload} disabled={uploadingFile} accept="image/*,application/pdf" />
+                  </label>
+                  {msgModal.attachment && (
+                    <span className="text-sm text-green-600 flex items-center">
+                      <CheckCircle className="w-4 h-4 mr-1" /> Fichier joint
+                    </span>
+                  )}
+                </div>
+              </Field>
+            </>
           )}
 
           <Field label="Message">

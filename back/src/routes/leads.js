@@ -8,6 +8,7 @@ import {
 } from '../controllers/leadsController.js';
 import { pool } from '../config/db.js';
 import { sendEmail, sendSmsCampaign } from '../utils/communication.js';
+import path from 'path';
 
 const router = Router();
 
@@ -29,7 +30,7 @@ router.delete('/:id', deleteLead);
 // POST /api/leads/send-message -> envoi d'un SMS ou email individuel depuis le CRM
 router.post('/send-message', async (req, res) => {
   try {
-    const { type, recipient, subject, content } = req.body || {};
+    const { type, recipient, subject, content, attachment } = req.body || {};
 
     if (!type || !recipient || !content) {
       return res.status(400).json({ message: 'Les champs type, recipient et content sont requis.' });
@@ -51,7 +52,13 @@ router.post('/send-message', async (req, res) => {
           <p style="color:#9ca3af;font-size:11px;margin-top:16px;text-align:center;">ZIV PROPTECH — Message envoyé depuis le CRM</p>
         </div>
       </div>`;
-      const result = await sendEmail(settings, recipient, subject || 'Message ZIV PROPTECH', htmlContent);
+      
+      let attachments = [];
+      if (attachment) {
+        attachments.push({ path: path.join(process.cwd(), 'public', attachment) });
+      }
+
+      const result = await sendEmail(settings, recipient, subject || 'Message ZIV PROPTECH', htmlContent, attachments);
       if (!result) {
         return res.status(500).json({ message: 'Échec de l\'envoi de l\'email. Vérifiez la configuration SMTP.' });
       }
@@ -79,7 +86,7 @@ router.post('/send-message', async (req, res) => {
 // POST /api/leads/send-campaign -> envoi d'une campagne SMS ou email a tous les leads
 router.post('/send-campaign', async (req, res) => {
   try {
-    const { type, subject, content } = req.body || {};
+    const { type, subject, content, attachment } = req.body || {};
 
     if (!type || !content) {
       return res.status(400).json({ message: 'Les champs type et content sont requis.' });
@@ -112,9 +119,14 @@ router.post('/send-campaign', async (req, res) => {
         </div>
       </div>`;
 
+      let attachments = [];
+      if (attachment) {
+        attachments.push({ path: path.join(process.cwd(), 'public', attachment) });
+      }
+
       const emails = leads.map(l => l.email).filter(Boolean);
       for (const email of emails) {
-        const ok = await sendEmail(settings, email, subject || 'Campagne ZIV PROPTECH', htmlContent);
+        const ok = await sendEmail(settings, email, subject || 'Campagne ZIV PROPTECH', htmlContent, attachments);
         if (ok) successCount++; else failCount++;
       }
       return res.json({ message: `Campagne email terminée : ${successCount} envoyé(s), ${failCount} échoué(s).`, successCount, failCount });
