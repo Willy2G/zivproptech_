@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import https from 'node:https';
 
 /**
  * Normalise l'URL de base LeTexto.
@@ -95,20 +96,36 @@ export async function sendSmsCampaign(settings, campaignTitle, contactsArr, cont
     console.log('📤 Envoi SMS vers:', finalUrl);
     console.log('📤 Payload:', JSON.stringify(bodyPayload));
 
-    const response = await fetch(finalUrl, {
+    // Remplacement de fetch par https.request natif pour bypasser le SSL (équivalent CURLOPT_SSL_VERIFYPEER = false)
+    const urlObj = new URL(finalUrl);
+    const options = {
+      hostname: urlObj.hostname,
+      port: urlObj.port || 443,
+      path: urlObj.pathname + urlObj.search,
       method: 'POST',
+      rejectUnauthorized: false, // <-- C'EST CECI QUI MANQUAIT AU POST
       headers: {
         'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(bodyPayload)
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(JSON.stringify(bodyPayload))
+      }
+    };
+
+    const responseData = await new Promise((resolve, reject) => {
+      const req = https.request(options, (res) => {
+        let body = '';
+        res.on('data', (chunk) => body += chunk);
+        res.on('end', () => resolve({ status: res.statusCode, body }));
+      });
+      req.on('error', (e) => reject(e));
+      req.write(JSON.stringify(bodyPayload));
+      req.end();
     });
 
-    const responseData = await response.text();
-    console.log(`📨 SMS Campaign -> ${response.status} | ${responseData}`);
+    console.log(`📨 SMS Campaign -> ${responseData.status} | ${responseData.body}`);
 
-    if (response.status >= 200 && response.status < 300) {
-      try { return JSON.parse(responseData); } catch { return responseData; }
+    if (responseData.status >= 200 && responseData.status < 300) {
+      try { return JSON.parse(responseData.body); } catch { return responseData.body; }
     }
 
     return false;

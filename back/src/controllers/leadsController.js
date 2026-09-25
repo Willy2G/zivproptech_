@@ -23,7 +23,10 @@ const ALLOWED_SOFTWARE = new Set([
  * Cree une demande de devis/demo (table `leads`).
  */
 export async function createLead(req, res) {
-  const { full_name, phone, email, software_interest, consulting_type, message } = req.body || {};
+  let { full_name, phone, email, software_interest, consulting_type, message } = req.body || {};
+
+  email = email ? email.trim().toLowerCase() : '';
+  phone = phone ? phone.replace(/[^\d+]/g, '') : '';
 
   // --- Validation ---
   const errors = [];

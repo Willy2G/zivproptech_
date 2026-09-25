@@ -19,7 +19,10 @@ export default function ExpertModal() {
   });
 
   const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    let { name, value } = e.target;
+    if (name === 'email') value = value.toLowerCase();
+    if (name === 'phone') value = value.replace(/[^\d+]/g, '');
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {

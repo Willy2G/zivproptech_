@@ -51,7 +51,7 @@ function GuideCard() {
           type="email"
           required
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value.toLowerCase())}
           placeholder="Votre adresse email professionnelle"
           className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-xl focus:bg-white/20 focus:ring-2 focus:ring-ziv-cyan outline-none transition-all text-white placeholder-blue-200 text-sm"
           disabled={loading || sent}

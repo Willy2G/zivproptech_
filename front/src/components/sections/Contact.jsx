@@ -33,7 +33,12 @@ export default function Contact() {
     }
   }, [selectedSoftware]);
 
-  const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
+  const handleChange = (e) => {
+    let { name, value } = e.target;
+    if (name === 'email') value = value.toLowerCase();
+    if (name === 'phone') value = value.replace(/[^\d+]/g, '');
+    setForm((f) => ({ ...f, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
