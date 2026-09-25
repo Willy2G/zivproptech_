@@ -131,9 +131,10 @@ export async function createLead(req, res) {
         console.error(`⚠️ ÉCHEC envoi guide email à ${lead.email} — vérifier la config SMTP (FROM: ${settings.email_from_address || settings.smtp_user || 'NON CONFIGURÉ'})`);
       }
 
-      if (lead.phone && lead.phone !== 'Non renseigné') {
-        await sendSmsCampaign(settings, 'Guide Digitalisation', [lead.phone], 'Merci pour votre téléchargement. Vérifiez vos emails pour obtenir le guide.');
-      }
+      // L'envoi de SMS de confirmation a été désactivé pour le guide de la digitalisation
+      // if (lead.phone && lead.phone !== 'Non renseigné') {
+      //   await sendSmsCampaign(settings, 'Guide Digitalisation', [lead.phone], 'Merci pour votre téléchargement. Vérifiez vos emails pour obtenir le guide.');
+      // }
     }
 
     // --- Logique spécifique : Rendez-vous ---
