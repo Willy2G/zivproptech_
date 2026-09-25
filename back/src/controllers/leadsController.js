@@ -26,7 +26,9 @@ export async function createLead(req, res) {
   let { full_name, phone, email, software_interest, consulting_type, message } = req.body || {};
 
   email = email ? email.trim().toLowerCase() : '';
-  phone = phone ? phone.replace(/[^\d+]/g, '') : '';
+  if (phone !== 'Non renseigné') {
+    phone = phone ? phone.replace(/[^\d+]/g, '') : '';
+  }
 
   // --- Validation ---
   const errors = [];
